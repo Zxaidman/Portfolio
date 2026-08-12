@@ -1,8 +1,7 @@
 # ZAID SHAIKH
 **BIM Specialist Modeller & Coordinator**
 
-📍 **Location:** Kurla, Mumbai, Maharashtra 400070  
-📞 **Phone:** [+91 82911 50433](tel:+918291150433)  
+📍 **Location:** Kurla, Mumbai, Maharashtra 400070   
 ✉️ **Email:** [shaikhzaid81.20@gmail.com](mailto:shaikhzaid81.20@gmail.com)  
 🔗 **LinkedIn:** [linkedin.com/in/zaid-shaikh-80a088208](https://linkedin.com/in/zaid-shaikh-80a088208)
 
