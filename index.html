@@ -3,251 +3,402 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zaid Shaikh — BIM Specialist Modeller & Coordinator</title>
+<title>Zaid Shaikh — BIM Specialist Modeller &amp; Coordinator</title>
 <meta name="description" content="Portfolio of Zaid Shaikh, BIM Specialist Modeller & Coordinator based in Mumbai — Revit Structure, rebar detailing, BBS, MEPF coordination and Navisworks clash detection.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6f7f9;
-  --surface:#ffffff;
-  --ink:#141922;
-  --ink-soft:#5a6472;
-  --line:#e3e7ec;
-  --accent:#1f6feb;
-  --accent-soft:#eaf1fe;
-  --radius:16px;
-  --shadow:0 1px 2px rgba(20,25,34,.05), 0 8px 24px rgba(20,25,34,.06);
-  --maxw:1120px;
-}
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0e1116;
-    --surface:#161b22;
-    --ink:#e8ecf1;
-    --ink-soft:#9aa5b1;
-    --line:#242c37;
-    --accent:#4d8dfb;
-    --accent-soft:#17233a;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
-  }
+  --bg:#0a0d12;
+  --bg-2:#0e131a;
+  --surface:#131a23;
+  --surface-2:#182029;
+  --ink:#e9eef5;
+  --ink-soft:#93a1b3;
+  --ink-dim:#63718a;
+  --line:#212c39;
+  --line-hot:#2e3d4f;
+  --cyan:#3fd0e8;
+  --amber:#f5a524;
+  --lime:#8ee06a;
+  --radius:4px;
+  --maxw:1180px;
+  --display:"Chakra Petch",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
+  margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(rgba(63,208,232,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(63,208,232,.028) 1px,transparent 1px);
+  background-size:56px 56px;
 }
 img{max-width:100%;display:block}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+a{color:var(--cyan);text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-section{padding:56px 0}
-h2{
-  font-size:13px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--ink-soft);margin:0 0 20px;font-weight:700;
-}
+section{padding:60px 0}
 
-/* ---------- HERO : round photo left, about me right ---------- */
-.hero{padding:64px 0 40px}
-.hero-grid{
-  display:grid;grid-template-columns:220px 1fr;gap:40px;align-items:center;
+/* ---------- HUD section header ---------- */
+.shead{display:flex;align-items:center;gap:14px;margin:0 0 26px}
+.shead .idx{
+  font:700 12px/1 var(--mono);color:var(--bg);background:var(--cyan);
+  padding:7px 9px;border-radius:2px;letter-spacing:.06em;flex:none;
 }
+.shead h2{
+  margin:0;font:700 15px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink);white-space:nowrap;
+}
+.shead .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line-hot),transparent)}
+.shead .note{font:500 11px/1 var(--mono);color:var(--ink-dim);letter-spacing:.1em;white-space:nowrap}
+
+/* ---------- corner-bracket panel ---------- */
+.panel{
+  position:relative;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px;
+}
+.panel::before,.panel::after{
+  content:"";position:absolute;width:14px;height:14px;pointer-events:none;
+  border-color:var(--cyan);opacity:.7;
+}
+.panel::before{top:-1px;left:-1px;border-top:2px solid;border-left:2px solid}
+.panel::after{bottom:-1px;right:-1px;border-bottom:2px solid;border-right:2px solid}
+
+/* ---------- HERO ---------- */
+.topbar{border-bottom:1px solid var(--line);background:rgba(10,13,18,.7);backdrop-filter:blur(6px)}
+.topbar .wrap{display:flex;flex-wrap:wrap;gap:10px 26px;padding-top:12px;padding-bottom:12px;align-items:center}
+.kv{font:500 11px/1 var(--mono);letter-spacing:.1em;color:var(--ink-dim);text-transform:uppercase}
+.kv b{color:var(--cyan);font-weight:700}
+.kv .live{color:var(--lime)}
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin-right:6px;
+  box-shadow:0 0 0 0 rgba(142,224,106,.6);animation:pulse 2.2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(142,224,106,0)}100%{box-shadow:0 0 0 0 rgba(142,224,106,0)}}
+
+.hero{padding:56px 0 44px}
+.hero-grid{display:grid;grid-template-columns:230px 1fr;gap:44px;align-items:start}
+.avatar-wrap{position:relative;width:210px}
 .avatar{
-  width:200px;height:200px;border-radius:50%;overflow:hidden;position:relative;
-  background:linear-gradient(140deg,var(--accent) 0%,#7aa8ff 55%,#b9ccff 100%);
-  box-shadow:var(--shadow);
-  display:grid;place-items:center;flex:none;
+  width:210px;height:210px;border-radius:50%;overflow:hidden;position:relative;
+  background:linear-gradient(150deg,#1d3a48,#2b5566 55%,#3fd0e8);
+  display:grid;place-items:center;border:1px solid var(--line-hot);
 }
 .avatar img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.avatar span{font-size:56px;font-weight:700;color:#fff;letter-spacing:.04em}
-.hero h1{font-size:clamp(30px,4vw,44px);line-height:1.12;margin:0 0 6px;letter-spacing:-.02em}
+.avatar span{font:700 62px/1 var(--display);color:rgba(255,255,255,.9);letter-spacing:.04em}
+.ring{
+  position:absolute;inset:-11px;border-radius:50%;
+  border:1px dashed rgba(63,208,232,.35);animation:spin 26s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lvl{
+  position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  font:700 11px/1 var(--mono);letter-spacing:.1em;color:var(--bg);background:var(--amber);
+  padding:6px 11px;border-radius:2px;white-space:nowrap;
+}
+.hero h1{
+  font:700 clamp(34px,5vw,54px)/1.04 var(--display);margin:0 0 10px;letter-spacing:.01em;
+  text-transform:uppercase;
+}
+.hero h1 em{font-style:normal;color:var(--cyan)}
 .role{
-  display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:999px;margin-bottom:16px;
+  display:inline-block;font:600 12px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--amber);border:1px solid rgba(245,165,36,.35);background:rgba(245,165,36,.08);
+  padding:8px 13px;border-radius:2px;margin-bottom:22px;
 }
-.hero p{margin:0 0 20px;color:var(--ink-soft);max-width:62ch}
-.meta{display:flex;flex-wrap:wrap;gap:10px}
-.meta a,.meta span{
-  font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);
-  padding:7px 13px;border-radius:999px;
+.hook{font-size:17px;color:var(--ink);margin:0 0 20px;max-width:60ch;border-left:2px solid var(--amber);padding-left:14px}
+
+/* ---------- point-wise list (the core readability pattern) ---------- */
+.points{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.points li{
+  display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;
+  background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--cyan);
+  padding:12px 15px;border-radius:var(--radius);transition:border-color .2s,transform .2s,background .2s;
 }
-.meta a:hover{border-color:var(--accent);text-decoration:none}
+.points li:hover{background:var(--surface-2);border-left-color:var(--amber);transform:translateX(4px)}
+.points .mk{font:700 12px/1.5 var(--mono);color:var(--cyan);letter-spacing:.05em}
+.points li:hover .mk{color:var(--amber)}
+.points b{display:block;font:600 14px/1.45 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.points span{display:block;font-size:15px;color:var(--ink-soft);line-height:1.55}
+
+.meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.meta a,.meta i{
+  font:500 13px/1 var(--mono);font-style:normal;color:var(--ink);
+  border:1px solid var(--line-hot);background:var(--surface);
+  padding:10px 14px;border-radius:2px;transition:.2s;
+}
+.meta a:hover{border-color:var(--cyan);color:var(--cyan);background:var(--surface-2)}
+.meta i{color:var(--ink-dim)}
+
+/* ---------- STAT STRIP ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:38px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.stat .n{font:700 30px/1 var(--display);color:var(--cyan);display:block}
+.stat .l{font:500 10px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-top:7px;display:block}
 
 /* ---------- CAROUSEL ROWS ---------- */
-.marquee{
-  overflow:hidden;position:relative;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
-          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+.marquee{overflow:hidden;position:relative;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);}
+.marquee + .marquee{margin-top:12px}
+.rowlabel{
+  font:500 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);
+  margin:0 0 10px;padding-left:24px;
 }
-.marquee + .marquee{margin-top:14px}
-.track{display:flex;gap:14px;width:max-content;animation:slide 34s linear infinite}
-.track.reverse{animation-direction:reverse;animation-duration:42s}
+.track{display:flex;gap:12px;width:max-content;animation:slide 38s linear infinite}
+.track.reverse{animation-direction:reverse;animation-duration:46s}
 .marquee:hover .track{animation-play-state:paused}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){
-  .track{animation:none}
-  .marquee{overflow-x:auto}
+  .track{animation:none}.marquee{overflow-x:auto}.ring{animation:none}.pulse{animation:none}
 }
 .chip{
-  flex:none;display:flex;align-items:center;gap:9px;white-space:nowrap;
-  background:var(--surface);border:1px solid var(--line);border-radius:999px;
-  padding:11px 20px;font-size:15px;font-weight:500;box-shadow:var(--shadow);
+  flex:none;display:flex;align-items:center;gap:10px;white-space:nowrap;
+  background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:11px 16px;font:600 14px/1 var(--display);letter-spacing:.06em;
+  text-transform:uppercase;transition:.2s;
 }
-.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
-.chip.skill{background:transparent;box-shadow:none;color:var(--ink-soft);font-size:14px}
-.chip.skill .dot{background:var(--ink-soft);opacity:.5}
+.chip:hover{border-color:var(--cyan);background:var(--surface-2)}
+.chip .tier{
+  font:700 9px/1 var(--mono);letter-spacing:.1em;padding:4px 6px;border-radius:2px;
+  background:rgba(63,208,232,.12);color:var(--cyan);
+}
+.chip .tier.core{background:rgba(245,165,36,.14);color:var(--amber)}
+.chip .tier.sup{background:rgba(147,161,179,.12);color:var(--ink-soft)}
+.chip.skill{font-size:13px;color:var(--ink-soft);background:transparent}
+.chip.skill .dot{width:5px;height:5px;background:var(--ink-dim);transform:rotate(45deg)}
 
-/* ---------- PROJECTS : 3 per row, hover reveals name + location ---------- */
-.projects{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
-}
+/* ---------- PROJECTS ---------- */
+.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .card{
   position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;
-  background:linear-gradient(150deg,#2b3a52,#4a6187);box-shadow:var(--shadow);
-  cursor:pointer;isolation:isolate;
+  background:linear-gradient(150deg,#1a2430,#2c3d4e);border:1px solid var(--line);
+  cursor:pointer;isolation:isolate;transition:border-color .3s;
 }
-.card:nth-child(2){background:linear-gradient(150deg,#3a4a3f,#66856f)}
-.card:nth-child(3){background:linear-gradient(150deg,#4a3f52,#7d6a90)}
-.card:nth-child(4){background:linear-gradient(150deg,#52463a,#8a7458)}
-.card:nth-child(5){background:linear-gradient(150deg,#3a4752,#5f7a8f)}
-.card:nth-child(6){background:linear-gradient(150deg,#42405a,#6f6c9b)}
-.card img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  transition:transform .5s ease, filter .4s ease;
-}
-.card .veil{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(8,12,18,.88) 0%,rgba(8,12,18,.35) 45%,rgba(8,12,18,0) 75%);
-  opacity:0;transition:opacity .35s ease;
-}
-.card .info{
-  position:absolute;left:0;right:0;bottom:0;padding:22px;color:#fff;z-index:2;
-  transform:translateY(12px);opacity:0;transition:transform .35s ease,opacity .35s ease;
-}
-.card .info h3{margin:0 0 4px;font-size:19px;letter-spacing:-.01em}
-.card .info p{margin:0;font-size:14px;opacity:.82;display:flex;align-items:center;gap:6px}
-.card .tag{
-  position:absolute;top:14px;left:14px;z-index:2;font-size:11px;font-weight:600;
-  letter-spacing:.08em;text-transform:uppercase;color:#fff;
-  background:rgba(255,255,255,.18);backdrop-filter:blur(6px);
-  padding:5px 10px;border-radius:999px;opacity:0;transition:opacity .35s ease;
-}
-.card:hover img,.card:focus-within img{transform:scale(1.06)}
-.card:hover .veil,.card:hover .info,.card:hover .tag,
-.card:focus-within .veil,.card:focus-within .info,.card:focus-within .tag{opacity:1}
+.card:nth-child(2){background:linear-gradient(150deg,#1b2a2e,#2f4a50)}
+.card:nth-child(3){background:linear-gradient(150deg,#262231,#41395a)}
+.card:nth-child(4){background:linear-gradient(150deg,#2b2620,#4d4030)}
+.card:nth-child(5){background:linear-gradient(150deg,#1e2733,#37485c)}
+.card:nth-child(6){background:linear-gradient(150deg,#22262c,#3a4149)}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .55s ease,filter .4s ease;filter:saturate(.9)}
+.card .veil{position:absolute;inset:0;opacity:0;transition:opacity .35s ease;
+  background:linear-gradient(to top,rgba(6,9,13,.94) 0%,rgba(6,9,13,.5) 48%,rgba(6,9,13,.05) 82%)}
+.card .scan{position:absolute;inset:0;opacity:0;transition:opacity .35s;
+  background:repeating-linear-gradient(0deg,rgba(63,208,232,.06) 0 1px,transparent 1px 4px)}
+.card .num{position:absolute;top:12px;right:14px;z-index:3;
+  font:700 13px/1 var(--mono);color:rgba(255,255,255,.55);letter-spacing:.06em}
+.card .tag{position:absolute;top:12px;left:12px;z-index:3;
+  font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--bg);
+  background:var(--cyan);padding:6px 9px;border-radius:2px;opacity:0;transition:opacity .3s}
+.card .info{position:absolute;left:0;right:0;bottom:0;padding:20px;z-index:3;
+  transform:translateY(10px);opacity:0;transition:transform .35s ease,opacity .35s ease}
+.card .info h3{margin:0 0 8px;font:700 19px/1.2 var(--display);letter-spacing:.04em;
+  text-transform:uppercase;color:#fff}
+.card .loc{display:flex;align-items:center;gap:7px;margin:0 0 9px;
+  font:500 12px/1 var(--mono);letter-spacing:.08em;color:var(--cyan);text-transform:uppercase}
+.card .loc svg{flex:none}
+.card .scope{margin:0;font-size:13px;color:rgba(233,238,245,.7);line-height:1.45}
+.card .frame{position:absolute;inset:9px;z-index:3;pointer-events:none;opacity:0;transition:opacity .35s}
+.card .frame i{position:absolute;width:16px;height:16px;border:2px solid var(--cyan);opacity:.9}
+.card .frame i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0}
+.card .frame i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0}
+.card .frame i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0}
+.card .frame i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0}
+.card:hover,.card:focus-within{border-color:var(--cyan)}
+.card:hover img,.card:focus-within img{transform:scale(1.07);filter:saturate(1.05)}
+.card:hover .veil,.card:hover .info,.card:hover .tag,.card:hover .frame,.card:hover .scan,
+.card:focus-within .veil,.card:focus-within .info,.card:focus-within .tag,
+.card:focus-within .frame,.card:focus-within .scan{opacity:1}
 .card:hover .info,.card:focus-within .info{transform:translateY(0)}
-.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.card:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.card.empty{display:grid;place-items:center;border-style:dashed}
+.card.empty p{font:500 11px/1.6 var(--mono);letter-spacing:.12em;color:var(--ink-dim);
+  text-transform:uppercase;text-align:center;margin:0}
 
-/* ---------- CONTENT BLOCKS ---------- */
-.panel{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  padding:26px;box-shadow:var(--shadow);
-}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.job-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:2px}
-.job-head h3{margin:0;font-size:19px;letter-spacing:-.01em}
-.job-head .when{font-size:14px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
-.job-sub{margin:0 0 20px;color:var(--ink-soft);font-size:15px}
-.duty{padding-left:16px;border-left:2px solid var(--line);margin:0 0 18px}
-.duty:last-child{margin-bottom:0}
-.duty h4{margin:0 0 4px;font-size:15px}
-.duty p{margin:0;color:var(--ink-soft);font-size:15px}
-.list{list-style:none;margin:0;padding:0}
-.list li{padding:12px 0;border-bottom:1px solid var(--line)}
-.list li:last-child{border-bottom:0;padding-bottom:0}
-.list li:first-child{padding-top:0}
-.list strong{display:block;font-weight:600}
-.list span{color:var(--ink-soft);font-size:14px}
-.grade{
-  float:right;font-size:13px;font-weight:600;color:var(--accent);
-  background:var(--accent-soft);padding:2px 9px;border-radius:999px;
-}
-.strengths{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.strengths .panel h3{margin:0 0 6px;font-size:17px}
-.strengths .panel p{margin:0;color:var(--ink-soft);font-size:15px}
-.num{
-  display:grid;place-items:center;width:34px;height:34px;border-radius:10px;
-  background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px;margin-bottom:14px;
-}
+/* ---------- EXPERIENCE ---------- */
+.job-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;
+  padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+.job-head h3{margin:0;font:700 20px/1.2 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.job-head .when{font:600 12px/1 var(--mono);letter-spacing:.08em;color:var(--amber);
+  border:1px solid rgba(245,165,36,.3);padding:7px 11px;border-radius:2px}
+.job-sub{margin:-8px 0 20px;font:500 12px/1 var(--mono);letter-spacing:.1em;
+  color:var(--ink-dim);text-transform:uppercase}
+.duties{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.duty{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.duty:hover{border-color:var(--line-hot)}
+.duty h4{margin:0 0 12px;font:700 14px/1.3 var(--display);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink);display:flex;align-items:center;gap:9px}
+.duty h4 .op{font:700 10px/1 var(--mono);color:var(--bg);background:var(--ink-soft);
+  padding:5px 7px;border-radius:2px;letter-spacing:.06em}
+.duty ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.duty li{position:relative;padding-left:19px;font-size:14.5px;
+  color:var(--ink-soft);line-height:1.5}
+.duty li::before{content:"▸";position:absolute;left:0;top:0;color:var(--cyan);font-size:12px;line-height:1.75}
+.duty li em{font-style:normal;color:var(--ink);font-weight:600}
+
+/* ---------- STRENGTHS ---------- */
+.strengths{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.strengths .panel{padding:22px}
+.badge{display:grid;place-items:center;width:38px;height:38px;border-radius:2px;
+  background:rgba(63,208,232,.1);border:1px solid rgba(63,208,232,.3);
+  color:var(--cyan);font:700 13px/1 var(--mono);margin-bottom:14px}
+.strengths h3{margin:0 0 10px;font:700 16px/1.25 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.strengths ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.strengths li{position:relative;padding-left:18px;font-size:14.5px;color:var(--ink-soft);line-height:1.5}
+.strengths li::before{content:"▸";position:absolute;left:0;top:0;color:var(--amber);font-size:12px;line-height:1.75}
+.strengths li em{font-style:normal;color:var(--ink);font-weight:600}
+
+/* ---------- EDUCATION / LANGUAGES ---------- */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:15px 0;border-bottom:1px dashed var(--line)}
+.rows li:last-child{border-bottom:0;padding-bottom:0}
+.rows li:first-child{padding-top:0}
+.rows strong{display:block;font:600 15px/1.3 var(--display);letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+.rows span{display:block;font:500 12px/1.4 var(--mono);color:var(--ink-dim);letter-spacing:.03em}
+.score{flex:none;font:700 13px/1 var(--mono);color:var(--lime);
+  background:rgba(142,224,106,.1);border:1px solid rgba(142,224,106,.25);
+  padding:8px 11px;border-radius:2px;letter-spacing:.04em}
+.bar{width:100%;height:5px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--lime))}
+.langrow{display:block;padding:15px 0;border-bottom:1px dashed var(--line)}
+.langrow:last-child{border-bottom:0;padding-bottom:0}
+.langrow:first-child{padding-top:0}
+.langrow .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.langrow .top b{font:600 15px/1.2 var(--display);letter-spacing:.06em;text-transform:uppercase}
+.langrow .top{margin-bottom:4px}
+.langrow .top em{font-style:normal;font:500 11px/1.7 var(--mono);color:var(--ink-dim);letter-spacing:.08em;text-align:right}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{font:500 12px/1 var(--mono);letter-spacing:.06em;color:var(--ink-soft);
+  border:1px solid var(--line-hot);padding:9px 12px;border-radius:2px}
 
 /* ---------- FOOTER ---------- */
-footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:24px}
-.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
-.foot h3{margin:0 0 4px;font-size:22px;letter-spacing:-.01em}
-.foot p{margin:0;color:var(--ink-soft);font-size:15px}
+footer{border-top:1px solid var(--line);padding:48px 0 60px;margin-top:20px;background:var(--bg-2)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px;align-items:center}
+.foot h3{margin:0 0 8px;font:700 26px/1.15 var(--display);letter-spacing:.03em;text-transform:uppercase}
+.foot p{margin:0;font:500 12px/1.5 var(--mono);color:var(--ink-dim);letter-spacing:.06em}
+.cta{font:700 13px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;
+  background:var(--cyan);color:var(--bg);padding:15px 24px;border-radius:2px;display:inline-block;transition:.2s}
+.cta:hover{background:var(--amber)}
+.cta.ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.cta.ghost:hover{background:var(--cyan);color:var(--bg)}
 
 /* ---------- RESPONSIVE ---------- */
-@media (max-width:900px){
+@media (max-width:960px){
   .projects{grid-template-columns:repeat(2,1fr)}
-  .strengths{grid-template-columns:1fr}
-  .two-col{grid-template-columns:1fr}
+  .strengths,.two-col,.duties{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:640px){
-  section{padding:40px 0}
-  .hero-grid{grid-template-columns:1fr;gap:24px;text-align:left}
-  .avatar{width:140px;height:140px}
-  .avatar span{font-size:40px}
+  section{padding:44px 0}
+  .hero-grid{grid-template-columns:1fr;gap:28px}
+  .avatar,.avatar-wrap{width:150px}.avatar{height:150px}
+  .avatar span{font-size:44px}
   .projects{grid-template-columns:1fr}
-  /* touch devices have no hover — keep project info visible */
-  .card .veil,.card .info,.card .tag{opacity:1}
+  /* no hover on touch — keep project data permanently visible */
+  .card .veil,.card .info,.card .tag,.card .frame{opacity:1}
   .card .info{transform:none}
+  .shead .note{display:none}
 }
 </style>
 </head>
 <body>
 
+<!-- ============ HUD TOP BAR ============ -->
+<div class="topbar">
+  <div class="wrap">
+    <span class="kv">Class <b>BIM Modeller</b></span>
+    <span class="kv">Exp <b>3 YRS</b></span>
+    <span class="kv">Base <b>Mumbai, IN</b></span>
+    <span class="kv live"><span class="pulse"></span>Open to opportunities</span>
+  </div>
+</div>
+
 <!-- ============ HERO: photo left / about me right ============ -->
 <header class="hero">
   <div class="wrap hero-grid">
-    <div class="avatar">
-      <span>ZS</span>
-      <img src="images/profile.jpg" alt="Zaid Shaikh" onerror="this.remove()">
+    <div class="avatar-wrap">
+      <div class="ring"></div>
+      <div class="avatar">
+        <span>ZS</span>
+        <img src="images/profile.jpg" alt="Zaid Shaikh" onerror="this.remove()">
+      </div>
+      <div class="lvl">LVL 03 · SPECIALIST</div>
     </div>
+
     <div>
-      <h1>Zaid Shaikh</h1>
+      <h1>Zaid <em>Shaikh</em></h1>
       <div class="role">BIM Specialist Modeller &amp; Coordinator</div>
-      <p>
-        I am a BIM Specialist Modeller with 3 years of practical experience creating precise 3D models that
-        make building design, coordination, and construction smoother. While I have a solid foundation in
-        architectural modelling and MEPF coordination, my technical core lies in Revit Structure and detailed
-        rebar modelling. Beyond just modelling, I really enjoy helping teams work more efficiently — whether
-        that means setting up standard workflows, training colleagues in Revit, or making sure daily tasks run
-        without a hitch. I am looking forward to bringing my cross-discipline knowledge to an architectural
-        firm that is ready to fully embrace and optimize a BIM-driven workflow.
+
+      <p class="hook">
+        3 years turning 2D concepts into precise 3D models that make design,
+        coordination and construction run smoother.
       </p>
+
+      <ul class="points">
+        <li><span class="mk">01</span><div>
+          <b>Technical core</b>
+          <span>Revit Structure and detailed rebar modelling — concrete accuracy down to the schedule.</span>
+        </div></li>
+        <li><span class="mk">02</span><div>
+          <b>Solid foundation</b>
+          <span>Architectural modelling and MEPF coordination across every discipline on the model.</span>
+        </div></li>
+        <li><span class="mk">03</span><div>
+          <b>Beyond modelling</b>
+          <span>Sets up standard workflows, trains colleagues in Revit, keeps daily tasks running without a hitch.</span>
+        </div></li>
+        <li><span class="mk">04</span><div>
+          <b>Looking for</b>
+          <span>An architectural firm ready to fully embrace and optimise a BIM-driven workflow.</span>
+        </div></li>
+      </ul>
+
       <div class="meta">
         <a href="mailto:shaikhzaid81.20@gmail.com">shaikhzaid81.20@gmail.com</a>
         <a href="tel:+918291150433">+91 82911 50433</a>
-        <a href="https://www.linkedin.com/in/zaid-shaikh-80a088208" target="_blank" rel="noopener">LinkedIn</a>
-        <span>Kurla, Mumbai — 400070</span>
+        <a href="https://www.linkedin.com/in/zaid-shaikh-80a088208" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <i>Kurla, Mumbai — 400070</i>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span class="n">3</span><span class="l">Years modelling</span></div>
+        <div class="stat"><span class="n">5</span><span class="l">Core workstreams</span></div>
+        <div class="stat"><span class="n">9.1</span><span class="l">Degree CGPI</span></div>
+        <div class="stat"><span class="n">3</span><span class="l">Languages</span></div>
       </div>
     </div>
   </div>
 </header>
 
-<!-- ============ ROW 1: software carousel / ROW 2: role skills ============ -->
+<!-- ============ ROW 1: software / ROW 2: role skills ============ -->
 <section id="skills">
   <div class="wrap">
-    <h2>Software &amp; Skills</h2>
+    <div class="shead">
+      <span class="idx">01</span><h2>Loadout</h2><span class="rule"></span>
+      <span class="note">hover to pause</span>
+    </div>
   </div>
 
-  <!-- Row 1 — software known -->
-  <div class="marquee">
-    <div class="track" id="softwareTrack"></div>
-  </div>
+  <p class="rowlabel">▚ Row 1 — Software</p>
+  <div class="marquee"><div class="track" id="softwareTrack"></div></div>
 
-  <!-- Row 2 — role related skills -->
-  <div class="marquee">
-    <div class="track reverse" id="skillTrack"></div>
-  </div>
+  <p class="rowlabel" style="margin-top:22px">▚ Row 2 — Role skills</p>
+  <div class="marquee"><div class="track reverse" id="skillTrack"></div></div>
 </section>
 
-<!-- ============ PROJECTS: 3 per row, hover reveals name + location ============ -->
+<!-- ============ PROJECTS ============ -->
 <section id="projects">
   <div class="wrap">
-    <h2>Selected Projects</h2>
+    <div class="shead">
+      <span class="idx">02</span><h2>Projects</h2><span class="rule"></span>
+      <span class="note">hover a card for details</span>
+    </div>
     <div class="projects" id="projectGrid"></div>
   </div>
 </section>
@@ -255,38 +406,62 @@ footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:24px}
 <!-- ============ EXPERIENCE ============ -->
 <section id="experience">
   <div class="wrap">
-    <h2>Professional Experience</h2>
+    <div class="shead">
+      <span class="idx">03</span><h2>Experience</h2><span class="rule"></span>
+      <span class="note">Aug 2023 → now</span>
+    </div>
+
     <div class="panel">
       <div class="job-head">
-        <h3>BIM Modeller, Quantity Surveyor &amp; BBS Detailer</h3>
-        <span class="when">Aug 2023 – Present</span>
+        <h3>BIM Modeller · Quantity Surveyor · BBS Detailer</h3>
+        <span class="when">AUG 2023 — PRESENT</span>
       </div>
-      <p class="job-sub">Computer Help · Navi Mumbai — 3 years</p>
+      <p class="job-sub">Computer Help — Navi Mumbai · 3 years</p>
 
-      <div class="duty">
-        <h4>Architecture &amp; structure modelling</h4>
-        <p>Drive the transition of 2D AutoCAD concepts into fully detailed 3D Revit models, with deep, precise
-           work in Revit Structure — accurate concrete modelling and extraction of detailed rebar schedules (BBS).</p>
-      </div>
-      <div class="duty">
-        <h4>MEPF &amp; clash coordination</h4>
-        <p>Federate architectural, structural and MEPF models and run Navisworks clash detection, catching and
-           resolving spatial conflicts before they reach site.</p>
-      </div>
-      <div class="duty">
-        <h4>Quantities &amp; deliverables</h4>
-        <p>Extract accurate Bill of Quantities (BOQ) directly from Revit, and produce everything from floor plans
-           to Good-For-Construction (GFC) shop drawings and final As-Built drawings.</p>
-      </div>
-      <div class="duty">
-        <h4>Standards, training &amp; workflow</h4>
-        <p>Support the BIM Manager in setting practical day-to-day BIM standards and regularly train architects
-           and junior engineers in Revit to lift team speed and consistency.</p>
-      </div>
-      <div class="duty">
-        <h4>Families &amp; presentation</h4>
-        <p>Build custom parametric Revit families to grow the project library, and handle editing and rendering
-           for project presentations.</p>
+      <div class="duties">
+        <div class="duty">
+          <h4><span class="op">OP 01</span> Architecture &amp; structure modelling</h4>
+          <ul>
+            <li>Drive the transition of <em>2D AutoCAD concepts</em> into fully detailed 3D Revit models.</li>
+            <li>Deep, precise work in <em>Revit Structure</em> — accurate concrete modelling.</li>
+            <li>Extract detailed <em>rebar schedules (BBS)</em> straight from the model.</li>
+          </ul>
+        </div>
+
+        <div class="duty">
+          <h4><span class="op">OP 02</span> MEPF &amp; clash coordination</h4>
+          <ul>
+            <li>Federate <em>architectural, structural and MEPF</em> models into one source of truth.</li>
+            <li>Run <em>Navisworks clash detection</em> across the federated model.</li>
+            <li>Catch and resolve spatial conflicts <em>before they reach site</em>.</li>
+          </ul>
+        </div>
+
+        <div class="duty">
+          <h4><span class="op">OP 03</span> Quantities &amp; deliverables</h4>
+          <ul>
+            <li>Extract accurate <em>Bill of Quantities (BOQ)</em> directly from Revit.</li>
+            <li>Produce floor plans and <em>Good-For-Construction (GFC)</em> shop drawings.</li>
+            <li>Deliver final <em>As-Built drawings</em> at project close-out.</li>
+          </ul>
+        </div>
+
+        <div class="duty">
+          <h4><span class="op">OP 04</span> Standards, training &amp; workflow</h4>
+          <ul>
+            <li>Support the BIM Manager in setting practical <em>day-to-day BIM standards</em>.</li>
+            <li>Regularly <em>train architects and junior engineers</em> in Revit.</li>
+            <li>Lift team <em>speed and consistency</em> through repeatable workflows.</li>
+          </ul>
+        </div>
+
+        <div class="duty">
+          <h4><span class="op">OP 05</span> Families &amp; presentation</h4>
+          <ul>
+            <li>Build <em>custom parametric Revit families</em> to grow the project library.</li>
+            <li>Handle <em>editing and rendering</em> for project presentations.</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -295,61 +470,92 @@ footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:24px}
 <!-- ============ CORE STRENGTHS ============ -->
 <section id="strengths">
   <div class="wrap">
-    <h2>Core Strengths</h2>
+    <div class="shead">
+      <span class="idx">04</span><h2>Core Strengths</h2><span class="rule"></span>
+    </div>
     <div class="strengths">
       <div class="panel">
-        <div class="num">01</div>
+        <div class="badge">01</div>
         <h3>Precision detailing</h3>
-        <p>Highly focused on accuracy in rebar, concrete and shop-drawing work where tolerances matter.</p>
+        <ul>
+          <li>Highly focused on accuracy in <em>rebar and concrete</em>.</li>
+          <li>Shop-drawing work where <em>tolerances matter</em>.</li>
+        </ul>
       </div>
       <div class="panel">
-        <div class="num">02</div>
-        <h3>Fast learner &amp; logical problem-solver</h3>
-        <p>Quickly absorbs new tools and workflows and reasons through coordination issues methodically.</p>
+        <div class="badge">02</div>
+        <h3>Fast learner &amp; problem-solver</h3>
+        <ul>
+          <li>Quickly absorbs <em>new tools and workflows</em>.</li>
+          <li>Reasons through coordination issues <em>methodically</em>.</li>
+        </ul>
       </div>
       <div class="panel">
-        <div class="num">03</div>
+        <div class="badge">03</div>
         <h3>Team enabler</h3>
-        <p>Trains and supports colleagues, turning individual knowledge into repeatable team standards.</p>
+        <ul>
+          <li>Trains and supports colleagues day to day.</li>
+          <li>Turns individual knowledge into <em>repeatable team standards</em>.</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ EDUCATION + LANGUAGES/INTERESTS ============ -->
+<!-- ============ EDUCATION + LANGUAGES ============ -->
 <section id="education">
-  <div class="wrap two-col">
-    <div>
-      <h2>Education</h2>
+  <div class="wrap">
+    <div class="shead">
+      <span class="idx">05</span><h2>Education &amp; Languages</h2><span class="rule"></span>
+    </div>
+    <div class="two-col">
       <div class="panel">
-        <ul class="list">
+        <ul class="rows">
           <li>
-            <span class="grade">CGPI 9.1</span>
-            <strong>Bachelor of Accounting and Finance (BAF)</strong>
-            <span>Shobha Jayaram Shetty College, Mumbai · 2020 – 2023</span>
+            <div>
+              <strong>Bachelor of Accounting &amp; Finance</strong>
+              <span>Shobha Jayaram Shetty College, Mumbai · 2020–2023</span>
+            </div>
+            <span class="score">CGPI 9.1</span>
           </li>
           <li>
-            <span class="grade">82.31%</span>
-            <strong>Higher Secondary Certificate (HSC)</strong>
-            <span>Anjuman Islam Allana Jr. College, Mumbai · 2020</span>
+            <div>
+              <strong>Higher Secondary Certificate</strong>
+              <span>Anjuman Islam Allana Jr. College, Mumbai · 2020</span>
+            </div>
+            <span class="score">82.31%</span>
           </li>
           <li>
-            <span class="grade">81.20%</span>
-            <strong>Secondary School Certificate (SSC)</strong>
-            <span>Anjuman Islam Kurla Boys High School · 2018</span>
+            <div>
+              <strong>Secondary School Certificate</strong>
+              <span>Anjuman Islam Kurla Boys High School · 2018</span>
+            </div>
+            <span class="score">81.20%</span>
           </li>
         </ul>
       </div>
-    </div>
-    <div>
-      <h2>Languages &amp; Interests</h2>
+
       <div class="panel">
-        <ul class="list">
-          <li><strong>Hindi</strong><span>Native / Bilingual</span></li>
-          <li><strong>English</strong><span>Full professional — writing · Professional working — speaking</span></li>
-          <li><strong>Marathi</strong><span>Conversational understanding, basic speaking</span></li>
-          <li><strong>Interests</strong><span>Computer enthusiast · Morning workouts · Reading artbooks</span></li>
-        </ul>
+        <div class="langrow">
+          <div class="top"><b>Hindi</b><em>Native / Bilingual</em></div>
+          <div class="bar"><i style="width:100%"></i></div>
+        </div>
+        <div class="langrow">
+          <div class="top"><b>English</b><em>Full professional — writing<br>Professional working — speaking</em></div>
+          <div class="bar"><i style="width:85%"></i></div>
+        </div>
+        <div class="langrow">
+          <div class="top"><b>Marathi</b><em>Conversational · basic speaking</em></div>
+          <div class="bar"><i style="width:45%"></i></div>
+        </div>
+        <div class="langrow">
+          <div class="top" style="margin-bottom:12px"><b>Interests</b></div>
+          <div class="tags">
+            <span>▸ Computer enthusiast</span>
+            <span>▸ Morning workouts</span>
+            <span>▸ Reading artbooks</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -359,60 +565,114 @@ footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:24px}
 <footer>
   <div class="wrap foot">
     <div>
-      <h3>Let's build something coordinated.</h3>
-      <p>Open to BIM roles with architectural and structural teams — Mumbai &amp; remote.</p>
+      <h3>Let's build something coordinated</h3>
+      <p>Open to BIM roles with architectural &amp; structural teams — Mumbai and remote</p>
     </div>
-    <div class="meta">
-      <a href="mailto:shaikhzaid81.20@gmail.com">Email me</a>
-      <a href="https://www.linkedin.com/in/zaid-shaikh-80a088208" target="_blank" rel="noopener">LinkedIn</a>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a class="cta" href="mailto:shaikhzaid81.20@gmail.com">Email me</a>
+      <a class="cta ghost" href="https://www.linkedin.com/in/zaid-shaikh-80a088208" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>
 </footer>
 
 <script>
-/* ---- Row 1: software known ---- */
+/* ================= ROW 1 — software known =================
+   tier: "core" = technical core, "" = strong working, "sup" = support tool  */
 const software = [
-  "Autodesk Revit", "Revit Structure", "Navisworks Manage", "AutoCAD",
-  "RC-Cads", "Revit Architecture", "IFC Workflows", "MS Excel", "MS Word"
+  { n:"Autodesk Revit",     t:"core" },
+  { n:"Revit Structure",    t:"core" },
+  { n:"Rebar / BBS",        t:"core" },
+  { n:"Navisworks Manage",  t:"" },
+  { n:"Revit Architecture", t:"" },
+  { n:"AutoCAD",            t:"" },
+  { n:"RC-Cads",            t:"" },
+  { n:"IFC Workflows",      t:"" },
+  { n:"MS Excel",           t:"sup" },
+  { n:"MS Word",            t:"sup" }
 ];
 
-/* ---- Row 2: role related skills ---- */
+/* ================= ROW 2 — role related skills ================= */
 const skills = [
-  "BIM Standard Set-up", "Rebar Detailing", "Bar Bending Schedules (BBS)",
-  "MEPF Integration", "Clash Detection", "2D → 3D Transition", "BOQ Extraction",
-  "GFC Shop Drawings", "As-Built Drawings", "Parametric Families",
-  "Revit Training", "Model Federation", "Quantity Surveying", "Team Guidance"
+  "BIM Standard Set-up","Rebar Detailing","Bar Bending Schedules","MEPF Integration",
+  "Clash Detection","2D → 3D Transition","BOQ Extraction","GFC Shop Drawings",
+  "As-Built Drawings","Parametric Families","Revit Training","Model Federation",
+  "Quantity Surveying","Team Guidance","Rendering & Presentation"
 ];
 
-/* ---- Projects: edit this list. Drop matching images in /images/projects/ ---- */
+/* ================= PROJECTS =================
+   Drop your render into images/projects/ with the matching filename.
+   Edit name / location / scope / tag freely — the grid handles any count. */
 const projects = [
-  { name:"Residential Tower — Structural BIM", location:"Navi Mumbai, Maharashtra", tag:"Revit Structure", img:"images/projects/project-1.jpg" },
-  { name:"Commercial Complex — MEPF Coordination", location:"Andheri, Mumbai",       tag:"Navisworks",      img:"images/projects/project-2.jpg" },
-  { name:"Rebar Detailing & BBS Package",         location:"Thane, Maharashtra",     tag:"BBS",             img:"images/projects/project-3.jpg" },
-  { name:"Mixed-Use Development — Architecture",  location:"Kurla, Mumbai",          tag:"Revit Arch",      img:"images/projects/project-4.jpg" },
-  { name:"Industrial Shed — GFC Shop Drawings",   location:"Bhiwandi, Maharashtra",  tag:"GFC Drawings",    img:"images/projects/project-5.jpg" },
-  { name:"Podium Parking — Clash Resolution",     location:"Panvel, Maharashtra",    tag:"Coordination",    img:"images/projects/project-6.jpg" }
+  { name:"Federated Residential Tower",
+    location:"Navi Mumbai, Maharashtra",
+    tag:"Full Federation",
+    scope:"Architecture, structure, site & services in one model — piling and raft through podium amenity deck to roof framing.",
+    img:"images/projects/project-1.jpg" },
+
+  { name:"High-Rise RCC Frame",
+    location:"Navi Mumbai, Maharashtra",
+    tag:"Revit Structure",
+    scope:"Full concrete frame — shear walls, columns, beams and slabs over a two-level basement podium.",
+    img:"images/projects/project-2.jpg" },
+
+  { name:"Wedge-Plate Floor Fit-Out",
+    location:"Mumbai, Maharashtra",
+    tag:"Interior & Facade",
+    scope:"Cutaway of a triangular floor plate — partitions, ceilings, mullion-by-mullion curtain wall detailing.",
+    img:"images/projects/project-3.jpg" },
+
+  { name:"Residential Tower — Architecture",
+    location:"Kurla, Mumbai",
+    tag:"Revit Architecture",
+    scope:"Full architectural model with stilt level, footings, typical floor repetition and terrace-level rooms.",
+    img:"images/projects/project-4.jpg" },
+
+  { name:"Twin Towers & Podium Parking",
+    location:"Thane, Maharashtra",
+    tag:"Coordination",
+    scope:"Two towers over a shared curved podium — structural frame, ramps and stair cores coordinated across both.",
+    img:"images/projects/project-5.jpg" },
+
+  { name:"", location:"", tag:"", scope:"", img:"" }   // ← empty slot, add your next render
 ];
 
-const chip = (t, cls) => `<div class="chip ${cls}"><span class="dot"></span>${t}</div>`;
-
-/* duplicate the list once so the marquee loops seamlessly at -50% */
+/* ---- render row 1 ---- */
 document.getElementById("softwareTrack").innerHTML =
-  [...software, ...software].map(s => chip(s, "")).join("");
-document.getElementById("skillTrack").innerHTML =
-  [...skills, ...skills].map(s => chip(s, "skill")).join("");
+  [...software, ...software].map(s => `
+    <div class="chip">
+      <span class="tier ${s.t}">${s.t === "core" ? "CORE" : s.t === "sup" ? "SUP" : "PRO"}</span>${s.n}
+    </div>`).join("");
 
-document.getElementById("projectGrid").innerHTML = projects.map(p => `
-  <article class="card" tabindex="0">
+/* ---- render row 2 ---- */
+document.getElementById("skillTrack").innerHTML =
+  [...skills, ...skills].map(s => `
+    <div class="chip skill"><span class="dot"></span>${s}</div>`).join("");
+
+/* ---- render project cards ---- */
+const pin = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>`;
+
+document.getElementById("projectGrid").innerHTML = projects.map((p, i) => {
+  const id = String(i + 1).padStart(2, "0");
+  if (!p.name) return `
+    <article class="card empty">
+      <p>Slot ${id}<br>Add render →<br>images/projects/project-${i + 1}.jpg</p>
+    </article>`;
+  return `
+  <article class="card" tabindex="0" aria-label="${p.name}, ${p.location}">
     <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.remove()">
-    <span class="tag">${p.tag}</span>
+    <div class="scan"></div>
     <div class="veil"></div>
+    <span class="tag">${p.tag}</span>
+    <span class="num">${id}</span>
+    <div class="frame"><i></i><i></i><i></i><i></i></div>
     <div class="info">
       <h3>${p.name}</h3>
-      <p>&#128205; ${p.location}</p>
+      <p class="loc">${pin}${p.location}</p>
+      <p class="scope">${p.scope}</p>
     </div>
-  </article>
-`).join("");
+  </article>`;
+}).join("");
 </script>
 </body>
 </html>
