@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zaid Shaikh — BIM Specialist Modeller & Coordinator</title>
+<meta name="description" content="Portfolio of Zaid Shaikh, BIM Specialist Modeller & Coordinator based in Mumbai — Revit Structure, rebar detailing, BBS, MEPF coordination and Navisworks clash detection.">
+<style>
+:root{
+  --bg:#f6f7f9;
+  --surface:#ffffff;
+  --ink:#141922;
+  --ink-soft:#5a6472;
+  --line:#e3e7ec;
+  --accent:#1f6feb;
+  --accent-soft:#eaf1fe;
+  --radius:16px;
+  --shadow:0 1px 2px rgba(20,25,34,.05), 0 8px 24px rgba(20,25,34,.06);
+  --maxw:1120px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1116;
+    --surface:#161b22;
+    --ink:#e8ecf1;
+    --ink-soft:#9aa5b1;
+    --line:#242c37;
+    --accent:#4d8dfb;
+    --accent-soft:#17233a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+h2{
+  font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);margin:0 0 20px;font-weight:700;
+}
+
+/* ---------- HERO : round photo left, about me right ---------- */
+.hero{padding:64px 0 40px}
+.hero-grid{
+  display:grid;grid-template-columns:220px 1fr;gap:40px;align-items:center;
+}
+.avatar{
+  width:200px;height:200px;border-radius:50%;overflow:hidden;position:relative;
+  background:linear-gradient(140deg,var(--accent) 0%,#7aa8ff 55%,#b9ccff 100%);
+  box-shadow:var(--shadow);
+  display:grid;place-items:center;flex:none;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.avatar span{font-size:56px;font-weight:700;color:#fff;letter-spacing:.04em}
+.hero h1{font-size:clamp(30px,4vw,44px);line-height:1.12;margin:0 0 6px;letter-spacing:-.02em}
+.role{
+  display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:999px;margin-bottom:16px;
+}
+.hero p{margin:0 0 20px;color:var(--ink-soft);max-width:62ch}
+.meta{display:flex;flex-wrap:wrap;gap:10px}
+.meta a,.meta span{
+  font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);
+  padding:7px 13px;border-radius:999px;
+}
+.meta a:hover{border-color:var(--accent);text-decoration:none}
+
+/* ---------- CAROUSEL ROWS ---------- */
+.marquee{
+  overflow:hidden;position:relative;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.marquee + .marquee{margin-top:14px}
+.track{display:flex;gap:14px;width:max-content;animation:slide 34s linear infinite}
+.track.reverse{animation-direction:reverse;animation-duration:42s}
+.marquee:hover .track{animation-play-state:paused}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){
+  .track{animation:none}
+  .marquee{overflow-x:auto}
+}
+.chip{
+  flex:none;display:flex;align-items:center;gap:9px;white-space:nowrap;
+  background:var(--surface);border:1px solid var(--line);border-radius:999px;
+  padding:11px 20px;font-size:15px;font-weight:500;box-shadow:var(--shadow);
+}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.chip.skill{background:transparent;box-shadow:none;color:var(--ink-soft);font-size:14px}
+.chip.skill .dot{background:var(--ink-soft);opacity:.5}
+
+/* ---------- PROJECTS : 3 per row, hover reveals name + location ---------- */
+.projects{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
+}
+.card{
+  position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;
+  background:linear-gradient(150deg,#2b3a52,#4a6187);box-shadow:var(--shadow);
+  cursor:pointer;isolation:isolate;
+}
+.card:nth-child(2){background:linear-gradient(150deg,#3a4a3f,#66856f)}
+.card:nth-child(3){background:linear-gradient(150deg,#4a3f52,#7d6a90)}
+.card:nth-child(4){background:linear-gradient(150deg,#52463a,#8a7458)}
+.card:nth-child(5){background:linear-gradient(150deg,#3a4752,#5f7a8f)}
+.card:nth-child(6){background:linear-gradient(150deg,#42405a,#6f6c9b)}
+.card img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .5s ease, filter .4s ease;
+}
+.card .veil{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,12,18,.88) 0%,rgba(8,12,18,.35) 45%,rgba(8,12,18,0) 75%);
+  opacity:0;transition:opacity .35s ease;
+}
+.card .info{
+  position:absolute;left:0;right:0;bottom:0;padding:22px;color:#fff;z-index:2;
+  transform:translateY(12px);opacity:0;transition:transform .35s ease,opacity .35s ease;
+}
+.card .info h3{margin:0 0 4px;font-size:19px;letter-spacing:-.01em}
+.card .info p{margin:0;font-size:14px;opacity:.82;display:flex;align-items:center;gap:6px}
+.card .tag{
+  position:absolute;top:14px;left:14px;z-index:2;font-size:11px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:#fff;
+  background:rgba(255,255,255,.18);backdrop-filter:blur(6px);
+  padding:5px 10px;border-radius:999px;opacity:0;transition:opacity .35s ease;
+}
+.card:hover img,.card:focus-within img{transform:scale(1.06)}
+.card:hover .veil,.card:hover .info,.card:hover .tag,
+.card:focus-within .veil,.card:focus-within .info,.card:focus-within .tag{opacity:1}
+.card:hover .info,.card:focus-within .info{transform:translateY(0)}
+.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+/* ---------- CONTENT BLOCKS ---------- */
+.panel{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px;box-shadow:var(--shadow);
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.job-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:2px}
+.job-head h3{margin:0;font-size:19px;letter-spacing:-.01em}
+.job-head .when{font-size:14px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.job-sub{margin:0 0 20px;color:var(--ink-soft);font-size:15px}
+.duty{padding-left:16px;border-left:2px solid var(--line);margin:0 0 18px}
+.duty:last-child{margin-bottom:0}
+.duty h4{margin:0 0 4px;font-size:15px}
+.duty p{margin:0;color:var(--ink-soft);font-size:15px}
+.list{list-style:none;margin:0;padding:0}
+.list li{padding:12px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0;padding-bottom:0}
+.list li:first-child{padding-top:0}
+.list strong{display:block;font-weight:600}
+.list span{color:var(--ink-soft);font-size:14px}
+.grade{
+  float:right;font-size:13px;font-weight:600;color:var(--accent);
+  background:var(--accent-soft);padding:2px 9px;border-radius:999px;
+}
+.strengths{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.strengths .panel h3{margin:0 0 6px;font-size:17px}
+.strengths .panel p{margin:0;color:var(--ink-soft);font-size:15px}
+.num{
+  display:grid;place-items:center;width:34px;height:34px;border-radius:10px;
+  background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px;margin-bottom:14px;
+}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:24px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
+.foot h3{margin:0 0 4px;font-size:22px;letter-spacing:-.01em}
+.foot p{margin:0;color:var(--ink-soft);font-size:15px}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:900px){
+  .projects{grid-template-columns:repeat(2,1fr)}
+  .strengths{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  section{padding:40px 0}
+  .hero-grid{grid-template-columns:1fr;gap:24px;text-align:left}
+  .avatar{width:140px;height:140px}
+  .avatar span{font-size:40px}
+  .projects{grid-template-columns:1fr}
+  /* touch devices have no hover — keep project info visible */
+  .card .veil,.card .info,.card .tag{opacity:1}
+  .card .info{transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO: photo left / about me right ============ -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="avatar">
+      <span>ZS</span>
+      <img src="images/profile.jpg" alt="Zaid Shaikh" onerror="this.remove()">
+    </div>
+    <div>
+      <h1>Zaid Shaikh</h1>
+      <div class="role">BIM Specialist Modeller &amp; Coordinator</div>
+      <p>
+        I am a BIM Specialist Modeller with 3 years of practical experience creating precise 3D models that
+        make building design, coordination, and construction smoother. While I have a solid foundation in
+        architectural modelling and MEPF coordination, my technical core lies in Revit Structure and detailed
+        rebar modelling. Beyond just modelling, I really enjoy helping teams work more efficiently — whether
+        that means setting up standard workflows, training colleagues in Revit, or making sure daily tasks run
+        without a hitch. I am looking forward to bringing my cross-discipline knowledge to an architectural
+        firm that is ready to fully embrace and optimize a BIM-driven workflow.
+      </p>
+      <div class="meta">
+        <a href="mailto:shaikhzaid81.20@gmail.com">shaikhzaid81.20@gmail.com</a>
+        <a href="tel:+918291150433">+91 82911 50433</a>
+        <a href="https://www.linkedin.com/in/zaid-shaikh-80a088208" target="_blank" rel="noopener">LinkedIn</a>
+        <span>Kurla, Mumbai — 400070</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ ROW 1: software carousel / ROW 2: role skills ============ -->
+<section id="skills">
+  <div class="wrap">
+    <h2>Software &amp; Skills</h2>
+  </div>
+
+  <!-- Row 1 — software known -->
+  <div class="marquee">
+    <div class="track" id="softwareTrack"></div>
+  </div>
+
+  <!-- Row 2 — role related skills -->
+  <div class="marquee">
+    <div class="track reverse" id="skillTrack"></div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS: 3 per row, hover reveals name + location ============ -->
+<section id="projects">
+  <div class="wrap">
+    <h2>Selected Projects</h2>
+    <div class="projects" id="projectGrid"></div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience">
+  <div class="wrap">
+    <h2>Professional Experience</h2>
+    <div class="panel">
+      <div class="job-head">
+        <h3>BIM Modeller, Quantity Surveyor &amp; BBS Detailer</h3>
+        <span class="when">Aug 2023 – Present</span>
+      </div>
+      <p class="job-sub">Computer Help · Navi Mumbai — 3 years</p>
+
+      <div class="duty">
+        <h4>Architecture &amp; structure modelling</h4>
+        <p>Drive the transition of 2D AutoCAD concepts into fully detailed 3D Revit models, with deep, precise
+           work in Revit Structure — accurate concrete modelling and extraction of detailed rebar schedules (BBS).</p>
+      </div>
+      <div class="duty">
+        <h4>MEPF &amp; clash coordination</h4>
+        <p>Federate architectural, structural and MEPF models and run Navisworks clash detection, catching and
+           resolving spatial conflicts before they reach site.</p>
+      </div>
+      <div class="duty">
+        <h4>Quantities &amp; deliverables</h4>
+        <p>Extract accurate Bill of Quantities (BOQ) directly from Revit, and produce everything from floor plans
+           to Good-For-Construction (GFC) shop drawings and final As-Built drawings.</p>
+      </div>
+      <div class="duty">
+        <h4>Standards, training &amp; workflow</h4>
+        <p>Support the BIM Manager in setting practical day-to-day BIM standards and regularly train architects
+           and junior engineers in Revit to lift team speed and consistency.</p>
+      </div>
+      <div class="duty">
+        <h4>Families &amp; presentation</h4>
+        <p>Build custom parametric Revit families to grow the project library, and handle editing and rendering
+           for project presentations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CORE STRENGTHS ============ -->
+<section id="strengths">
+  <div class="wrap">
+    <h2>Core Strengths</h2>
+    <div class="strengths">
+      <div class="panel">
+        <div class="num">01</div>
+        <h3>Precision detailing</h3>
+        <p>Highly focused on accuracy in rebar, concrete and shop-drawing work where tolerances matter.</p>
+      </div>
+      <div class="panel">
+        <div class="num">02</div>
+        <h3>Fast learner &amp; logical problem-solver</h3>
+        <p>Quickly absorbs new tools and workflows and reasons through coordination issues methodically.</p>
+      </div>
+      <div class="panel">
+        <div class="num">03</div>
+        <h3>Team enabler</h3>
+        <p>Trains and supports colleagues, turning individual knowledge into repeatable team standards.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDUCATION + LANGUAGES/INTERESTS ============ -->
+<section id="education">
+  <div class="wrap two-col">
+    <div>
+      <h2>Education</h2>
+      <div class="panel">
+        <ul class="list">
+          <li>
+            <span class="grade">CGPI 9.1</span>
+            <strong>Bachelor of Accounting and Finance (BAF)</strong>
+            <span>Shobha Jayaram Shetty College, Mumbai · 2020 – 2023</span>
+          </li>
+          <li>
+            <span class="grade">82.31%</span>
+            <strong>Higher Secondary Certificate (HSC)</strong>
+            <span>Anjuman Islam Allana Jr. College, Mumbai · 2020</span>
+          </li>
+          <li>
+            <span class="grade">81.20%</span>
+            <strong>Secondary School Certificate (SSC)</strong>
+            <span>Anjuman Islam Kurla Boys High School · 2018</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h2>Languages &amp; Interests</h2>
+      <div class="panel">
+        <ul class="list">
+          <li><strong>Hindi</strong><span>Native / Bilingual</span></li>
+          <li><strong>English</strong><span>Full professional — writing · Professional working — speaking</span></li>
+          <li><strong>Marathi</strong><span>Conversational understanding, basic speaking</span></li>
+          <li><strong>Interests</strong><span>Computer enthusiast · Morning workouts · Reading artbooks</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot">
+    <div>
+      <h3>Let's build something coordinated.</h3>
+      <p>Open to BIM roles with architectural and structural teams — Mumbai &amp; remote.</p>
+    </div>
+    <div class="meta">
+      <a href="mailto:shaikhzaid81.20@gmail.com">Email me</a>
+      <a href="https://www.linkedin.com/in/zaid-shaikh-80a088208" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---- Row 1: software known ---- */
+const software = [
+  "Autodesk Revit", "Revit Structure", "Navisworks Manage", "AutoCAD",
+  "RC-Cads", "Revit Architecture", "IFC Workflows", "MS Excel", "MS Word"
+];
+
+/* ---- Row 2: role related skills ---- */
+const skills = [
+  "BIM Standard Set-up", "Rebar Detailing", "Bar Bending Schedules (BBS)",
+  "MEPF Integration", "Clash Detection", "2D → 3D Transition", "BOQ Extraction",
+  "GFC Shop Drawings", "As-Built Drawings", "Parametric Families",
+  "Revit Training", "Model Federation", "Quantity Surveying", "Team Guidance"
+];
+
+/* ---- Projects: edit this list. Drop matching images in /images/projects/ ---- */
+const projects = [
+  { name:"Residential Tower — Structural BIM", location:"Navi Mumbai, Maharashtra", tag:"Revit Structure", img:"images/projects/project-1.jpg" },
+  { name:"Commercial Complex — MEPF Coordination", location:"Andheri, Mumbai",       tag:"Navisworks",      img:"images/projects/project-2.jpg" },
+  { name:"Rebar Detailing & BBS Package",         location:"Thane, Maharashtra",     tag:"BBS",             img:"images/projects/project-3.jpg" },
+  { name:"Mixed-Use Development — Architecture",  location:"Kurla, Mumbai",          tag:"Revit Arch",      img:"images/projects/project-4.jpg" },
+  { name:"Industrial Shed — GFC Shop Drawings",   location:"Bhiwandi, Maharashtra",  tag:"GFC Drawings",    img:"images/projects/project-5.jpg" },
+  { name:"Podium Parking — Clash Resolution",     location:"Panvel, Maharashtra",    tag:"Coordination",    img:"images/projects/project-6.jpg" }
+];
+
+const chip = (t, cls) => `<div class="chip ${cls}"><span class="dot"></span>${t}</div>`;
+
+/* duplicate the list once so the marquee loops seamlessly at -50% */
+document.getElementById("softwareTrack").innerHTML =
+  [...software, ...software].map(s => chip(s, "")).join("");
+document.getElementById("skillTrack").innerHTML =
+  [...skills, ...skills].map(s => chip(s, "skill")).join("");
+
+document.getElementById("projectGrid").innerHTML = projects.map(p => `
+  <article class="card" tabindex="0">
+    <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.remove()">
+    <span class="tag">${p.tag}</span>
+    <div class="veil"></div>
+    <div class="info">
+      <h3>${p.name}</h3>
+      <p>&#128205; ${p.location}</p>
+    </div>
+  </article>
+`).join("");
+</script>
+</body>
+</html>
