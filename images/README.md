@@ -20,13 +20,14 @@ images/
 The card text in `index.html` was written to match these specific renders — save each
 one under the matching filename:
 
-| File | The render it expects |
-|---|---|
+
+| File            | The render it expects                                                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `project-1.jpg` | Colour isometric cutaway — piles/raft at the bottom, podium amenity deck with pool and jogging track, tower above, exposed roof framing |
-| `project-2.jpg` | Grey + blue structural frame of the tall tower with the blue basement/podium box |
-| `project-3.jpg` | Triangular wedge floor plate, cutaway showing partitions, ceilings and the glazed facade |
-| `project-4.jpg` | Finished cream/beige architectural tower with balconies, stilt level and footings |
-| `project-5.jpg` | Monochrome twin towers over the curved podium parking |
+| `project-2.jpg` | Grey + blue structural frame of the tall tower with the blue basement/podium box                                                         |
+| `project-3.jpg` | Triangular wedge floor plate, cutaway showing partitions, ceilings and the glazed facade                                                 |
+| `project-4.jpg` | Finished cream/beige architectural tower with balconies, stilt level and footings                                                        |
+| `project-5.jpg` | Monochrome twin towers over the curved podium parking                                                                                    |
 
 Prefer landscape crops around 1200×900 (4:3). The cards crop to 4:3, so anything
 wildly tall will get trimmed top and bottom.
