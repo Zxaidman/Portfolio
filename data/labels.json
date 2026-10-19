@@ -1,0 +1,18 @@
+{
+  "_readme": "Public labels for each project, keyed by a neutral id (s + source slide number). Project names are confidential and must never appear here or anywhere in the site. title: shown as 'G+<storeys> <title>' when storeys is set. location: city or country only. mask: [x, y, w, h] in video pixels to cover burned-in text. exclude: true hides the project.",
+  "s04": { "title": "podium tower model", "storeys": null, "location": "UAE", "type": "Other" },
+  "s05": { "title": "residential tower complex model", "storeys": null, "location": "Mumbai", "type": "Residential" },
+  "s06": { "title": "luxury residential tower model", "storeys": null, "location": "Mumbai", "type": "Residential" },
+  "s07": { "title": "IT park building model", "storeys": null, "location": "Mumbai", "type": "Commercial" },
+  "s08": { "title": "residential tower model", "storeys": null, "location": "Mumbai", "type": "Residential" },
+  "s09": { "title": "residential building model", "storeys": null, "location": "Mumbai", "type": "Residential", "mask": [40, 72, 400, 62] },
+  "s10": { "title": "residential building model", "storeys": null, "location": "", "type": "Residential" },
+  "s11": { "title": "residential block model", "storeys": null, "location": "Bhopal", "type": "Residential" },
+  "s12": { "title": "sea-facing residential tower model", "storeys": null, "location": "Mumbai", "type": "Residential" },
+  "s13": { "title": "sale and rehab building model", "storeys": null, "location": "Mumbai", "type": "Residential" },
+  "s14": { "title": "luxury residential tower model", "storeys": null, "location": "Mumbai", "type": "Residential" },
+  "s15": { "title": "commercial tower model", "storeys": null, "location": "", "type": "Commercial" },
+  "s21": { "title": "residential block model", "storeys": null, "location": "", "type": "Other" },
+  "s22": { "title": "architectural and structural model", "storeys": null, "location": "", "type": "Other" },
+  "_bbs_exclude": ["slide-19-01", "slide-20-01"]
+}

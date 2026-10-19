@@ -1,0 +1,2 @@
+# Only needed for `sync` / `daily` (image re-encoding). `build` and `validate` use the standard library.
+Pillow>=10.0

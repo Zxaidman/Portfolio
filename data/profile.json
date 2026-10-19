@@ -1,0 +1,42 @@
+{
+  "name": "Zaid Shaikh",
+  "role": "BIM Specialist Modeller & Coordinator",
+  "headline": "I turn 2D drawings into Revit models a site team can build from.",
+  "intro": "Three years modelling live Mumbai projects at Computer Help. My core is Revit Structure and rebar: concrete modelled to the bar, bar bending schedules taken straight off the model, and clash-free MEPF coordination in Navisworks before anything reaches site.",
+  "location": "Kurla, Mumbai",
+  "email": "shaikhzaid81.20@gmail.com",
+  "linkedin": "https://linkedin.com/in/zaid-shaikh-80a088208",
+  "employer": "Computer Help",
+  "employerUrl": "https://buildingsoftware.in",
+  "available": true,
+  "stats": [
+    { "value": "3 yrs", "label": "on live projects" },
+    { "value": "LOD 350", "label": "structural detail" },
+    { "value": "BBS + BOQ", "label": "straight from the model" }
+  ],
+  "experience": [
+    {
+      "role": "BIM Modeller, Quantity Surveyor & BBS Detailer",
+      "org": "Computer Help, Navi Mumbai",
+      "from": "Aug 2023",
+      "to": "Present",
+      "points": [
+        "Convert 2D AutoCAD concepts into detailed architectural and structural Revit models, with concrete and rebar modelled precisely enough to extract bar bending schedules.",
+        "Federate architectural, structural and MEPF models and run Navisworks clash detection so conflicts are resolved before construction.",
+        "Extract bills of quantities from Revit and issue floor plans, GFC shop drawings and as-built sets.",
+        "Help the BIM manager set day-to-day standards and train architects and junior engineers in Revit.",
+        "Build parametric Revit families for the office library and render models for client presentations."
+      ]
+    }
+  ],
+  "skills": [
+    { "group": "Modelling", "items": ["Revit Structure", "Revit Architecture", "Rebar detailing", "Parametric families"] },
+    { "group": "Coordination", "items": ["Navisworks clash detection", "MEPF federation", "2D to 3D conversion", "BIM standards"] },
+    { "group": "Deliverables", "items": ["Bar bending schedules", "BOQ extraction", "GFC shop drawings", "As-built drawings", "IFC export"] },
+    { "group": "Software", "items": ["Autodesk Revit", "Navisworks", "AutoCAD", "RC-CADS", "MS Excel"] }
+  ],
+  "education": [
+    { "title": "Bachelor of Accounting and Finance", "detail": "CGPI 9.1, Shobha Jayaram Shetty College, Mumbai", "years": "2020–2023" }
+  ],
+  "languages": ["Hindi", "English", "Marathi"]
+}

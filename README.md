@@ -1,71 +1,67 @@
-# ZAID SHAIKH
-**BIM Specialist Modeller & Coordinator**
+# Zaid Shaikh — BIM Specialist Modeller & Coordinator
 
-📍 **Location:** Kurla, Mumbai, Maharashtra 400070   
-✉️ **Email:** [shaikhzaid81.20@gmail.com](mailto:shaikhzaid81.20@gmail.com)  
-🔗 **LinkedIn:** [linkedin.com/in/zaid-shaikh-80a088208](https://linkedin.com/in/zaid-shaikh-80a088208)
+Portfolio site: **https://zxaidman.github.io/Portfolio/**
 
----
+Revit Structure and rebar specialist at Computer Help, Mumbai. Three years modelling live projects: concrete and rebar to LOD 350, bar bending schedules and BOQs from the model, and Navisworks clash coordination with MEPF.
 
-## 👤 Profile
-
-I am a BIM Specialist Modeller with **3 years of practical experience** creating precise 3D models that make building design, coordination, and construction smoother. While I have a solid foundation in Architectural modelling and MEPF coordination, my technical core lies in **Revit Structure** and **detailed rebar modelling**. 
-
-Beyond modelling, I enjoy helping teams work more efficiently—whether setting up standard workflows, training colleagues in Revit, or ensuring daily tasks run seamlessly. I look forward to bringing my cross-discipline knowledge to an architectural firm ready to fully embrace and optimize a BIM-driven workflow.
+- Email: [shaikhzaid81.20@gmail.com](mailto:shaikhzaid81.20@gmail.com)
+- LinkedIn: [linkedin.com/in/zaid-shaikh-80a088208](https://linkedin.com/in/zaid-shaikh-80a088208)
 
 ---
 
-## 🛠️ Key Skills
+## How the site works
 
-* **BIM & Workflow:** BIM standard set-up, team guidance, Revit training for team members
-* **Modelling Focus:** Revit Architecture & Structure, rebar detailing, Bar Bending Schedules (BBS)
-* **Coordination:** MEPF integration, Navisworks clash detection, 2D-to-3D transition
-* **Deliverables:** BOQ extraction, GFC shop drawings, AutoCAD/IFC files, As-Built drawings
-* **Software:** Autodesk Revit, Navisworks, AutoCAD, RC-Cads, MS Excel, MS Word
+The page is a static site on GitHub Pages, designed as a Revit drawing sheet. The title block's revision cell shows the current version, and a different project, build-up video and theme lead the page each day.
 
----
+```
+index.html              generated — do not edit by hand
+assets/css/main.css     design tokens + four themes (sheet, blueprint, night, concrete)
+assets/js/main.js       progressive enhancement: filters, viewer, video previews
+data/profile.json       bio, experience, skills, contact      <- edit by hand
+data/labels.json        public title / storeys / city per project id  <- edit by hand
+data/projects.json      projects, images, videos, BBS sheets  <- written by `sync`
+data/site.json          today's featured project, theme, version, revisions
+data/media-manifest.json content hashes, so unchanged media is never re-copied
+media/                  optimised images (1800px + 720px thumbs), videos, posters
+scripts/portfolio.py    CLI: sync, refresh, build, validate, daily
+scripts/render.py       renders index.html from data/*.json
+VERSION, CHANGELOG.md   SemVer: MAJOR redesign · MINOR new content · PATCH daily rotation
+```
 
-## 💼 Professional Experience
+### Requirements
 
-### **BIM Modeller, Quantity Surveyor & BBS Detailer**
-**Computer Help** • Navi Mumbai  
-*Aug 2023 – Present (3 years)*
+- Python 3.9+
+- Pillow, for `sync`/`daily` only: `pip install -r requirements.txt`
 
-* **Architecture & Structure Modelling:** Drive the transition of 2D AutoCAD concepts into fully detailed 3D Revit models, with deep, precise work in Revit Structure — accurate concrete modelling and extraction of detailed rebar schedules (BBS).
-* **MEPF & Clash Coordination:** Federate architectural, structural, and MEPF models and run Navisworks clash detection, catching and resolving spatial conflicts before they reach the site.
-* **Quantities & Deliverables:** Extract accurate Bill of Quantities (BOQ) directly from Revit, and produce floor plans, Good-For-Construction (GFC) shop drawings, and final As-Built drawings.
-* **Standards, Training & Workflow:** Support the BIM Manager in setting practical day-to-day BIM standards and regularly train architects and junior engineers in Revit to lift team speed and consistency.
-* **Families & Presentation:** Build custom parametric Revit families to grow the project library, and handle editing and rendering for project presentations.
+### Common tasks
 
----
+```bash
+# Daily job (what the 6 AM IST scheduled task runs)
+git clone --depth 1 https://github.com/aasif-shaikh7/BIM-Portfolio ../BIM-Portfolio
+python3 scripts/portfolio.py daily --source ../BIM-Portfolio
 
-## 🌟 Core Strengths
+# Edited data/profile.json? Re-render and check:
+python3 scripts/portfolio.py build
 
-* **Precision Detailing:** Highly focused on accuracy in rebar, concrete, and shop-drawing work where tolerances matter.
-* **Fast Learner & Logical Problem-Solver:** Quickly absorbs new tools and workflows and reasons through coordination issues methodically.
-* **Team Enabler:** Trains and supports colleagues, turning individual knowledge into repeatable team standards.
+# Preview locally
+python3 -m http.server 8000      # then open http://localhost:8000
 
----
+# Manual redesign: bump MAJOR
+python3 scripts/portfolio.py refresh --major
+```
 
-## 🎓 Education
+### Confidentiality
 
-* **Bachelor of Accounting and Finance (BAF)** — *CGPI: 9.1*  
-  Shobha Jayaram Shetty College, Mumbai (2020 – 2023)
-* **Higher Secondary Certificate (HSC)** — *82.31%*  
-  Anjuman Islam Allana Jr. College, Mumbai (2020)
-* **Secondary School Certificate (SSC)** — *81.20%*  
-  Anjuman Islam Kurla Boys High School (2018)
+Client project names never appear on the site. Each project is published under a neutral id (`s09` = source slide 9) with the title, storey count and city from `data/labels.json`. To show "G+20 residential tower model", set `"storeys": 20` for that id. Video metadata is stripped, and `mask` covers any burned-in title in a video.
 
----
+Every `sync` and `daily` run also performs a **leak check**: it reads the project names from the source repo in memory and fails, so nothing is pushed, if any of them appears in a published path or file.
 
-## 🌐 Languages & Interests
+### Behaviour worth knowing
 
-### **Languages**
-* **Hindi:** Native / Bilingual
-* **English:** Full professional (writing); professional working (speaking)
-* **Marathi:** Conversational understanding, basic speaking
+- **Idempotent:** rerunning `daily` on the same date produces no diff and no version bump.
+- **Light history:** daily commits only touch `data/site.json`, `index.html`, `VERSION` and `CHANGELOG.md`. Media is recopied only when the source file's bytes change.
+- **Safe deploys:** the Pages workflow runs `validate` first, so a missing asset or a bad JSON file blocks the deploy instead of shipping a broken page.
+- **Pruning:** media that the source no longer provides is deleted, so removed projects disappear from the site.
+- **Source format:** `sync` parses the BIM-Portfolio `index.html` (project articles, build-up figures, BBS slides). If that page's markup changes a lot, `sync` refuses to write an empty project list and the job fails loudly.
 
-### **Interests**
-* Computer enthusiast
-* Morning workouts
-* Reading artbooks
+Build-up soundtracks are from Mixkit (free licence, no attribution required). Code is licensed under GPL-3.0 (see `LICENSE`).

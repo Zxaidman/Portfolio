@@ -1,0 +1,777 @@
+{
+  "projects": [
+    {
+      "slug": "s04",
+      "sheet": "A-001",
+      "title": "Podium tower model",
+      "kind": "Architectural & Structural Modelling",
+      "type": "Other",
+      "location": "UAE",
+      "summary": "Complete architectural and structural Revit modelling package for a UAE development — model, sheets and BOQ delivered construction-ready.",
+      "images": [
+        {
+          "src": "media/projects/s04/slide-04-01.jpg",
+          "thumb": "media/projects/s04/slide-04-01-thumb.jpg",
+          "w": 1278,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s04/slide-04-02.jpg",
+          "thumb": "media/projects/s04/slide-04-02-thumb.jpg",
+          "w": 551,
+          "h": 954
+        },
+        {
+          "src": "media/projects/s04/slide-04-03.jpg",
+          "thumb": "media/projects/s04/slide-04-03-thumb.jpg",
+          "w": 639,
+          "h": 313
+        },
+        {
+          "src": "media/projects/s04/slide-04-04.jpg",
+          "thumb": "media/projects/s04/slide-04-04-thumb.jpg",
+          "w": 640,
+          "h": 313
+        },
+        {
+          "src": "media/projects/s04/slide-04-05.jpg",
+          "thumb": "media/projects/s04/slide-04-05-thumb.jpg",
+          "w": 640,
+          "h": 296
+        }
+      ],
+      "video": {
+        "src": "media/video/s04.mp4",
+        "poster": "media/video/s04-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s05",
+      "sheet": "A-002",
+      "title": "Residential tower complex model",
+      "kind": "Residential Skyscraper Complex",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "High-rise residential complex modelled end-to-end in Revit with full BBS and quantity documentation across all towers.",
+      "images": [
+        {
+          "src": "media/projects/s05/slide-05-01.jpg",
+          "thumb": "media/projects/s05/slide-05-01-thumb.jpg",
+          "w": 1558,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s05/slide-05-02.jpg",
+          "thumb": "media/projects/s05/slide-05-02-thumb.jpg",
+          "w": 958,
+          "h": 523
+        },
+        {
+          "src": "media/projects/s05/slide-05-03.jpg",
+          "thumb": "media/projects/s05/slide-05-03-thumb.jpg",
+          "w": 1025,
+          "h": 523
+        },
+        {
+          "src": "media/projects/s05/slide-05-04.jpg",
+          "thumb": "media/projects/s05/slide-05-04-thumb.jpg",
+          "w": 884,
+          "h": 927
+        },
+        {
+          "src": "media/projects/s05/slide-05-05.jpg",
+          "thumb": "media/projects/s05/slide-05-05-thumb.jpg",
+          "w": 884,
+          "h": 523
+        },
+        {
+          "src": "media/projects/s05/slide-05-06.jpg",
+          "thumb": "media/projects/s05/slide-05-06-thumb.jpg",
+          "w": 699,
+          "h": 735
+        },
+        {
+          "src": "media/projects/s05/slide-05-07.jpg",
+          "thumb": "media/projects/s05/slide-05-07-thumb.jpg",
+          "w": 603,
+          "h": 357
+        },
+        {
+          "src": "media/projects/s05/slide-05-08.jpg",
+          "thumb": "media/projects/s05/slide-05-08-thumb.jpg",
+          "w": 653,
+          "h": 357
+        },
+        {
+          "src": "media/projects/s05/slide-05-09.jpg",
+          "thumb": "media/projects/s05/slide-05-09-thumb.jpg",
+          "w": 699,
+          "h": 357
+        },
+        {
+          "src": "media/projects/s05/slide-05-10.jpg",
+          "thumb": "media/projects/s05/slide-05-10-thumb.jpg",
+          "w": 884,
+          "h": 927
+        }
+      ],
+      "video": {
+        "src": "media/video/s05.mp4",
+        "poster": "media/video/s05-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s06",
+      "sheet": "A-003",
+      "title": "Luxury residential tower model",
+      "kind": "Luxury Residential",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "Luxury residential tower — architectural & structural modelling with coordinated layout sheets and BOQ extraction.",
+      "images": [
+        {
+          "src": "media/projects/s06/slide-06-01.jpg",
+          "thumb": "media/projects/s06/slide-06-01-thumb.jpg",
+          "w": 389,
+          "h": 1098
+        },
+        {
+          "src": "media/projects/s06/slide-06-02.jpg",
+          "thumb": "media/projects/s06/slide-06-02-thumb.jpg",
+          "w": 691,
+          "h": 528
+        },
+        {
+          "src": "media/projects/s06/slide-06-03.jpg",
+          "thumb": "media/projects/s06/slide-06-03-thumb.jpg",
+          "w": 687,
+          "h": 418
+        },
+        {
+          "src": "media/projects/s06/slide-06-04.jpg",
+          "thumb": "media/projects/s06/slide-06-04-thumb.jpg",
+          "w": 431,
+          "h": 1099
+        },
+        {
+          "src": "media/projects/s06/slide-06-05.jpg",
+          "thumb": "media/projects/s06/slide-06-05-thumb.jpg",
+          "w": 423,
+          "h": 1099
+        }
+      ],
+      "video": {
+        "src": "media/video/s06.mp4",
+        "poster": "media/video/s06-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s07",
+      "sheet": "A-004",
+      "title": "IT park building model",
+      "kind": "Grade-A IT/ITES Park",
+      "type": "Commercial",
+      "location": "Mumbai",
+      "summary": "Large-format IT park delivered with multi-building architectural and structural coordination in Revit.",
+      "images": [
+        {
+          "src": "media/projects/s07/slide-07-01.jpg",
+          "thumb": "media/projects/s07/slide-07-01-thumb.jpg",
+          "w": 1113,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s07/slide-07-02.jpg",
+          "thumb": "media/projects/s07/slide-07-02-thumb.jpg",
+          "w": 617,
+          "h": 980
+        },
+        {
+          "src": "media/projects/s07/slide-07-03.jpg",
+          "thumb": "media/projects/s07/slide-07-03-thumb.jpg",
+          "w": 1659,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s07/slide-07-04.jpg",
+          "thumb": "media/projects/s07/slide-07-04-thumb.jpg",
+          "w": 1140,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s07/slide-07-05.jpg",
+          "thumb": "media/projects/s07/slide-07-05-thumb.jpg",
+          "w": 330,
+          "h": 529
+        },
+        {
+          "src": "media/projects/s07/slide-07-06.jpg",
+          "thumb": "media/projects/s07/slide-07-06-thumb.jpg",
+          "w": 330,
+          "h": 441
+        }
+      ],
+      "video": {
+        "src": "media/video/s07.mp4",
+        "poster": "media/video/s07-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s08",
+      "sheet": "A-005",
+      "title": "Residential tower model",
+      "kind": "Luxury Residential Tower",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "Premium residential tower modelled to LOD 350 with reinforcement documentation and quantity takeoff.",
+      "images": [
+        {
+          "src": "media/projects/s08/slide-08-01.jpg",
+          "thumb": "media/projects/s08/slide-08-01-thumb.jpg",
+          "w": 670,
+          "h": 1098
+        },
+        {
+          "src": "media/projects/s08/slide-08-02.jpg",
+          "thumb": "media/projects/s08/slide-08-02-thumb.jpg",
+          "w": 563,
+          "h": 1016
+        },
+        {
+          "src": "media/projects/s08/slide-08-03.jpg",
+          "thumb": "media/projects/s08/slide-08-03-thumb.jpg",
+          "w": 711,
+          "h": 628
+        },
+        {
+          "src": "media/projects/s08/slide-08-04.jpg",
+          "thumb": "media/projects/s08/slide-08-04-thumb.jpg",
+          "w": 710,
+          "h": 450
+        }
+      ],
+      "video": {
+        "src": "media/video/s08.mp4",
+        "poster": "media/video/s08-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s09",
+      "sheet": "A-006",
+      "title": "Residential building model",
+      "kind": "Residential",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "Residential development — full Revit modelling, BBS for beam, footing and slab, and GFC drawing issuance.",
+      "images": [
+        {
+          "src": "media/projects/s09/slide-09-01.jpg",
+          "thumb": "media/projects/s09/slide-09-01-thumb.jpg",
+          "w": 489,
+          "h": 385
+        },
+        {
+          "src": "media/projects/s09/slide-09-02.jpg",
+          "thumb": "media/projects/s09/slide-09-02-thumb.jpg",
+          "w": 682,
+          "h": 603
+        },
+        {
+          "src": "media/projects/s09/slide-09-03.jpg",
+          "thumb": "media/projects/s09/slide-09-03-thumb.jpg",
+          "w": 694,
+          "h": 383
+        },
+        {
+          "src": "media/projects/s09/slide-09-04.jpg",
+          "thumb": "media/projects/s09/slide-09-04-thumb.jpg",
+          "w": 777,
+          "h": 700
+        },
+        {
+          "src": "media/projects/s09/slide-09-05.jpg",
+          "thumb": "media/projects/s09/slide-09-05-thumb.jpg",
+          "w": 478,
+          "h": 603
+        },
+        {
+          "src": "media/projects/s09/slide-09-06.jpg",
+          "thumb": "media/projects/s09/slide-09-06-thumb.jpg",
+          "w": 755,
+          "h": 383
+        }
+      ],
+      "video": {
+        "src": "media/video/s09.mp4",
+        "poster": "media/video/s09-poster.jpg",
+        "duration": "0:28",
+        "kind": "4D simulation"
+      }
+    },
+    {
+      "slug": "s10",
+      "sheet": "A-007",
+      "title": "Residential building model",
+      "kind": "Architectural & Structural Modelling",
+      "type": "Residential",
+      "location": "",
+      "summary": "Residential build modelled in Revit with coordinated architectural and structural sheets and construction-ready documentation.",
+      "images": [
+        {
+          "src": "media/projects/s10/slide-10-01.jpg",
+          "thumb": "media/projects/s10/slide-10-01-thumb.jpg",
+          "w": 673,
+          "h": 1095
+        },
+        {
+          "src": "media/projects/s10/slide-10-02.jpg",
+          "thumb": "media/projects/s10/slide-10-02-thumb.jpg",
+          "w": 673,
+          "h": 1003
+        },
+        {
+          "src": "media/projects/s10/slide-10-03.jpg",
+          "thumb": "media/projects/s10/slide-10-03-thumb.jpg",
+          "w": 588,
+          "h": 522
+        },
+        {
+          "src": "media/projects/s10/slide-10-04.jpg",
+          "thumb": "media/projects/s10/slide-10-04-thumb.jpg",
+          "w": 589,
+          "h": 458
+        }
+      ],
+      "video": {
+        "src": "media/video/s10.mp4",
+        "poster": "media/video/s10-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s11",
+      "sheet": "A-008",
+      "title": "Residential block model",
+      "kind": "Architectural & Structural Modelling",
+      "type": "Residential",
+      "location": "Bhopal",
+      "summary": "Bhopal residential development — complete architectural and structural Revit model with layout sheets and quantity extraction.",
+      "images": [
+        {
+          "src": "media/projects/s11/slide-11-01.jpg",
+          "thumb": "media/projects/s11/slide-11-01-thumb.jpg",
+          "w": 613,
+          "h": 615
+        },
+        {
+          "src": "media/projects/s11/slide-11-02.jpg",
+          "thumb": "media/projects/s11/slide-11-02-thumb.jpg",
+          "w": 632,
+          "h": 1026
+        },
+        {
+          "src": "media/projects/s11/slide-11-03.jpg",
+          "thumb": "media/projects/s11/slide-11-03-thumb.jpg",
+          "w": 613,
+          "h": 482
+        },
+        {
+          "src": "media/projects/s11/slide-11-04.jpg",
+          "thumb": "media/projects/s11/slide-11-04-thumb.jpg",
+          "w": 755,
+          "h": 1125
+        }
+      ],
+      "video": {
+        "src": "media/video/s11.mp4",
+        "poster": "media/video/s11-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s12",
+      "sheet": "A-009",
+      "title": "Sea-facing residential tower model",
+      "kind": "Sea-Facing Ultra-Luxury Home",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "Sea-facing ultra-luxury residence detailed to a high LOD, with precise structural coordination and finish-level documentation.",
+      "images": [
+        {
+          "src": "media/projects/s12/slide-12-01.jpg",
+          "thumb": "media/projects/s12/slide-12-01-thumb.jpg",
+          "w": 642,
+          "h": 1013
+        },
+        {
+          "src": "media/projects/s12/slide-12-02.jpg",
+          "thumb": "media/projects/s12/slide-12-02-thumb.jpg",
+          "w": 761,
+          "h": 1091
+        },
+        {
+          "src": "media/projects/s12/slide-12-03.jpg",
+          "thumb": "media/projects/s12/slide-12-03-thumb.jpg",
+          "w": 550,
+          "h": 351
+        },
+        {
+          "src": "media/projects/s12/slide-12-04.jpg",
+          "thumb": "media/projects/s12/slide-12-04-thumb.jpg",
+          "w": 553,
+          "h": 364
+        },
+        {
+          "src": "media/projects/s12/slide-12-05.jpg",
+          "thumb": "media/projects/s12/slide-12-05-thumb.jpg",
+          "w": 550,
+          "h": 272
+        }
+      ],
+      "video": {
+        "src": "media/video/s12.mp4",
+        "poster": "media/video/s12-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s13",
+      "sheet": "A-010",
+      "title": "Sale and rehab building model",
+      "kind": "Sale & Rehab Building",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "Sale and rehab building package — architectural & structural modelling with reinforcement detailing and BOQ output.",
+      "images": [
+        {
+          "src": "media/projects/s13/slide-13-01.jpg",
+          "thumb": "media/projects/s13/slide-13-01-thumb.jpg",
+          "w": 622,
+          "h": 1101
+        },
+        {
+          "src": "media/projects/s13/slide-13-02.jpg",
+          "thumb": "media/projects/s13/slide-13-02-thumb.jpg",
+          "w": 653,
+          "h": 1027
+        },
+        {
+          "src": "media/projects/s13/slide-13-03.jpg",
+          "thumb": "media/projects/s13/slide-13-03-thumb.jpg",
+          "w": 675,
+          "h": 1027
+        }
+      ],
+      "video": {
+        "src": "media/video/s13.mp4",
+        "poster": "media/video/s13-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s14",
+      "sheet": "A-011",
+      "title": "Luxury residential tower model",
+      "kind": "Ultra-Luxury Residential",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "Ultra-luxury residential tower modelled in Revit with coordinated structural drawings and construction-ready sheet issuance.",
+      "images": [
+        {
+          "src": "media/projects/s14/slide-14-01.jpg",
+          "thumb": "media/projects/s14/slide-14-01-thumb.jpg",
+          "w": 721,
+          "h": 1125
+        },
+        {
+          "src": "media/projects/s14/slide-14-02.jpg",
+          "thumb": "media/projects/s14/slide-14-02-thumb.jpg",
+          "w": 671,
+          "h": 988
+        },
+        {
+          "src": "media/projects/s14/slide-14-03.jpg",
+          "thumb": "media/projects/s14/slide-14-03-thumb.jpg",
+          "w": 894,
+          "h": 1448
+        }
+      ],
+      "video": {
+        "src": "media/video/s14.mp4",
+        "poster": "media/video/s14-poster.jpg",
+        "duration": "0:21",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s15",
+      "sheet": "A-012",
+      "title": "Commercial tower model",
+      "kind": "Commercial Tower",
+      "type": "Commercial",
+      "location": "",
+      "summary": "Commercial business tower — architectural and structural BIM delivery with clash-free coordination and documentation.",
+      "images": [
+        {
+          "src": "media/projects/s15/slide-15-01.jpg",
+          "thumb": "media/projects/s15/slide-15-01-thumb.jpg",
+          "w": 721,
+          "h": 1125
+        },
+        {
+          "src": "media/projects/s15/slide-15-02.jpg",
+          "thumb": "media/projects/s15/slide-15-02-thumb.jpg",
+          "w": 1118,
+          "h": 548
+        },
+        {
+          "src": "media/projects/s15/slide-15-03.jpg",
+          "thumb": "media/projects/s15/slide-15-03-thumb.jpg",
+          "w": 1118,
+          "h": 478
+        }
+      ],
+      "video": {
+        "src": "media/video/s15.mp4",
+        "poster": "media/video/s15-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s21",
+      "sheet": "A-013",
+      "title": "Residential block model",
+      "kind": "Architectural & Structural Modelling",
+      "type": "Other",
+      "location": "",
+      "summary": "Revit architectural and structural model with coordinated model views — full-model renders, sections and construction-ready documentation across the development.",
+      "images": [
+        {
+          "src": "media/projects/s21/slide-21-01.jpg",
+          "thumb": "media/projects/s21/slide-21-01-thumb.jpg",
+          "w": 1800,
+          "h": 889
+        },
+        {
+          "src": "media/projects/s21/slide-21-02.jpg",
+          "thumb": "media/projects/s21/slide-21-02-thumb.jpg",
+          "w": 1800,
+          "h": 889
+        },
+        {
+          "src": "media/projects/s21/slide-21-03.jpg",
+          "thumb": "media/projects/s21/slide-21-03-thumb.jpg",
+          "w": 1800,
+          "h": 889
+        },
+        {
+          "src": "media/projects/s21/slide-21-04.jpg",
+          "thumb": "media/projects/s21/slide-21-04-thumb.jpg",
+          "w": 1800,
+          "h": 889
+        }
+      ],
+      "video": {
+        "src": "media/video/s21.mp4",
+        "poster": "media/video/s21-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    },
+    {
+      "slug": "s22",
+      "sheet": "A-014",
+      "title": "Architectural and structural model",
+      "kind": "Architectural & Structural Modelling",
+      "type": "Other",
+      "location": "",
+      "summary": "Complete architectural and structural Revit model — full-model overviews with architecture and structure coordination shown across detailed views.",
+      "images": [
+        {
+          "src": "media/projects/s22/slide-22-01.jpg",
+          "thumb": "media/projects/s22/slide-22-01-thumb.jpg",
+          "w": 1219,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s22/slide-22-02.jpg",
+          "thumb": "media/projects/s22/slide-22-02-thumb.jpg",
+          "w": 1800,
+          "h": 1276
+        },
+        {
+          "src": "media/projects/s22/slide-22-03.jpg",
+          "thumb": "media/projects/s22/slide-22-03-thumb.jpg",
+          "w": 1525,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s22/slide-22-04.jpg",
+          "thumb": "media/projects/s22/slide-22-04-thumb.jpg",
+          "w": 1800,
+          "h": 889
+        },
+        {
+          "src": "media/projects/s22/slide-22-05.jpg",
+          "thumb": "media/projects/s22/slide-22-05-thumb.jpg",
+          "w": 1590,
+          "h": 1800
+        },
+        {
+          "src": "media/projects/s22/slide-22-06.jpg",
+          "thumb": "media/projects/s22/slide-22-06-thumb.jpg",
+          "w": 1800,
+          "h": 889
+        },
+        {
+          "src": "media/projects/s22/slide-22-07.jpg",
+          "thumb": "media/projects/s22/slide-22-07-thumb.jpg",
+          "w": 1800,
+          "h": 1443
+        }
+      ],
+      "video": {
+        "src": "media/video/s22.mp4",
+        "poster": "media/video/s22-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
+    }
+  ],
+  "bbs": [
+    {
+      "src": "media/bbs/slide-16-01.jpg",
+      "thumb": "media/bbs/slide-16-01-thumb.jpg",
+      "w": 1096,
+      "h": 268,
+      "alt": "BBS beam reinforcement elevation drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-02.jpg",
+      "thumb": "media/bbs/slide-16-02-thumb.jpg",
+      "w": 341,
+      "h": 267,
+      "alt": "BBS beam reinforcement section drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-03.jpg",
+      "thumb": "media/bbs/slide-16-03-thumb.jpg",
+      "w": 341,
+      "h": 290,
+      "alt": "BBS beam reinforcement cross-section drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-04.jpg",
+      "thumb": "media/bbs/slide-16-04-thumb.jpg",
+      "w": 1095,
+      "h": 290,
+      "alt": "BBS beam reinforcement layout drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-05.jpg",
+      "thumb": "media/bbs/slide-16-05-thumb.jpg",
+      "w": 1800,
+      "h": 1171,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-06.jpg",
+      "thumb": "media/bbs/slide-16-06-thumb.jpg",
+      "w": 1800,
+      "h": 828,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-07.jpg",
+      "thumb": "media/bbs/slide-16-07-thumb.jpg",
+      "w": 1095,
+      "h": 452,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-08.jpg",
+      "thumb": "media/bbs/slide-16-08-thumb.jpg",
+      "w": 341,
+      "h": 451,
+      "alt": "BBS column reinforcement section drawing"
+    },
+    {
+      "src": "media/bbs/slide-16-09.jpg",
+      "thumb": "media/bbs/slide-16-09-thumb.jpg",
+      "w": 1800,
+      "h": 1671,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-17-01.jpg",
+      "thumb": "media/bbs/slide-17-01-thumb.jpg",
+      "w": 1800,
+      "h": 999,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-17-02.jpg",
+      "thumb": "media/bbs/slide-17-02-thumb.jpg",
+      "w": 1064,
+      "h": 489,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-17-03.jpg",
+      "thumb": "media/bbs/slide-17-03-thumb.jpg",
+      "w": 1064,
+      "h": 523,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-17-04.jpg",
+      "thumb": "media/bbs/slide-17-04-thumb.jpg",
+      "w": 1800,
+      "h": 889,
+      "alt": "BBS reinforcement drawing"
+    },
+    {
+      "src": "media/bbs/slide-18-01.jpg",
+      "thumb": "media/bbs/slide-18-01-thumb.jpg",
+      "w": 1800,
+      "h": 234,
+      "alt": "Slab reinforcement section drawing"
+    },
+    {
+      "src": "media/bbs/slide-18-02.jpg",
+      "thumb": "media/bbs/slide-18-02-thumb.jpg",
+      "w": 1800,
+      "h": 888,
+      "alt": "BOQ & technical drawing"
+    },
+    {
+      "src": "media/bbs/slide-18-03.jpg",
+      "thumb": "media/bbs/slide-18-03-thumb.jpg",
+      "w": 1800,
+      "h": 888,
+      "alt": "BOQ & technical drawing"
+    },
+    {
+      "src": "media/bbs/slide-18-04.jpg",
+      "thumb": "media/bbs/slide-18-04-thumb.jpg",
+      "w": 1800,
+      "h": 266,
+      "alt": "Slab reinforcement detailing drawing"
+    }
+  ]
+}
