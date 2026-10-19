@@ -257,12 +257,32 @@ def contact(profile: dict) -> str:
 
 
 # --------------------------------------------------------------------------- #
+# Design tokens
+# --------------------------------------------------------------------------- #
+def write_tokens(system: dict) -> Path:
+    """design/system.json -> assets/css/tokens.css (themes, font stack, scale)."""
+    lines = ["/* Generated from design/system.json by scripts/render.py. Do not edit. */",
+             f"/* Design system: {system.get('name', '')} (since {system.get('introduced', '')}) */"]
+    for i, (name, th) in enumerate(system["themes"].items()):
+        sel = f':root,\n[data-theme="{name}"]' if i == 0 else f'[data-theme="{name}"]'
+        props = "".join(f"\n  --{k}: {val};" for k, val in th.items() if k != "scheme")
+        lines.append(f"{sel} {{{props}\n  color-scheme: {th.get('scheme', 'light')};\n}}")
+    scale = "".join(f"\n  {k}: {val};" for k, val in system.get("scale", {}).items())
+    lines.append(f":root {{\n  --font: {system['fonts']['body']};{scale}\n}}")
+    out = ROOT / "assets" / "css" / "tokens.css"
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return out
+
+
+# --------------------------------------------------------------------------- #
 # Page
 # --------------------------------------------------------------------------- #
 def build() -> Path:
     profile = json.loads((DATA / "profile.json").read_text(encoding="utf-8"))
     data = json.loads((DATA / "projects.json").read_text(encoding="utf-8"))
     site = json.loads((DATA / "site.json").read_text(encoding="utf-8"))
+    system = json.loads((ROOT / "design" / "system.json").read_text(encoding="utf-8"))
+    write_tokens(system)
     projects = data["projects"]
     by_slug = {p["slug"]: p for p in projects}
     featured = by_slug.get(site["featured"], projects[0])
@@ -315,7 +335,8 @@ def build() -> Path:
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap">
+<link rel="stylesheet" href="{e(system["fonts"]["stylesheet"])}">
+<link rel="stylesheet" href="assets/css/tokens.css?v={v}">
 <link rel="stylesheet" href="assets/css/main.css?v={v}">
 <script type="application/ld+json">{ld}</script>
 </head>

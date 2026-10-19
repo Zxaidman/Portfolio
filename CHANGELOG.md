@@ -2,6 +2,12 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [2.0.1] - 2026-10-19
+- Cadence: daily PATCH (theme and asset rotation), weekly MINOR on Mondays (design-system overhaul), monthly MAJOR on the 1st (complete rework).
+- Design tokens now live in `design/system.json` (generated into `tokens.css`); every weekly and monthly design is archived in `design/archive/` and logged in `design/HISTORY.md`.
+- Added WCAG contrast checks, a no-repeat check against archived designs, and headless browser QA (`scripts/qa.py`).
+- Monthly designs are also kept as a Claude Design System; v2.0.0 Drawing Sheet is the first.
+
 ## [2.0.0] - 2026-10-19
 - Redesign: the site is now a Revit drawing sheet. The hero plays a build-up animation inside a title block whose revision cell shows the live version.
 - Added 14 Computer Help team projects with 64 model views, 14 construction build-up videos and 17 rebar/BBS drawings, synced from the BIM-Portfolio repo.

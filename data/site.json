@@ -17,9 +17,14 @@
     "s10",
     "s11"
   ],
-  "version": "2.0.0",
+  "version": "2.0.1",
   "date": "2026-10-19",
   "revisions": [
+    {
+      "rev": "2.0.1",
+      "date": "2026-10-19",
+      "note": "Design tokens moved into a versioned design system"
+    },
     {
       "rev": "2.0.0",
       "date": "2026-10-19",

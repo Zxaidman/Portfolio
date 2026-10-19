@@ -25,7 +25,11 @@ data/media-manifest.json content hashes, so unchanged media is never re-copied
 media/                  optimised images (1800px + 720px thumbs), videos, posters
 scripts/portfolio.py    CLI: sync, refresh, build, validate, daily
 scripts/render.py       renders index.html from data/*.json
-VERSION, CHANGELOG.md   SemVer: MAJOR redesign · MINOR new content · PATCH daily rotation
+design/system.json      active design system: themes, fonts, scale  -> assets/css/tokens.css
+design/HISTORY.md       every design shipped (no repeats)
+design/archive/         snapshot of every weekly/monthly design, never overwritten
+scripts/qa.py           headless browser QA: errors, broken images, overflow, all themes
+VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ```
 
 ### Requirements
@@ -46,9 +50,23 @@ python3 scripts/portfolio.py build
 # Preview locally
 python3 -m http.server 8000      # then open http://localhost:8000
 
-# Manual redesign: bump MAJOR
-python3 scripts/portfolio.py refresh --major
+# What kind of day is it? (patch | minor | major)
+python3 scripts/portfolio.py cadence
+
+# Weekly overhaul / monthly rework, after changing the design files:
+python3 scripts/portfolio.py daily --source ../BIM-Portfolio --minor   # or --major
+python3 scripts/qa.py --out /tmp/qa && python3 scripts/portfolio.py archive --shots /tmp/qa
 ```
+
+### Update cadence and versions
+
+| When | Version | What changes |
+|---|---|---|
+| Every day | PATCH `x.y.Z` | Theme and featured-asset rotation within the current design system, plus new media from the source |
+| Mondays | MINOR `x.Y.0` | Complete design-system overhaul: new palette themes, type, scale, component styling |
+| 1st of the month | MAJOR `X.0.0` | Complete rework: new concept, layout and interactions, plus a Claude Design System artifact |
+
+Every weekly and monthly design is snapshotted in `design/archive/` and logged in `design/HISTORY.md`, so nothing is lost when the next one ships, and `validate` refuses a design that repeats an earlier one (name, font set, or paper+accent palette). Design changes ship only after `validate`, the WCAG contrast check, `qa.py` and the leak check all pass.
 
 ### Confidentiality
 

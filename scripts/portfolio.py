@@ -10,7 +10,9 @@ Subcommands
             bump the semantic version, and append a CHANGELOG entry.
   build     Render index.html from data/*.json (see scripts/render.py).
   validate  Check that every JSON file parses and every referenced asset exists.
-  daily     sync -> refresh -> build -> validate, in one go (what the 6 AM job runs).
+  daily     sync -> refresh -> build -> validate -> leak check (what the 5:53 AM job runs).
+  archive   Snapshot the active design into design/archive/ (weekly and monthly designs).
+  cadence   Print today's update kind: patch (daily), minor (Mondays), major (1st of month).
 
 Design notes
 ------------
@@ -19,10 +21,10 @@ Design notes
   stays light even though the media folder is large.
 * Media is copied only when its content hash changes (no daily re-commit of
   160 MB of video). Images are re-encoded to web sizes with Pillow.
-* Versioning follows SemVer (MAJOR.MINOR.PATCH):
-    PATCH  daily rotation only (featured project / theme / hero)
-    MINOR  sync brought in new or changed projects, images or videos
-    MAJOR  manual redesign (bump with `refresh --major`)
+* Versioning follows SemVer (MAJOR.MINOR.PATCH) on a fixed cadence:
+    PATCH  daily: theme and featured-asset rotation, plus any new media from the source
+    MINOR  weekly (Mondays): complete design-system overhaul (`daily --minor`)
+    MAJOR  monthly (the 1st): complete portfolio rework (`daily --major`)
 * The rotation is deterministic for a given date, so re-running the job on the
   same day is idempotent: it produces no diff and no version bump.
 
@@ -52,9 +54,11 @@ IMAGE_FULL_MAX = 1800   # px, long edge for gallery images
 IMAGE_THUMB_MAX = 720   # px, long edge for register previews / cards
 JPEG_QUALITY = 82
 
-# Curated themes. Daily rotation only ever picks from this list, so the site
-# changes character without ever leaving the design system.
-THEMES = ["sheet", "blueprint", "night", "concrete"]
+def themes() -> list[str]:
+    """Themes of the active design system (design/system.json). Daily rotation only picks
+    from this list, so the look changes without leaving the current design system."""
+    system = read_json(ROOT / "design" / "system.json", {}) or {}
+    return list(system.get("themes", {})) or ["sheet"]
 
 # Project type is not in the source data; classify by its category line.
 TYPE_RULES = [
@@ -503,14 +507,15 @@ def daily_state(projects: list[dict], day: dt.date) -> dict:
     ordinal = day.toordinal()
     with_video = [p for p in projects if p.get("video")] or projects
     featured = with_video[ordinal % len(with_video)]
-    theme = THEMES[ordinal % len(THEMES)]
+    names = themes()
+    theme = names[ordinal % len(names)]
     # Reel starts at a different project each day so the strip feels new.
     offset = ordinal % max(len(with_video), 1)
     reel = [p["slug"] for p in with_video[offset:] + with_video[:offset]]
     return {"featured": featured["slug"], "theme": theme, "reel": reel}
 
 
-def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool) -> bool:
+def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_minor: bool = False) -> bool:
     data = read_json(DATA / "projects.json")
     if not data or not data.get("projects"):
         raise SystemExit("data/projects.json is empty; run `sync` first.")
@@ -520,11 +525,13 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool) -> bool:
 
     state = daily_state(data["projects"], day)
     rotated = any(site.get(k) != v for k, v in state.items())
-    if not (rotated or content_changed or force_major):
+    if not (rotated or content_changed or force_major or force_minor):
         log(f"refresh: nothing changed for {day.isoformat()}; staying on {version}")
         return False
 
-    part = "major" if force_major else ("minor" if content_changed else "patch")
+    # Cadence: MAJOR = monthly full rework, MINOR = weekly design-system overhaul,
+    # PATCH = daily theme/asset rotation (new media from the source is a daily asset change).
+    part = "major" if force_major else ("minor" if force_minor else "patch")
     # The very first run after a manual redesign keeps the hand-set version.
     new_version = version if site.get("version") != version else bump(version, part)
 
@@ -535,6 +542,9 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool) -> bool:
     note = f"Featured {featured['title']}, {state['theme']} theme"
     if content_changed:
         note = "Synced new project media. " + note
+    system = read_json(ROOT / "design" / "system.json", {}) or {}
+    if part in ("major", "minor"):
+        note = f"{system.get('name', 'New design')} design system. " + note
     history.insert(0, {"rev": new_version, "date": day.isoformat(), "note": note})
     site["revisions"] = history[:5]  # the title block shows the last five
     write_json(site_path, site)
@@ -544,12 +554,142 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool) -> bool:
     head = "# Changelog\n\nAll notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).\n"
     body = changelog.read_text(encoding="utf-8").replace(head, "") if changelog.exists() else ""
     if f"## [{new_version}]" not in body:
-        kind = {"major": "Redesign", "minor": "Content", "patch": "Daily rotation"}[part]
+        kind = {"major": "Monthly rework", "minor": "Weekly design-system overhaul",
+                "patch": "Daily rotation"}[part]
         entry = f"\n## [{new_version}] - {day.isoformat()}\n- {kind}: {note}.\n"
         changelog.write_text(head + entry + body, encoding="utf-8")
     how = f"{version} -> {new_version} ({part})" if new_version != version else f"first build of {version}"
     log(f"refresh: {how}; {note}")
     return True
+
+
+def _luminance(hex_color: str) -> float:
+    h = hex_color.lstrip("#")
+    if len(h) == 3:
+        h = "".join(c * 2 for c in h)
+    rgb = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    lin = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def contrast(a: str, b: str) -> float:
+    """WCAG 2.x contrast ratio between two hex colours."""
+    la, lb = sorted((_luminance(a), _luminance(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+# (foreground, background, minimum ratio). Text pairs need 4.5:1; the accent is used for
+# small text (sheet numbers, revision), so it is held to 4.5:1 too.
+CONTRAST_RULES = [("ink", "paper", 7.0), ("ink", "panel", 4.5), ("muted", "paper", 4.5),
+                  ("accent", "paper", 4.5), ("on-accent", "accent", 4.5), ("line", "paper", 1.6)]
+
+
+def check_design(errors: list[str]) -> None:
+    system = read_json(ROOT / "design" / "system.json", None)
+    if not system:
+        errors.append("design/system.json missing or empty")
+        return
+    for key in ("name", "introduced", "fonts", "themes"):
+        if key not in system:
+            errors.append(f"design/system.json: missing '{key}'")
+    if len(system.get("themes", {})) < 3:
+        errors.append("design/system.json: needs at least 3 themes so the daily rotation has variety")
+    for name, th in system.get("themes", {}).items():
+        for fg, bg, minimum in CONTRAST_RULES:
+            if fg not in th or bg not in th:
+                errors.append(f"theme '{name}': missing token {fg if fg not in th else bg}")
+                continue
+            ratio = contrast(th[fg], th[bg])
+            if ratio < minimum:
+                errors.append(f"theme '{name}': {fg} on {bg} contrast {ratio:.2f} < {minimum}")
+    if not (ROOT / "design" / "HISTORY.md").exists():
+        errors.append("design/HISTORY.md missing")
+
+
+# Files that make up a design. Each shipped weekly/monthly design is snapshotted with them.
+DESIGN_FILES = ["design/system.json", "assets/css/tokens.css", "assets/css/main.css",
+                "assets/js/main.js", "scripts/render.py"]
+ARCHIVE = ROOT / "design" / "archive"
+
+
+def archive_dir_for(version: str) -> Path | None:
+    hits = sorted(ARCHIVE.glob(f"v{version}-*")) if ARCHIVE.exists() else []
+    return hits[0] if hits else None
+
+
+def cmd_archive(version: str, shots: Path | None = None) -> Path:
+    """Snapshot the active design into design/archive/v<version>-<name>/ (never overwritten)."""
+    system = read_json(ROOT / "design" / "system.json", {}) or {}
+    existing = archive_dir_for(version)
+    dest = existing or ARCHIVE / f"v{version}-{slugify(system.get('name', 'design'))}"
+    if existing:
+        # A snapshot is never overwritten; only missing screenshots may be added to it.
+        log(f"archive: {existing.relative_to(ROOT)} exists; design files left untouched")
+    else:
+        for rel in DESIGN_FILES:
+            src = ROOT / rel
+            if src.exists():
+                (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, dest / rel)
+    if shots and shots.exists() and not (dest / "screenshots").exists():
+        (dest / "screenshots").mkdir(parents=True, exist_ok=True)
+        for name in ("desktop-full.png", "mobile-full.png"):
+            if (shots / name).exists():
+                # Downscale so the archive stays small.
+                from PIL import Image
+                with Image.open(shots / name) as im:
+                    im.thumbnail((900, 4000))
+                    im.convert("RGB").save(dest / "screenshots" / name.replace(".png", ".jpg"), quality=78)
+    if existing:
+        return dest
+    (dest / "README.md").write_text(
+        f"# {system.get('name', '')} (v{version})\n\n{system.get('concept', '')}\n\n"
+        "Restore by copying these files back to the repo root, then `python3 scripts/portfolio.py build`.\n",
+        encoding="utf-8")
+    log(f"archive: wrote {dest.relative_to(ROOT)}")
+    return dest
+
+
+def _rgb(hex_color: str) -> tuple[int, int, int]:
+    h = hex_color.lstrip("#")
+    h = "".join(c * 2 for c in h) if len(h) == 3 else h
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _near(a: str, b: str, limit: float = 28.0) -> bool:
+    return sum((x - y) ** 2 for x, y in zip(_rgb(a), _rgb(b))) ** 0.5 < limit
+
+
+def check_unique(errors: list[str]) -> None:
+    """No repeats: the active design must differ from every archived design other than its own
+    snapshot — by name, by font set, and by every theme's paper+accent pairing."""
+    system = read_json(ROOT / "design" / "system.json", {}) or {}
+    version = (ROOT / "VERSION").read_text().strip() if (ROOT / "VERSION").exists() else ""
+    if version and system.get("introduced") == version and not archive_dir_for(version):
+        errors.append(f"design introduced in {version} has no archive snapshot (run `archive`)")
+    for snap in sorted(ARCHIVE.glob("v*")) if ARCHIVE.exists() else []:
+        old = read_json(snap / "design" / "system.json", None)
+        if not old or old == system:
+            continue  # its own snapshot, or a restored identical design (allowed only for itself)
+        tag = snap.name
+        if old.get("name", "").strip().lower() == system.get("name", "").strip().lower():
+            errors.append(f"design repeats the name of {tag}")
+        if old.get("fonts", {}).get("stylesheet") == system.get("fonts", {}).get("stylesheet"):
+            errors.append(f"design reuses the font set of {tag}")
+        for tname, th in system.get("themes", {}).items():
+            for oname, oth in old.get("themes", {}).items():
+                if _near(th["paper"], oth["paper"]) and _near(th["accent"], oth["accent"]):
+                    errors.append(f"theme '{tname}' is too close to '{oname}' in {tag} (paper+accent)")
+
+
+def cadence(day: dt.date) -> str:
+    """Which kind of update a date gets: 1st of month = major rework, Monday = minor
+    design-system overhaul, any other day = patch rotation. Major wins on a Monday the 1st."""
+    if day.day == 1:
+        return "major"
+    if day.weekday() == 0:
+        return "minor"
+    return "patch"
 
 
 def cmd_build() -> None:
@@ -590,7 +730,7 @@ def cmd_validate() -> int:
         need(data["hero"]["src"], "hero"); need(data["hero"]["poster"], "hero")
     if site.get("featured") not in slugs:
         errors.append(f"site.json: featured '{site.get('featured')}' is not a project")
-    if site.get("theme") not in THEMES:
+    if site.get("theme") not in themes():
         errors.append(f"site.json: unknown theme '{site.get('theme')}'")
     version = (ROOT / "VERSION").read_text().strip() if (ROOT / "VERSION").exists() else ""
     if not re.fullmatch(r"\d+\.\d+\.\d+", version):
@@ -599,7 +739,9 @@ def cmd_validate() -> int:
         errors.append(f"site.json version {site.get('version')} != VERSION {version}")
     if not profile.get("name"):
         errors.append("profile.json: missing name")
-    for rel in ("index.html", "assets/css/main.css", "assets/js/main.js", ".nojekyll"):
+    check_design(errors)
+    check_unique(errors)
+    for rel in ("index.html", "assets/css/main.css", "assets/css/tokens.css", "assets/js/main.js", ".nojekyll"):
         need(rel, "site")
     html = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
     for ref in re.findall(r'(?:src|href)="((?:assets|media|data)/[^"?#]+)', html):
@@ -623,9 +765,14 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("refresh", "daily"):
         sp = sub.choices[name] if name in sub.choices else sub.add_parser(name)
         sp.add_argument("--date", help="YYYY-MM-DD (default: today in IST)")
-        sp.add_argument("--major", action="store_true", help="bump MAJOR (manual redesign)")
+        sp.add_argument("--major", action="store_true", help="bump MAJOR (monthly full rework)")
+        sp.add_argument("--minor", action="store_true", help="bump MINOR (weekly design-system overhaul)")
     sub.add_parser("validate")
     sub.add_parser("build")
+    ap_ = sub.add_parser("archive", help="snapshot the active design into design/archive/")
+    ap_.add_argument("--shots", type=Path, help="QA screenshot folder to include")
+    cp = sub.add_parser("cadence", help="print patch/minor/major for a date (default: today, IST)")
+    cp.add_argument("--date", help="YYYY-MM-DD")
     args = ap.parse_args(argv)
 
     if args.cmd == "validate":
@@ -633,18 +780,28 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "build":
         cmd_build()
         return cmd_validate()
+    if args.cmd == "archive":
+        cmd_archive((ROOT / "VERSION").read_text().strip(), args.shots)
+        return cmd_validate()
+    if args.cmd == "cadence":
+        d = dt.date.fromisoformat(args.date) if args.date else dt.datetime.now(IST).date()
+        print(cadence(d))
+        return 0
     day = dt.date.fromisoformat(args.date) if getattr(args, "date", None) else dt.datetime.now(IST).date()
     if args.cmd == "sync":
         _, secrets = cmd_sync(args.source.resolve())
         return max(cmd_validate(), leak_check(secrets))
     if args.cmd == "refresh":
-        cmd_refresh(day, content_changed=False, force_major=args.major)
+        cmd_refresh(day, content_changed=False, force_major=args.major, force_minor=args.minor)
         cmd_build()
         return cmd_validate()
     # daily
     changed, secrets = cmd_sync(args.source.resolve())
-    cmd_refresh(day, content_changed=changed, force_major=args.major)
+    cmd_refresh(day, content_changed=changed, force_major=args.major, force_minor=args.minor)
     cmd_build()
+    if args.major or args.minor:
+        # Weekly/monthly designs are snapshotted the moment they are built, so they are never lost.
+        cmd_archive((ROOT / "VERSION").read_text().strip())
     # Validation and the confidentiality check both gate the push: non-zero exit = do not push.
     return max(cmd_validate(), leak_check(secrets))
 

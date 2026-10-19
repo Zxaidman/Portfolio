@@ -1,0 +1,28 @@
+{
+  "_readme": "The active design system. scripts/portfolio.py build turns this into assets/css/tokens.css. A weekly overhaul (MINOR) replaces this file and restyles assets/css/main.css; a monthly rework (MAJOR) may also change scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme.",
+  "name": "Drawing sheet",
+  "introduced": "2.0.0",
+  "concept": "The page is a Revit drawing sheet: models sit in light-grey viewports, projects form a drawing register, and the title block's revision cell carries the site version.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap",
+    "body": "\"Archivo\", \"Helvetica Neue\", Arial, sans-serif"
+  },
+  "scale": {
+    "--step--1": "clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem)",
+    "--step-0": "clamp(1rem, 0.97rem + 0.15vw, 1.0625rem)",
+    "--step-1": "clamp(1.2rem, 1.1rem + 0.45vw, 1.45rem)",
+    "--step-2": "clamp(1.5rem, 1.25rem + 1.1vw, 2.2rem)",
+    "--step-3": "clamp(2rem, 1.4rem + 2.6vw, 3.6rem)",
+    "--step-hero": "clamp(3.2rem, 1.2rem + 9vw, 9.5rem)",
+    "--gutter": "clamp(16px, 3.5vw, 48px)",
+    "--frame": "clamp(0px, 1.2vw, 16px)",
+    "--max": "1360px",
+    "--radius": "2px"
+  },
+  "themes": {
+    "sheet":     { "scheme": "light", "paper": "#ecedea", "panel": "#e2e4e0", "ink": "#1b2330", "muted": "#566170", "line": "#a3abb4", "accent": "#b8322a", "on-accent": "#ffffff", "viewport": "#d8dadb" },
+    "blueprint": { "scheme": "dark",  "paper": "#0f2f57", "panel": "#133866", "ink": "#e8eef6", "muted": "#a9bbd3", "line": "#48699a", "accent": "#f2c14e", "on-accent": "#0f2f57", "viewport": "#d3d8de" },
+    "night":     { "scheme": "dark",  "paper": "#182028", "panel": "#1e2731", "ink": "#e3e8ed", "muted": "#98a3ae", "line": "#3b4754", "accent": "#5cc0c9", "on-accent": "#10181f", "viewport": "#cfd3d6" },
+    "concrete":  { "scheme": "light", "paper": "#d7d3cb", "panel": "#cdc8bf", "ink": "#24252a", "muted": "#55524c", "line": "#8f8a81", "accent": "#22528c", "on-accent": "#ffffff", "viewport": "#e6e6e4" }
+  }
+}
