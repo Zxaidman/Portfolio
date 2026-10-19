@@ -667,6 +667,10 @@ def check_unique(errors: list[str]) -> None:
     version = (ROOT / "VERSION").read_text().strip() if (ROOT / "VERSION").exists() else ""
     if version and system.get("introduced") == version and not archive_dir_for(version):
         errors.append(f"design introduced in {version} has no archive snapshot (run `archive`)")
+    history = (ROOT / "design" / "HISTORY.md")
+    intro = system.get("introduced", "")
+    if intro and history.exists() and not re.search(rf"^\|\s*{re.escape(intro)}\s*\|", history.read_text(), re.M):
+        errors.append(f"design/HISTORY.md has no row for {intro} ({system.get('name', '')}); add one before shipping")
     for snap in sorted(ARCHIVE.glob("v*")) if ARCHIVE.exists() else []:
         old = read_json(snap / "design" / "system.json", None)
         if not old or old == system:
