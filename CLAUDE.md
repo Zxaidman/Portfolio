@@ -11,11 +11,12 @@ This file is the permanent memory for whoever maintains the site, human or AI. T
 
 ## How the site works
 
-The page is a static site on GitHub Pages, designed as a Revit drawing sheet. The title block's revision cell shows the current version, and a different project, build-up video and theme lead the page each day.
+The page is a static site on GitHub Pages. Its current design is described in `design/system.json` and the newest row of `design/HISTORY.md`; the page always shows the live version and recent revisions.
 
 ```
 index.html              generated — do not edit by hand
-assets/css/main.css     design tokens + four themes (sheet, blueprint, night, concrete)
+assets/css/main.css     component styles (uses tokens only)
+assets/css/tokens.css   generated from design/system.json — do not edit by hand
 assets/js/main.js       progressive enhancement: filters, viewer, video previews
 data/profile.json       bio, experience, skills, contact      <- edit by hand
 data/labels.json        public title / storeys / city per project id  <- edit by hand
@@ -23,7 +24,7 @@ data/projects.json      projects, images, videos, BBS sheets  <- written by `syn
 data/site.json          today's featured project, theme, version, revisions
 data/media-manifest.json content hashes, so unchanged media is never re-copied
 media/                  optimised images (1800px + 720px thumbs), videos, posters
-scripts/portfolio.py    CLI: sync, refresh, build, validate, daily
+scripts/portfolio.py    CLI: sync, refresh, build, validate, daily, archive, cadence
 scripts/render.py       renders index.html from data/*.json
 design/system.json      active design system: themes, fonts, scale  -> assets/css/tokens.css
 design/HISTORY.md       every design shipped (no repeats)
@@ -40,7 +41,7 @@ VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ### Common tasks
 
 ```bash
-# Daily job (what the 6 AM IST scheduled task runs)
+# Daily job (what the 5:53 AM IST scheduled task runs)
 git clone --depth 1 https://github.com/aasif-shaikh7/BIM-Portfolio ../BIM-Portfolio
 python3 scripts/portfolio.py daily --source ../BIM-Portfolio
 
