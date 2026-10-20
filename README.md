@@ -12,9 +12,9 @@ I turn 2D drawings into Revit models a site team can build from. Three years mod
 
 ## A site that keeps changing
 
-- **Every day** a different project, build-up video and colour theme lead the page.
-- **Every week** the site gets a completely new design system.
-- **Every month** the whole portfolio is reworked from a new idea.
+- **Every morning** the site gets a completely new design: new colours, type and motion.
+- **Twice more each day** a different project, build-up video and colour theme lead the page.
+- **Every third day** the whole portfolio is rebuilt with a new layout, inspired by what's trending in web design.
 
 Each version is numbered and recorded: see the [changelog](CHANGELOG.md) and the [design history](design/HISTORY.md). No design is ever repeated, and every past design is kept.
 

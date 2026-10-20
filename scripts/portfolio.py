@@ -10,9 +10,9 @@ Subcommands
             bump the semantic version, and append a CHANGELOG entry.
   build     Render index.html from data/*.json (see scripts/render.py).
   validate  Check that every JSON file parses and every referenced asset exists.
-  daily     sync -> refresh -> build -> validate -> leak check (what the 5:53 AM job runs).
-  archive   Snapshot the active design into design/archive/ (weekly and monthly designs).
-  cadence   Print today's update kind: patch (daily), minor (Mondays), major (1st of month).
+  daily     sync -> refresh -> build -> validate -> leak check (what the scheduled job runs).
+  archive   Snapshot the active design into design/archive/ (minor and major designs).
+  cadence   Print this run's kind: patch, minor or major (--calendar lists the next majors).
 
 Design notes
 ------------
@@ -21,10 +21,10 @@ Design notes
   stays light even though the media folder is large.
 * Media is copied only when its content hash changes (no daily re-commit of
   160 MB of video). Images are re-encoded to web sizes with Pillow.
-* Versioning follows SemVer (MAJOR.MINOR.PATCH) on a fixed cadence:
-    PATCH  daily: theme and featured-asset rotation, plus any new media from the source
-    MINOR  weekly (Mondays): complete design-system overhaul (`daily --minor`)
-    MAJOR  monthly (the 1st): complete portfolio rework (`daily --major`)
+* Versioning follows SemVer (MAJOR.MINOR.PATCH) on a fixed cadence (IST):
+    PATCH  1:50 PM and 9:50 PM daily: theme and featured-asset change, plus new media
+    MINOR  5:50 AM daily: a new design system (`daily --minor`)
+    MAJOR  5:50 AM every 3rd day, Sundays not counted: whole revamp, new layout (`daily --major`)
 * The rotation is deterministic for a given date, so re-running the job on the
   same day is idempotent: it produces no diff and no version bump.
 
@@ -49,6 +49,11 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 MEDIA = ROOT / "media"
 IST = ZoneInfo("Asia/Kolkata")
+
+# Run slots in IST. The scheduled job fires at 05:50, 13:50 and 21:50 (8 hours apart).
+SLOTS = ["morning", "afternoon", "night"]
+MAJOR_ANCHOR = dt.date(2026, 10, 21)   # first major day of the 3-day cycle
+MAJOR_EVERY = 3                        # every 3rd counted day; Sundays are not counted
 
 IMAGE_FULL_MAX = 1800   # px, long edge for gallery images
 IMAGE_THUMB_MAX = 720   # px, long edge for register previews / cards
@@ -502,9 +507,10 @@ def bump(version: str, part: str) -> str:
     return f"{major}.{minor}.{patch + 1}"
 
 
-def daily_state(projects: list[dict], day: dt.date) -> dict:
-    """Deterministic rotation for a date: same date -> same state."""
-    ordinal = day.toordinal()
+def daily_state(projects: list[dict], day: dt.date, slot: str = "morning") -> dict:
+    """Deterministic rotation for a run slot: same date + slot -> same state.
+    Three slots a day (morning, afternoon, night), so each run shows something different."""
+    ordinal = day.toordinal() * len(SLOTS) + SLOTS.index(slot)
     with_video = [p for p in projects if p.get("video")] or projects
     featured = with_video[ordinal % len(with_video)]
     names = themes()
@@ -515,7 +521,8 @@ def daily_state(projects: list[dict], day: dt.date) -> dict:
     return {"featured": featured["slug"], "theme": theme, "reel": reel}
 
 
-def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_minor: bool = False) -> bool:
+def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_minor: bool = False,
+                slot: str = "morning") -> bool:
     data = read_json(DATA / "projects.json")
     if not data or not data.get("projects"):
         raise SystemExit("data/projects.json is empty; run `sync` first.")
@@ -523,21 +530,26 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
     site = read_json(site_path, {}) or {}
     version = (ROOT / "VERSION").read_text().strip() if (ROOT / "VERSION").exists() else "2.0.0"
 
-    state = daily_state(data["projects"], day)
+    slot_id = f"{day.isoformat()} {slot}"
+    if site.get("slot") == slot_id and not content_changed:
+        # Each slot ships at most once, so a re-run (or a retried job) never double-bumps.
+        log(f"refresh: {slot_id} already shipped as {version}; nothing to do")
+        return False
+    state = daily_state(data["projects"], day, slot)
     rotated = any(site.get(k) != v for k, v in state.items())
     if not (rotated or content_changed or force_major or force_minor):
-        log(f"refresh: nothing changed for {day.isoformat()}; staying on {version}")
+        log(f"refresh: nothing changed for {slot_id}; staying on {version}")
         return False
 
-    # Cadence: MAJOR = monthly full rework, MINOR = weekly design-system overhaul,
-    # PATCH = daily theme/asset rotation (new media from the source is a daily asset change).
+    # Cadence (see cadence()): MAJOR = whole revamp every 3rd day, MINOR = new design system
+    # every morning, PATCH = theme/asset change at 1:50 PM and 9:50 PM (plus any new media).
     part = "major" if force_major else ("minor" if force_minor else "patch")
     # The very first run after a manual redesign keeps the hand-set version.
     new_version = version if site.get("version") != version else bump(version, part)
 
     featured = next(p for p in data["projects"] if p["slug"] == state["featured"])
     site.update(state)
-    site.update({"version": new_version, "date": day.isoformat()})
+    site.update({"version": new_version, "date": day.isoformat(), "slot": slot_id})
     history = site.get("revisions", [])
     note = f"Featured {featured['title']}, {state['theme']} theme"
     if content_changed:
@@ -554,9 +566,9 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
     head = "# Changelog\n\nAll notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).\n"
     body = changelog.read_text(encoding="utf-8").replace(head, "") if changelog.exists() else ""
     if f"## [{new_version}]" not in body:
-        kind = {"major": "Monthly rework", "minor": "Weekly design-system overhaul",
-                "patch": "Daily rotation"}[part]
-        entry = f"\n## [{new_version}] - {day.isoformat()}\n- {kind}: {note}.\n"
+        kind = {"major": "Revamp (new layout)", "minor": "New design system",
+                "patch": f"{slot.capitalize()} theme and asset change"}[part]
+        entry = f"\n## [{new_version}] - {day.isoformat()} ({slot})\n- {kind}: {note}.\n"
         changelog.write_text(head + entry + body, encoding="utf-8")
     how = f"{version} -> {new_version} ({part})" if new_version != version else f"first build of {version}"
     log(f"refresh: {how}; {note}")
@@ -606,7 +618,7 @@ def check_design(errors: list[str]) -> None:
         errors.append("design/HISTORY.md missing")
 
 
-# Files that make up a design. Each shipped weekly/monthly design is snapshotted with them.
+# Files that make up a design. Each shipped minor/major design is snapshotted with them.
 DESIGN_FILES = ["design/system.json", "assets/css/tokens.css", "assets/css/main.css",
                 "assets/js/main.js", "scripts/render.py"]
 ARCHIVE = ROOT / "design" / "archive"
@@ -686,14 +698,36 @@ def check_unique(errors: list[str]) -> None:
                     errors.append(f"theme '{tname}' is too close to '{oname}' in {tag} (paper+accent)")
 
 
-def cadence(day: dt.date) -> str:
-    """Which kind of update a date gets: 1st of month = major rework, Monday = minor
-    design-system overhaul, any other day = patch rotation. Major wins on a Monday the 1st."""
-    if day.day == 1:
-        return "major"
-    if day.weekday() == 0:
-        return "minor"
-    return "patch"
+def slot_for(at: dt.datetime) -> str:
+    """morning before 10:00, afternoon before 18:00, night after (IST)."""
+    return "morning" if at.hour < 10 else ("afternoon" if at.hour < 18 else "night")
+
+
+def is_major_day(day: dt.date) -> bool:
+    """Every 3rd day counting from MAJOR_ANCHOR, Sundays skipped (never a major day,
+    never counted). From a Wednesday anchor this lands on every Wednesday and Saturday."""
+    if day.weekday() == 6 or day < MAJOR_ANCHOR:
+        return False
+    counted = sum(1 for i in range((day - MAJOR_ANCHOR).days)
+                  if (MAJOR_ANCHOR + dt.timedelta(days=i)).weekday() != 6)
+    return counted % MAJOR_EVERY == 0
+
+
+def cadence(day: dt.date, slot: str = "morning") -> str:
+    """What a run ships. Morning: major on a major day, otherwise minor (every day, Sunday
+    included). Afternoon and night: patch (every day, Sunday included)."""
+    if slot != "morning":
+        return "patch"
+    return "major" if is_major_day(day) else "minor"
+
+
+def next_majors(start: dt.date, n: int = 6) -> list[str]:
+    out, d = [], start
+    while len(out) < n:
+        if is_major_day(d):
+            out.append(d.strftime("%a %d %b"))
+        d += dt.timedelta(days=1)
+    return out
 
 
 def cmd_build() -> None:
@@ -769,14 +803,17 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("refresh", "daily"):
         sp = sub.choices[name] if name in sub.choices else sub.add_parser(name)
         sp.add_argument("--date", help="YYYY-MM-DD (default: today in IST)")
-        sp.add_argument("--major", action="store_true", help="bump MAJOR (monthly full rework)")
-        sp.add_argument("--minor", action="store_true", help="bump MINOR (weekly design-system overhaul)")
+        sp.add_argument("--slot", choices=SLOTS, help="run slot (default: from the current IST time)")
+        sp.add_argument("--major", action="store_true", help="bump MAJOR (whole revamp, every 3rd day)")
+        sp.add_argument("--minor", action="store_true", help="bump MINOR (new design system, every morning)")
     sub.add_parser("validate")
     sub.add_parser("build")
     ap_ = sub.add_parser("archive", help="snapshot the active design into design/archive/")
     ap_.add_argument("--shots", type=Path, help="QA screenshot folder to include")
-    cp = sub.add_parser("cadence", help="print patch/minor/major for a date (default: today, IST)")
+    cp = sub.add_parser("cadence", help="print patch/minor/major for this run (default: now, IST)")
     cp.add_argument("--date", help="YYYY-MM-DD")
+    cp.add_argument("--slot", choices=SLOTS)
+    cp.add_argument("--calendar", action="store_true", help="also list the next major days")
     args = ap.parse_args(argv)
 
     if args.cmd == "validate":
@@ -787,24 +824,28 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "archive":
         cmd_archive((ROOT / "VERSION").read_text().strip(), args.shots)
         return cmd_validate()
+    now = dt.datetime.now(IST)
+    day = dt.date.fromisoformat(args.date) if getattr(args, "date", None) else now.date()
+    slot = getattr(args, "slot", None) or slot_for(now)
     if args.cmd == "cadence":
-        d = dt.date.fromisoformat(args.date) if args.date else dt.datetime.now(IST).date()
-        print(cadence(d))
+        print(cadence(day, slot))
+        if args.calendar:
+            print("next major days: " + ", ".join(next_majors(day)))
         return 0
-    day = dt.date.fromisoformat(args.date) if getattr(args, "date", None) else dt.datetime.now(IST).date()
     if args.cmd == "sync":
         _, secrets = cmd_sync(args.source.resolve())
         return max(cmd_validate(), leak_check(secrets))
     if args.cmd == "refresh":
-        cmd_refresh(day, content_changed=False, force_major=args.major, force_minor=args.minor)
+        cmd_refresh(day, content_changed=False, force_major=args.major, force_minor=args.minor, slot=slot)
         cmd_build()
         return cmd_validate()
     # daily
     changed, secrets = cmd_sync(args.source.resolve())
-    cmd_refresh(day, content_changed=changed, force_major=args.major, force_minor=args.minor)
+    shipped = cmd_refresh(day, content_changed=changed, force_major=args.major, force_minor=args.minor,
+                          slot=slot)
     cmd_build()
-    if args.major or args.minor:
-        # Weekly/monthly designs are snapshotted the moment they are built, so they are never lost.
+    if shipped and (args.major or args.minor):
+        # Minor/major designs are snapshotted the moment they are built, so they are never lost.
         cmd_archive((ROOT / "VERSION").read_text().strip())
     # Validation and the confidentiality check both gate the push: non-zero exit = do not push.
     return max(cmd_validate(), leak_check(secrets))

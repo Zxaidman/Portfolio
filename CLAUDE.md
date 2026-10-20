@@ -5,9 +5,9 @@ This file is the permanent memory for whoever maintains the site, human or AI. T
 ## Where the history lives (never delete)
 
 - `CHANGELOG.md`: one entry per version, written automatically by `scripts/portfolio.py refresh`.
-- `design/HISTORY.md`: one row per weekly design system and monthly rework, written by the person or job that ships it. `validate` fails if the current design has no row.
-- `design/archive/v<version>-<name>/`: a permanent snapshot of every weekly and monthly design (tokens, CSS, JS, renderer, screenshots). Never edit or delete a snapshot, except the one created in the current run while it is still being fixed.
-- Claude Design System artifacts: one per monthly rework, linked from `design/HISTORY.md`.
+- `design/HISTORY.md`: one row per design system (minor) and revamp (major), written by the person or job that ships it. `validate` fails if the current design has no row.
+- `design/archive/v<version>-<name>/`: a permanent snapshot of every minor and major design (tokens, CSS, JS, renderer, screenshots). Never edit or delete a snapshot, except the one created in the current run while it is still being fixed.
+- Claude Design System artifacts: one per revamp (major), linked from `design/HISTORY.md`.
 
 ## How the site works
 
@@ -28,7 +28,8 @@ scripts/portfolio.py    CLI: sync, refresh, build, validate, daily, archive, cad
 scripts/render.py       renders index.html from data/*.json
 design/system.json      active design system: themes, fonts, scale  -> assets/css/tokens.css
 design/HISTORY.md       every design shipped (no repeats)
-design/archive/         snapshot of every weekly/monthly design, never overwritten
+design/INSPIRATION.md   design brief: the bar, layout archetypes, motions, trend notes
+design/archive/         snapshot of every minor and major design, never overwritten
 scripts/qa.py           headless browser QA: errors, broken images, overflow, all themes
 VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ```
@@ -41,7 +42,7 @@ VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ### Common tasks
 
 ```bash
-# Daily job (what the 5:53 AM IST scheduled task runs)
+# A run (what the scheduled task does; slot comes from the current IST time)
 git clone --depth 1 https://github.com/aasif-shaikh7/BIM-Portfolio ../BIM-Portfolio
 python3 scripts/portfolio.py daily --source ../BIM-Portfolio
 
@@ -51,23 +52,27 @@ python3 scripts/portfolio.py build
 # Preview locally
 python3 -m http.server 8000      # then open http://localhost:8000
 
-# What kind of day is it? (patch | minor | major)
-python3 scripts/portfolio.py cadence
+# What does this run ship? (patch | minor | major)
+python3 scripts/portfolio.py cadence --calendar
 
-# Weekly overhaul / monthly rework, after changing the design files:
+# New design system (minor) or revamp (major), after changing the design files:
 python3 scripts/portfolio.py daily --source ../BIM-Portfolio --minor   # or --major
 python3 scripts/qa.py --out /tmp/qa && python3 scripts/portfolio.py archive --shots /tmp/qa
 ```
 
 ### Update cadence and versions
 
-| When | Version | What changes |
-|---|---|---|
-| Every day | PATCH `x.y.Z` | Theme and featured-asset rotation within the current design system, plus new media from the source |
-| Mondays | MINOR `x.Y.0` | Complete design-system overhaul: new palette themes, type, scale, component styling |
-| 1st of the month | MAJOR `X.0.0` | Complete rework: new concept, layout and interactions, plus a Claude Design System artifact |
+One scheduled task fires at **5:50 AM, 1:50 PM and 9:50 PM IST** every day (8 hours apart). `python3 scripts/portfolio.py cadence` says what this run ships; `--calendar` lists the next major days.
 
-Every weekly and monthly design is snapshotted in `design/archive/` and logged in `design/HISTORY.md`, so nothing is lost when the next one ships, and `validate` refuses a design that repeats an earlier one (name, font set, or paper+accent palette). Design changes ship only after `validate`, the WCAG contrast check, `qa.py` and the leak check all pass.
+| Slot | Kind | Version | What changes |
+|---|---|---|---|
+| 5:50 AM, major day | MAJOR `X.0.0` | Whole revamp: new layout archetype, concept, interactions and motion; a new Claude Design System |
+| 5:50 AM, other days | MINOR `x.Y.0` | A new design system: palette (≥ 3 themes), type, scale, components, one new signature motion |
+| 1:50 PM and 9:50 PM | PATCH `x.y.Z` | Theme and featured-asset change within the current design, plus new media from the source |
+
+Major days are every 3rd day counting from Wed 21 Oct 2026, Sundays not counted (so every Wednesday and Saturday). Minor and patch run every day, Sunday included. Each slot ships at most once: a retried job does nothing.
+
+Read `design/INSPIRATION.md` before any minor or major. Every minor and major is snapshotted in `design/archive/` and logged in `design/HISTORY.md`. `validate` refuses a design that repeats an earlier one (name, font set or palette) or has no HISTORY row. Design changes ship only after `validate`, the WCAG contrast check, `qa.py` and the leak check all pass.
 
 ### Confidentiality
 
@@ -77,8 +82,8 @@ Every `sync` and `daily` run also performs a **leak check**: it reads the projec
 
 ### Behaviour worth knowing
 
-- **Idempotent:** rerunning `daily` on the same date produces no diff and no version bump.
-- **Light history:** daily commits only touch `data/site.json`, `index.html`, `VERSION` and `CHANGELOG.md`. Media is recopied only when the source file's bytes change.
+- **Idempotent:** each slot (date + morning/afternoon/night) ships at most once; rerunning it changes nothing.
+- **Light history:** patch commits only touch `data/site.json`, `index.html`, `VERSION` and `CHANGELOG.md`. Media is recopied only when the source file's bytes change.
 - **Safe deploys:** the Pages workflow runs `validate` first, so a missing asset or a bad JSON file blocks the deploy instead of shipping a broken page.
 - **Pruning:** media that the source no longer provides is deleted, so removed projects disappear from the site.
 - **Source format:** `sync` parses the BIM-Portfolio `index.html` (project articles, build-up figures, BBS slides). If that page's markup changes a lot, `sync` refuses to write an empty project list and the job fails loudly.

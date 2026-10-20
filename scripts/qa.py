@@ -13,7 +13,7 @@ Screenshots go to --out so a human or agent can review the design.
 Usage:  python3 scripts/qa.py --out /tmp/qa-shots
 Requires: pip install playwright  (uses a preinstalled Chromium when one is found)
 Exit code 0 = pass, 1 = fail, 2 = could not run (no browser) — treat 2 as a failure for
-weekly/monthly design changes.
+minor/major design changes.
 """
 from __future__ import annotations
 
