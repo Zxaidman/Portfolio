@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [2.0.2] - 2026-10-20
+- Daily rotation: Synced new project media. Featured Sale and rehab building model, blueprint theme.
+
 ## [2.0.1] - 2026-10-19
 - Cadence: daily PATCH (theme and asset rotation), weekly MINOR on Mondays (design-system overhaul), monthly MAJOR on the 1st (complete rework).
 - Design tokens now live in `design/system.json` (generated into `tokens.css`); every weekly and monthly design is archived in `design/archive/` and logged in `design/HISTORY.md`.
