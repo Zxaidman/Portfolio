@@ -1,25 +1,30 @@
 {
-  "featured": "s13",
-  "theme": "blueprint",
+  "featured": "s06",
+  "theme": "survey",
   "reel": [
-    "s13",
-    "s14",
-    "s15",
-    "s21",
-    "s22",
-    "s04",
-    "s05",
     "s06",
     "s07",
     "s08",
     "s09",
     "s10",
     "s11",
-    "s12"
+    "s12",
+    "s13",
+    "s14",
+    "s15",
+    "s21",
+    "s22",
+    "s04",
+    "s05"
   ],
-  "version": "2.0.2",
-  "date": "2026-10-20",
+  "version": "3.0.0",
+  "date": "2026-10-21",
   "revisions": [
+    {
+      "rev": "3.0.0",
+      "date": "2026-10-21",
+      "note": "Storey stack design system. Synced new project media. Featured Luxury residential tower model, survey theme"
+    },
     {
       "rev": "2.0.2",
       "date": "2026-10-20",
@@ -35,5 +40,6 @@
       "date": "2026-10-19",
       "note": "Featured Sea-facing residential tower model, sheet theme"
     }
-  ]
+  ],
+  "slot": "2026-10-21 morning"
 }

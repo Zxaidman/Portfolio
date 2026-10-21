@@ -17,7 +17,7 @@ Read this before every new design system (minor, every morning) and every revamp
 | Drawing sheet *(used 2.0.0)* | Title block, drawing register, viewports |
 | Bento grid | Varied-size tiles: hero video tile, stats tiles, project tiles, BBS tile; subgrid alignment |
 | Horizontal scroll story | Vertical intro that turns into a sideways run through the projects, like walking past a site hoarding |
-| Floor-by-floor stack | The page is a building: sections are storeys, scroll climbs from foundation to terrace, a level indicator tracks progress |
+| Floor-by-floor stack *(used 3.0.0)* | The page is a building: sections are storeys, scroll climbs from foundation to terrace, a level indicator tracks progress |
 | Cinematic full-bleed | Each project a full-screen chapter with its build-up video behind oversized type |
 | Index / archive list | Dense text index with hover-revealed renders following the cursor; brutalist grid |
 | Exploded axonometric | Projects scattered on a canvas like an exploded model, revealed on hover or click |
@@ -35,7 +35,7 @@ Read this before every new design system (minor, every morning) and every revamp
 - Kinetic type: variable-font width or weight animating on scroll or hover
 - Cursor-following media preview over a text index
 - Horizontal pinned scroll section
-- Section-box clipping reveal (a clip-path box sweeping open, like a Revit section box)
+- Section-box clipping reveal (a clip-path box sweeping open, like a Revit section box) *(used 3.0.0)*
 - Rebar line-draw: SVG stroke-dashoffset drawing bars as the BBS section enters
 - Counter roll-up for stats when they enter the viewport
 - Magnetic buttons / subtle tilt on project tiles
@@ -46,6 +46,7 @@ Read this before every new design system (minor, every morning) and every revamp
 
 - Bento grids, oversized hero typography with variable fonts, scroll-driven and scroll-triggered CSS animation, dark-first palettes, restrained glassmorphism, micro-interactions on every state, mixed scroll directions, cinematic video heroes, grain and chromatic textures, accessible-first colour tokens, lightweight pages. Sources: [Line25: Web Design Trends 2026](https://line25.com/articles/web-design-trends-2026/), [Really Good Designs: Web Design Trends 2026](https://reallygooddesigns.com/web-design-trends-2026/), [Chrome: scroll-triggered animations](https://developer.chrome.com/blog/scroll-triggered-animations).
 - Each run appends a dated line here with what it found.
+- 2026-10-21 (3.0.0): Awwwards Creative Pass keeps surfacing scroll-driven data storytelling ([Scroll-driven PK modelling](https://www.awwwards.com/inspiration/scroll-driven-pk-modeling-substraterx)) and architecture studios using scroll as spatial movement ([Verticité Architecture](https://www.awwwards.com/inspiration/horizontal-scroll-verticite-architecture)). Native CSS scroll timelines (`animation-timeline: scroll()/view()`) are now enough for progress indicators and reveals without JS libraries. Used: a lift car on a scroll timeline and view-timeline section-box reveals.
 
 ## Non-negotiables
 

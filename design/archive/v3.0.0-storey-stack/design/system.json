@@ -1,0 +1,32 @@
+{
+  "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
+  "name": "Storey stack",
+  "introduced": "3.0.0",
+  "concept": "The page is a tower in section. You arrive on the roof and descend level by level to the foundation: every section opens on a Revit level datum with its elevation, a lift car in the side shaft tracks where you are, and media is revealed by a section box sweeping open.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Geist+Mono:wght@400;500;600&display=swap",
+    "body": "\"Bricolage Grotesque\", \"Segoe UI\", system-ui, sans-serif",
+    "display": "\"Bricolage Grotesque\", \"Arial Narrow\", system-ui, sans-serif",
+    "mono": "\"Geist Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
+  },
+  "scale": {
+    "--step--1": "clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem)",
+    "--step-0": "clamp(1rem, 0.96rem + 0.2vw, 1.1rem)",
+    "--step-1": "clamp(1.25rem, 1.12rem + 0.6vw, 1.6rem)",
+    "--step-2": "clamp(1.6rem, 1.3rem + 1.4vw, 2.6rem)",
+    "--step-3": "clamp(2.2rem, 1.5rem + 3.4vw, 4.6rem)",
+    "--step-hero": "clamp(3.6rem, 1rem + 11vw, 12rem)",
+    "--gutter": "clamp(16px, 3vw, 44px)",
+    "--rail": "clamp(0px, 13vw, 184px)",
+    "--storey": "clamp(64px, 9vw, 136px)",
+    "--max": "1240px",
+    "--radius": "0px",
+    "--slab": "6px"
+  },
+  "themes": {
+    "formwork":  { "scheme": "light", "paper": "#f2e8d5", "panel": "#e8dcc4", "ink": "#1d1912", "muted": "#5e5446", "line": "#b3a588", "accent": "#a33c0b", "on-accent": "#ffffff", "viewport": "#e2ddd3" },
+    "slab":      { "scheme": "dark",  "paper": "#141517", "panel": "#1c1e21", "ink": "#f0eee8", "muted": "#a3a29c", "line": "#4a4c52", "accent": "#c6f04a", "on-accent": "#141517", "viewport": "#d9dbd6" },
+    "survey":    { "scheme": "dark",  "paper": "#0d2621", "panel": "#12302a", "ink": "#e6f1ec", "muted": "#9dbbb1", "line": "#3a6357", "accent": "#ff9466", "on-accent": "#0d2621", "viewport": "#d4dcd8" },
+    "chalkline": { "scheme": "light", "paper": "#f1f4f6", "panel": "#e4e9ed", "ink": "#121a22", "muted": "#4c5966", "line": "#a6b2bd", "accent": "#b0136f", "on-accent": "#ffffff", "viewport": "#dfe4e8" }
+  }
+}

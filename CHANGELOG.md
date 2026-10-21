@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [3.0.0] - 2026-10-21 (morning)
+- Revamp (new layout): Storey stack design system. Synced new project media. Featured Luxury residential tower model, survey theme.
+
 ## [2.0.2] - 2026-10-20
 - Daily rotation: Synced new project media. Featured Sale and rehab building model, blueprint theme.
 

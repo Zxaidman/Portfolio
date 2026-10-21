@@ -1,60 +1,64 @@
 /* Generated from design/system.json by scripts/render.py. Do not edit. */
-/* Design system: Drawing sheet (since 2.0.0) */
+/* Design system: Storey stack (since 3.0.0) */
 :root,
-[data-theme="sheet"] {
-  --paper: #ecedea;
-  --panel: #e2e4e0;
-  --ink: #1b2330;
-  --muted: #566170;
-  --line: #a3abb4;
-  --accent: #b8322a;
+[data-theme="formwork"] {
+  --paper: #f2e8d5;
+  --panel: #e8dcc4;
+  --ink: #1d1912;
+  --muted: #5e5446;
+  --line: #b3a588;
+  --accent: #a33c0b;
   --on-accent: #ffffff;
-  --viewport: #d8dadb;
+  --viewport: #e2ddd3;
   color-scheme: light;
 }
-[data-theme="blueprint"] {
-  --paper: #0f2f57;
-  --panel: #133866;
-  --ink: #e8eef6;
-  --muted: #a9bbd3;
-  --line: #48699a;
-  --accent: #f2c14e;
-  --on-accent: #0f2f57;
-  --viewport: #d3d8de;
+[data-theme="slab"] {
+  --paper: #141517;
+  --panel: #1c1e21;
+  --ink: #f0eee8;
+  --muted: #a3a29c;
+  --line: #4a4c52;
+  --accent: #c6f04a;
+  --on-accent: #141517;
+  --viewport: #d9dbd6;
   color-scheme: dark;
 }
-[data-theme="night"] {
-  --paper: #182028;
-  --panel: #1e2731;
-  --ink: #e3e8ed;
-  --muted: #98a3ae;
-  --line: #3b4754;
-  --accent: #5cc0c9;
-  --on-accent: #10181f;
-  --viewport: #cfd3d6;
+[data-theme="survey"] {
+  --paper: #0d2621;
+  --panel: #12302a;
+  --ink: #e6f1ec;
+  --muted: #9dbbb1;
+  --line: #3a6357;
+  --accent: #ff9466;
+  --on-accent: #0d2621;
+  --viewport: #d4dcd8;
   color-scheme: dark;
 }
-[data-theme="concrete"] {
-  --paper: #d7d3cb;
-  --panel: #cdc8bf;
-  --ink: #24252a;
-  --muted: #55524c;
-  --line: #8f8a81;
-  --accent: #22528c;
+[data-theme="chalkline"] {
+  --paper: #f1f4f6;
+  --panel: #e4e9ed;
+  --ink: #121a22;
+  --muted: #4c5966;
+  --line: #a6b2bd;
+  --accent: #b0136f;
   --on-accent: #ffffff;
-  --viewport: #e6e6e4;
+  --viewport: #dfe4e8;
   color-scheme: light;
 }
 :root {
-  --font: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
-  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
-  --step-1: clamp(1.2rem, 1.1rem + 0.45vw, 1.45rem);
-  --step-2: clamp(1.5rem, 1.25rem + 1.1vw, 2.2rem);
-  --step-3: clamp(2rem, 1.4rem + 2.6vw, 3.6rem);
-  --step-hero: clamp(3.2rem, 1.2rem + 9vw, 9.5rem);
-  --gutter: clamp(16px, 3.5vw, 48px);
-  --frame: clamp(0px, 1.2vw, 16px);
-  --max: 1360px;
-  --radius: 2px;
+  --font: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.25rem, 1.12rem + 0.6vw, 1.6rem);
+  --step-2: clamp(1.6rem, 1.3rem + 1.4vw, 2.6rem);
+  --step-3: clamp(2.2rem, 1.5rem + 3.4vw, 4.6rem);
+  --step-hero: clamp(3.6rem, 1rem + 11vw, 12rem);
+  --gutter: clamp(16px, 3vw, 44px);
+  --rail: clamp(0px, 13vw, 184px);
+  --storey: clamp(64px, 9vw, 136px);
+  --max: 1240px;
+  --radius: 0px;
+  --slab: 6px;
 }
