@@ -1,8 +1,7 @@
 {
-  "featured": "s06",
-  "theme": "survey",
+  "featured": "s07",
+  "theme": "chalkline",
   "reel": [
-    "s06",
     "s07",
     "s08",
     "s09",
@@ -15,11 +14,17 @@
     "s21",
     "s22",
     "s04",
-    "s05"
+    "s05",
+    "s06"
   ],
-  "version": "3.0.0",
+  "version": "3.0.1",
   "date": "2026-10-21",
   "revisions": [
+    {
+      "rev": "3.0.1",
+      "date": "2026-10-21",
+      "note": "Synced new project media. Featured IT park building model, chalkline theme"
+    },
     {
       "rev": "3.0.0",
       "date": "2026-10-21",
@@ -41,5 +46,5 @@
       "note": "Featured Sea-facing residential tower model, sheet theme"
     }
   ],
-  "slot": "2026-10-21 morning"
+  "slot": "2026-10-21 afternoon"
 }

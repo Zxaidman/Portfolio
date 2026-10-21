@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [3.0.1] - 2026-10-21 (afternoon)
+- Afternoon theme and asset change: Synced new project media. Featured IT park building model, chalkline theme.
+
 ## [3.0.0] - 2026-10-21 (morning)
 - Revamp (new layout): Storey stack design system. Synced new project media. Featured Luxury residential tower model, survey theme.
 
