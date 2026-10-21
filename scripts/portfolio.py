@@ -24,7 +24,7 @@ Design notes
 * Versioning follows SemVer (MAJOR.MINOR.PATCH) on a fixed cadence (IST):
     PATCH  1:50 PM and 9:50 PM daily: theme and featured-asset change, plus new media
     MINOR  5:50 AM daily: a new design system (`daily --minor`)
-    MAJOR  5:50 AM every 3rd day, Sundays not counted: whole revamp, new layout (`daily --major`)
+    MAJOR  5:50 AM Monday, Wednesday and Friday: whole revamp, new layout (`daily --major`)
 * The rotation is deterministic for a given date, so re-running the job on the
   same day is idempotent: it produces no diff and no version bump.
 
@@ -52,8 +52,7 @@ IST = ZoneInfo("Asia/Kolkata")
 
 # Run slots in IST. The scheduled job fires at 05:50, 13:50 and 21:50 (8 hours apart).
 SLOTS = ["morning", "afternoon", "night"]
-MAJOR_ANCHOR = dt.date(2026, 10, 21)   # first major day of the 3-day cycle
-MAJOR_EVERY = 3                        # every 3rd counted day; Sundays are not counted
+MAJOR_WEEKDAYS = {0, 2, 4}             # Monday, Wednesday, Friday (Python weekday numbers)
 
 IMAGE_FULL_MAX = 1800   # px, long edge for gallery images
 IMAGE_THUMB_MAX = 720   # px, long edge for register previews / cards
@@ -541,7 +540,7 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
         log(f"refresh: nothing changed for {slot_id}; staying on {version}")
         return False
 
-    # Cadence (see cadence()): MAJOR = whole revamp every 3rd day, MINOR = new design system
+    # Cadence (see cadence()): MAJOR = whole revamp Mon/Wed/Fri, MINOR = new design system
     # every morning, PATCH = theme/asset change at 1:50 PM and 9:50 PM (plus any new media).
     part = "major" if force_major else ("minor" if force_minor else "patch")
     # The very first run after a manual redesign keeps the hand-set version.
@@ -704,13 +703,8 @@ def slot_for(at: dt.datetime) -> str:
 
 
 def is_major_day(day: dt.date) -> bool:
-    """Every 3rd day counting from MAJOR_ANCHOR, Sundays skipped (never a major day,
-    never counted). From a Wednesday anchor this lands on every Wednesday and Saturday."""
-    if day.weekday() == 6 or day < MAJOR_ANCHOR:
-        return False
-    counted = sum(1 for i in range((day - MAJOR_ANCHOR).days)
-                  if (MAJOR_ANCHOR + dt.timedelta(days=i)).weekday() != 6)
-    return counted % MAJOR_EVERY == 0
+    """Majors (whole revamp) ship on the Monday, Wednesday and Friday morning slots."""
+    return day.weekday() in MAJOR_WEEKDAYS
 
 
 def cadence(day: dt.date, slot: str = "morning") -> str:
@@ -804,7 +798,7 @@ def main(argv: list[str] | None = None) -> int:
         sp = sub.choices[name] if name in sub.choices else sub.add_parser(name)
         sp.add_argument("--date", help="YYYY-MM-DD (default: today in IST)")
         sp.add_argument("--slot", choices=SLOTS, help="run slot (default: from the current IST time)")
-        sp.add_argument("--major", action="store_true", help="bump MAJOR (whole revamp, every 3rd day)")
+        sp.add_argument("--major", action="store_true", help="bump MAJOR (whole revamp, Mon/Wed/Fri)")
         sp.add_argument("--minor", action="store_true", help="bump MINOR (new design system, every morning)")
     sub.add_parser("validate")
     sub.add_parser("build")

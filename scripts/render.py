@@ -277,7 +277,7 @@ def revisions(site: dict) -> str:
     )
     return f"""
 <section class="storey storey-revisions" id="revisions" aria-labelledby="rev-title">
-  {datum("revisions", "rev-title", f"Rev {site['version']}", "This tower is rebuilt on a schedule: a new design system every morning, a whole revamp every third day, and a fresh featured project twice a day in between.")}
+  {datum("revisions", "rev-title", f"Rev {site['version']}", "This tower is rebuilt on a schedule: a whole revamp every Monday, Wednesday and Friday, a new design system on the other mornings, and a fresh featured project twice a day in between.")}
   <div class="rev-wrap">
     <table class="rev-table">
       <caption class="mono">Latest revisions</caption>

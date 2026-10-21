@@ -70,7 +70,7 @@ One scheduled task fires at **5:50 AM, 1:50 PM and 9:50 PM IST** every day (8 ho
 | 5:50 AM, other days | MINOR `x.Y.0` | A new design system: palette (≥ 3 themes), type, scale, components, one new signature motion |
 | 1:50 PM and 9:50 PM | PATCH `x.y.Z` | Theme and featured-asset change within the current design, plus new media from the source |
 
-Major days are every 3rd day counting from Wed 21 Oct 2026, Sundays not counted (so every Wednesday and Saturday). Minor and patch run every day, Sunday included. Each slot ships at most once: a retried job does nothing.
+Major days are **Monday, Wednesday and Friday**. Minor runs on the other mornings (Tuesday, Thursday, Saturday, Sunday); patch runs every day, Sunday included. Each slot ships at most once: a retried job does nothing.
 
 Read `design/INSPIRATION.md` before any minor or major. Every minor and major is snapshotted in `design/archive/` and logged in `design/HISTORY.md`. `validate` refuses a design that repeats an earlier one (name, font set or palette) or has no HISTORY row. Design changes ship only after `validate`, the WCAG contrast check, `qa.py` and the leak check all pass.
 

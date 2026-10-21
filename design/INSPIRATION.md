@@ -1,11 +1,11 @@
 # Design brief and inspiration pool
 
-Read this before every new design system (minor, every morning) and every revamp (major, every 3rd day). The goal: each morning a visitor should feel they are on a **new site**, and every revamp should look like a different studio built it.
+Read this before every new design system (minor, every morning) and every revamp (major, Monday, Wednesday and Friday). The goal: each morning a visitor should feel they are on a **new site**, and every revamp should look like a different studio built it.
 
 ## The bar
 
-- **Minor (daily new design system):** a change someone notices in one second. New palette family (≥ 3 themes), a new type pairing, new spacing and corner language, new button/chip/row treatments, and **one new signature motion**. Same page structure.
-- **Major (every 3rd day, Sundays not counted):** a whole revamp. New concept, **new layout archetype**, new navigation pattern, new interactions, new motion system. The page structure in `scripts/render.py` and behaviour in `assets/js/main.js` are rewritten. All content stays: hero, featured project, all 14 projects, build-up videos, rebar/BBS drawings, about, contact, the version and revision history, the image viewer.
+- **Minor (new design system, Tue/Thu/Sat/Sun mornings):** a change someone notices in one second. New palette family (≥ 3 themes), a new type pairing, new spacing and corner language, new button/chip/row treatments, and **one new signature motion**. Same page structure.
+- **Major (Mon/Wed/Fri mornings):** a whole revamp. New concept, **new layout archetype**, new navigation pattern, new interactions, new motion system. The page structure in `scripts/render.py` and behaviour in `assets/js/main.js` are rewritten. All content stays: hero, featured project, all 14 projects, build-up videos, rebar/BBS drawings, about, contact, the version and revision history, the image viewer.
 - **Never repeat** a layout archetype, a font pairing, a palette family or a signature motion already listed in `design/HISTORY.md`.
 - **Research fresh each run.** Search the web for what's current (Awwwards / CSS Design Awards sites of the day, motion sites, trending portfolio posts on LinkedIn, Instagram, X, Dribbble, Behance). Note one or two concrete inspirations in the HISTORY.md row.
 - **Ground it in the subject.** BIM, Revit, structural RCC, rebar, construction sequencing, site drawings. The work is the imagery: Revit renders, build-up videos, BBS drawings.
