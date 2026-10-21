@@ -1,25 +1,28 @@
 {
-  "featured": "s07",
-  "theme": "chalkline",
+  "featured": "s14",
+  "theme": "formwork",
   "reel": [
-    "s07",
-    "s08",
-    "s09",
-    "s10",
-    "s11",
-    "s12",
-    "s13",
     "s14",
     "s15",
     "s21",
     "s22",
-    "s04",
     "s05",
-    "s06"
+    "s06",
+    "s07",
+    "s09",
+    "s10",
+    "s11",
+    "s12",
+    "s13"
   ],
-  "version": "3.0.1",
+  "version": "3.0.2",
   "date": "2026-10-21",
   "revisions": [
+    {
+      "rev": "3.0.2",
+      "date": "2026-10-21",
+      "note": "Synced new project media. Featured Luxury residential tower model, formwork theme"
+    },
     {
       "rev": "3.0.1",
       "date": "2026-10-21",
@@ -39,12 +42,7 @@
       "rev": "2.0.1",
       "date": "2026-10-19",
       "note": "Design tokens moved into a versioned design system"
-    },
-    {
-      "rev": "2.0.0",
-      "date": "2026-10-19",
-      "note": "Featured Sea-facing residential tower model, sheet theme"
     }
   ],
-  "slot": "2026-10-21 afternoon"
+  "slot": "2026-10-21 night"
 }

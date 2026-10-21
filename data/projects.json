@@ -40,12 +40,7 @@
           "h": 296
         }
       ],
-      "video": {
-        "src": "media/video/s04.mp4",
-        "poster": "media/video/s04-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
-      }
+      "video": null
     },
     {
       "slug": "s05",
@@ -258,12 +253,7 @@
           "h": 450
         }
       ],
-      "video": {
-        "src": "media/video/s08.mp4",
-        "poster": "media/video/s08-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
-      }
+      "video": null
     },
     {
       "slug": "s09",

@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [3.0.2] - 2026-10-21 (night)
+- Night theme and asset change: Synced new project media. Featured Luxury residential tower model, formwork theme.
+
 ## [3.0.1] - 2026-10-21 (afternoon)
 - Afternoon theme and asset change: Synced new project media. Featured IT park building model, chalkline theme.
 
