@@ -16,6 +16,10 @@
   --sig-shadow: 0 18px 48px rgb(0 0 0 / 0.22);
   --sig-display: var(--font-display, var(--font));
   --sig-mono: var(--font-mono, ui-monospace, monospace);
+  /* The IFC model frames are neutral clay; the canvas recolours them with this hue (keeping
+     their shading). Mix 0 = untinted clay, 1 = fully the tint hue. Designs may override. */
+  --sig-model-tint: var(--accent);
+  --sig-model-tint-mix: 0.5;
 }
 .sig-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .sig-eyebrow { margin: 0; font-family: var(--sig-mono); font-size: 0.74rem; letter-spacing: 0.06em; color: var(--muted); }
@@ -169,6 +173,8 @@
 .sig-meter b { font-family: var(--sig-display); font-size: clamp(1.6rem, 1rem + 2vw, 2.6rem); color: var(--ink); font-variant-numeric: tabular-nums; }
 .sig-meter i { grid-column: 1 / -1; display: block; width: clamp(120px, 16vw, 200px); height: 3px; background: var(--sig-hair); border-radius: 3px; overflow: hidden; }
 .sig-meter em { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+.sig-meter small { grid-column: 1 / -1; min-height: 1.2em; font: inherit; font-size: 0.72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.sig-meter small:empty { display: none; }
 .sig-live .sig-hint {
   display: inline-flex; align-items: center; gap: 8px; position: absolute; z-index: 2; left: 50%; bottom: calc(clamp(20px, 5vh, 44px) + var(--sig-safe-bottom)); translate: -50% 0;
   padding: 7px 14px; border-radius: 999px; border: 1px solid var(--sig-hair); background: var(--sig-glass);

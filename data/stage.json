@@ -1,20 +1,64 @@
 {
   "segments": [
     {
-      "id": "buildup",
+      "id": "model",
       "fit": "contain",
-      "count": 144,
+      "tint": true,
+      "count": 168,
+      "complete": 0.6,
       "desktop": {
-        "dir": "media/stage/buildup",
-        "w": 589,
-        "h": 900
+        "dir": "media/stage/model",
+        "w": 1122,
+        "h": 780
       },
       "mobile": {
-        "dir": "media/stage/buildup-m",
-        "w": 366,
-        "h": 560
+        "dir": "media/stage/model-m",
+        "w": 748,
+        "h": 520
       },
-      "poster": "media/stage/buildup-poster.webp"
+      "poster": "media/stage/model-poster.webp",
+      "phases": [
+        {
+          "at": 0.0,
+          "label": "Foundation"
+        },
+        {
+          "at": 0.102,
+          "label": "Ground floor"
+        },
+        {
+          "at": 0.174,
+          "label": "Level 1"
+        },
+        {
+          "at": 0.246,
+          "label": "Level 2"
+        },
+        {
+          "at": 0.318,
+          "label": "Level 3"
+        },
+        {
+          "at": 0.39,
+          "label": "Level 4"
+        },
+        {
+          "at": 0.462,
+          "label": "Terrace"
+        },
+        {
+          "at": 0.62,
+          "label": "Exploded view"
+        },
+        {
+          "at": 0.82,
+          "label": "Reassembling"
+        },
+        {
+          "at": 0.95,
+          "label": "Model complete"
+        }
+      ]
     }
   ]
 }

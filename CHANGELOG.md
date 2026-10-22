@@ -2,6 +2,12 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [4.1.0] - 2026-10-22 (signature)
+- The scroll stage now plays a real 3D BIM model built from an IFC instead of a screen recording: a faint wireframe of the finished building, then columns grow, beams slide in, slabs drop, walls rise and the facade flies in, storey by storey, while the camera orbits. The storeys then separate into an exploded view and close up again before the push-in.
+- The model is tinted to each day's theme, keeping its shading, so it changes colour with every design system and patch.
+- The build meter now names the level being placed (Foundation, Ground floor, Level 1 ... Terrace, Exploded view) and reaches 100% when the building is fully assembled.
+- New offline renderer (tools/ifc-stage) that keeps only geometry from an IFC; no names, properties or addresses are published.
+
 ## [4.0.0] - 2026-10-22 (signature)
 - Signature scroll stage: the hero is now pinned and scrolling builds a Revit tower floor by floor (144 frames, background cut out so it floats on every theme). The name fades out, HUD cards float in beside the tower, a "Built %" meter counts up, then the camera pushes into a Revit {3D} viewport that expands into the project showcase.
 - Signature skill cards: 16 cards in four categories with filter chips, glyph tiles, badges, links to evidence, hover lift and a cursor-following glow.

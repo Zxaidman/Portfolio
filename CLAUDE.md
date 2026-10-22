@@ -13,7 +13,7 @@ This file is the permanent memory for whoever maintains the site, human or AI. T
 
 Two sections live in their own files and survive every minor and major:
 
-- **Scroll stage** (`scripts/signature.py` `stage_html`, `assets/js/signature.js`, `assets/css/signature.css`): the pinned hero. Scrolling plays the Revit build-up frame by frame (tower background cut out, so it floats on any theme), the name fades out, two glass HUD cards float in beside the tower, a "Built %" meter counts up, the camera pushes in, and a Revit `{3D}` viewport opens and expands into the project showcase. Frames come from `scripts/stage.py` and `data/stage.json`; an optional clip of Zaid can be added as a second segment.
+- **Scroll stage** (`scripts/signature.py` `stage_html`, `assets/js/signature.js`, `assets/css/signature.css`): the pinned hero. Scrolling plays a 3D BIM model rendered from an IFC frame by frame: a faint wireframe of the finished building, then elements fly into place storey by storey (columns grow, beams slide in, slabs drop, walls rise, facade flies in), an exploded view while the camera orbits, and the model closing up again. Frames are neutral clay on a transparent background; the canvas tints them to `--sig-model-tint` (default: the theme accent, mix `--sig-model-tint-mix`), so every theme recolours the model. The name fades out, two glass HUD cards float in, a "Built %" meter counts up with the level being placed, the camera pushes in, and a Revit `{3D}` viewport opens and expands into the project showcase. Frames come from `tools/ifc-stage/` + `scripts/stage.py model` and `data/stage.json`; an optional clip of Zaid can be added as a second segment.
 - **Skill cards** (`skills_html`): category chips and a grid of cards with a glyph tile, badge, name, one-line description and a link to evidence on the page; hover lift, category-tinted glow that follows the cursor, staggered entrance. Content: `data/skills.json` (hand-edited only).
 
 Rules for every design:
@@ -44,11 +44,12 @@ design/INSPIRATION.md   design brief: the bar, layout archetypes, motions, trend
 design/archive/         snapshot of every minor and major design, never overwritten
 scripts/qa.py           headless browser QA: errors, broken images, overflow, all themes, live scroll stage
 scripts/signature.py    permanent signature sections: scroll stage + skill cards (HTML)
-scripts/stage.py        builds the stage frame sequences from a build-up video (+ optional clip of Zaid)
+scripts/stage.py        packages the stage frames: IFC model renders (or a build-up video) + optional clip of Zaid
+tools/ifc-stage/        offline IFC -> transparent frames renderer (three.js, headless Chromium); see its README
 assets/css/signature.css, assets/js/signature.js   signature styling and scroll engine
 data/skills.json        HUD card and skill card content            <- edit by hand
 data/stage.json         stage frame segments                       <- written by stage.py
-media/stage/            stage frames (desktop + mobile WebP, background cut out)
+media/stage/            stage frames (desktop + mobile WebP, transparent)
 VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ```
 
@@ -67,7 +68,9 @@ python3 scripts/portfolio.py daily --source ../BIM-Portfolio
 # Edited data/profile.json? Re-render and check:
 python3 scripts/portfolio.py build
 
-# Add Zaid's clip after the build-up (8-10 s, steady camera); needs ffmpeg, numpy, scipy:
+# New hero model from an IFC (never commit the IFC): see tools/ifc-stage/README.md
+
+# Add Zaid's clip after the build (8-10 s, steady camera); needs ffmpeg, numpy, scipy:
 python3 scripts/stage.py person path/to/zaid.mp4 --frames 120 && python3 scripts/portfolio.py build
 
 # Preview locally
@@ -98,6 +101,8 @@ Read `design/INSPIRATION.md` before any minor or major. Every minor and major is
 ### Confidentiality
 
 Client project names never appear on the site. Each project is published under a neutral id (`s09` = source slide 9) with the title, storey count and city from `data/labels.json`. To show "G+20 residential tower model", set `"storeys": 20` for that id. Video metadata is stripped, and `mask` covers any burned-in title in a video.
+
+The hero model comes from an IFC that is kept outside the repo; only geometry is extracted (no names, GUIDs, properties or addresses) and only rendered images are published. Never commit an IFC, its file name, or its level/project names.
 
 Every `sync` and `daily` run also performs a **leak check**: it reads the project names from the source repo in memory and fails, so nothing is pushed, if any of them appears in a published path or file.
 

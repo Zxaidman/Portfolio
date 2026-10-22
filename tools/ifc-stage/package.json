@@ -1,0 +1,7 @@
+{
+  "name": "ifc-stage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline renderer for the portfolio scroll stage (IFC -> transparent frames)",
+  "dependencies": { "three": "0.169.0" }
+}

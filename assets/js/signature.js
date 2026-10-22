@@ -2,9 +2,11 @@
    signature.js — behaviour for the permanent signature sections.
      stage():  pinned scroll stage. One scroll progress p (0 → 1 across the section)
                drives everything: frame sequence on a canvas, hero fade, HUD parallax
-               cards, the build meter, the camera push-in and the viewport that expands
-               into the showcase. Frames are preloaded progressively (first, last, then
-               every other frame, then the rest), so it works before everything loads.
+               cards, the build meter (+ the level being placed), the camera push-in and
+               the viewport that expands into the showcase. Frames are preloaded
+               progressively (first, last, then every other frame, then the rest), so it
+               works before everything loads. Segments marked "tint" (the IFC model, rendered
+               as neutral clay) are recoloured to --sig-model-tint, keeping their shading.
      showcaseTabs(): keyboard-accessible tabs inside the showcase.
      skills(): filter chips + cursor-following glow on the skill cards.
    Motion is opt-in: with prefers-reduced-motion (or no JS) the static layout stays.
@@ -32,11 +34,11 @@
     hudIn: [0.15, 0.23], hudOut: [0.40, 0.47],                 // desktop: both HUD cards
     mL: { in: [0.15, 0.21], out: [0.29, 0.34] },               // mobile: left card first
     mR: { in: [0.34, 0.40], out: [0.48, 0.53] },               // then right card
-    meter: [0.08, 0.14, 0.55, 0.61],
+    meter: [0.08, 0.14, 0.58, 0.63],
     hint: [0.05, 0.11, 0.48, 0.56],
-    push: [0.55, 0.66],          // camera pushes into the model and the model fades away
-    screenIn: [0.62, 0.66],      // viewport fades in where the model was
-    expand: [0.66, 0.88],        // viewport grows to fill the screen
+    push: [0.58, 0.68],          // camera pushes into the model and the model fades away
+    screenIn: [0.64, 0.68],      // viewport fades in where the model was
+    expand: [0.68, 0.90],        // viewport grows to fill the screen
   };
 
   function stage() {
@@ -58,6 +60,7 @@
     const meter = $(".sig-meter", section);
     const meterVal = $("[data-sig-meter]", section);
     const meterBar = $("[data-sig-bar]", section);
+    const meterPhase = $("[data-sig-phase]", section);
     const hint = $(".sig-hint", section);
     const screen = $(".sig-screen", section);
 
@@ -74,7 +77,58 @@
       return `${set.dir}/f${String(f.i).padStart(3, "0")}.webp`;
     };
 
-    const st = { p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, active: true, raf: 0, gen: 0 };
+    const st = { p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, active: true, raf: 0, gen: 0, phase: "" };
+
+    // ---------------- theme tint ----------------
+    // Resolve --sig-model-tint to a colour the canvas understands (any CSS colour syntax).
+    const tint = { color: "", mix: 0, key: "" };
+    const probe = document.createElement("canvas").getContext("2d");
+    function readTint() {
+      const cs = getComputedStyle(section);
+      const tmp = document.createElement("span");
+      tmp.style.cssText = "position:absolute;visibility:hidden;color:var(--sig-model-tint)";
+      section.appendChild(tmp);
+      const raw = getComputedStyle(tmp).color;
+      tmp.remove();
+      let color = "";
+      if (probe && raw) {
+        probe.fillStyle = "#000"; probe.fillStyle = raw;  // ignored if the canvas can't parse it
+        probe.clearRect(0, 0, 1, 1); probe.fillRect(0, 0, 1, 1);
+        const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
+        color = `rgb(${r},${g},${b})`;
+      }
+      tint.color = color;
+      tint.mix = clamp(parseFloat(cs.getPropertyValue("--sig-model-tint-mix")) || 0);
+      tint.key = `${color}|${tint.mix}`;
+    }
+    // Themes switch by attribute/class on <html> or <body>: re-read and redraw.
+    const retint = () => { readTint(); st.drawnKey = ""; request(); };
+    const mo = new MutationObserver(retint);
+    [document.documentElement, document.body].forEach((n) => mo.observe(n, { attributes: true, attributeFilter: ["class", "data-theme", "style"] }));
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", retint);
+
+    // One reusable offscreen buffer; the last tinted frame is cached.
+    const buf = document.createElement("canvas");
+    const bctx = buf.getContext("2d");
+    let tinted = { idx: -1, key: "" };
+    function tintedImage(idx, img) {
+      if (!bctx || !tint.color || tint.mix <= 0) return img;
+      if (tinted.idx === idx && tinted.key === tint.key && tinted.img === img) return buf;
+      buf.width = img.width; buf.height = img.height;
+      bctx.globalCompositeOperation = "source-over"; bctx.globalAlpha = 1;
+      bctx.clearRect(0, 0, buf.width, buf.height);
+      bctx.drawImage(img, 0, 0);
+      bctx.globalCompositeOperation = "color";          // hue + saturation from the tint, light from the render
+      bctx.globalAlpha = tint.mix;
+      bctx.fillStyle = tint.color;
+      bctx.fillRect(0, 0, buf.width, buf.height);
+      bctx.globalCompositeOperation = "destination-in"; // keep the render's transparency
+      bctx.globalAlpha = 1;
+      bctx.drawImage(img, 0, 0);
+      bctx.globalCompositeOperation = "source-over";
+      tinted = { idx, key: tint.key, img };
+      return buf;
+    }
 
     // ---------------- loading ----------------
     function loadFrame(idx, gen) {
@@ -141,11 +195,12 @@
       const idx = nearestLoaded(wanted());
       if (idx < 0) return;
       const push = ease(seg(st.p, T.push[0], T.push[1]));
-      const key = `${idx}|${push.toFixed(3)}|${st.vw}x${st.vh}`;
+      const key = `${idx}|${push.toFixed(3)}|${st.vw}x${st.vh}|${tint.key}`;
       if (!force && key === st.drawnKey) return;
       st.drawnKey = key;
       const f = frames[idx];
       const img = f.img;
+      const src = f.seg.tint ? tintedImage(idx, img) : img;
       const { vw, vh, dpr } = st;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, vw, vh);
@@ -157,7 +212,8 @@
         const mobile = vw < 860;
         h = vh * (mobile ? 0.6 : 0.82);
         w = img.width * (h / img.height);
-        if (w > vw * 0.9) { w = vw * 0.9; h = img.height * (w / img.width); }
+        const maxW = vw * (mobile ? 0.96 : 0.9);
+        if (w > maxW) { w = maxW; h = img.height * (w / img.width); }
         x = (vw - w) / 2;
         y = (mobile ? vh * 0.46 : vh * 0.53) - h / 2;
       }
@@ -166,7 +222,7 @@
       const k = 1 + push * 0.55;
       const cx = vw / 2, cy = vh * 0.5;
       ctx.globalAlpha = Math.max(0, 1 - push * 1.05);
-      ctx.drawImage(img, cx + (x - cx) * k, cy + (y - lift - cy) * k, w * k, h * k);
+      ctx.drawImage(src, cx + (x - cx) * k, cy + (y - lift - cy) * k, w * k, h * k);
       ctx.globalAlpha = 1;
     }
 
@@ -202,8 +258,17 @@
         card(hudR, T.hudIn, T.hudOut, "x", 1);
       }
 
-      // Build meter (shows the share of the build-up segment that has played)
-      const built = seg(p, T.frames[0], T.frames[0] + (T.frames[1] - T.frames[0]) * (segments[0].count / total));
+      // Build meter: share of the first segment that is built ("complete" = the fraction of its
+      // frames at which the model is fully assembled; after that it explodes and closes again).
+      const first = segments[0];
+      const firstSpan = (T.frames[1] - T.frames[0]) * (first.count / total);
+      const built = seg(p, T.frames[0], T.frames[0] + firstSpan * (first.complete || 1));
+      if (meterPhase && first.phases) {
+        const u = seg(p, T.frames[0], T.frames[0] + firstSpan);
+        let label = "";
+        for (const ph of first.phases) if (u >= ph.at) label = ph.label;
+        if (label !== st.phase) { st.phase = label; meterPhase.textContent = label; }
+      }
       meter.style.opacity = String(seg(p, T.meter[0], T.meter[1]) * (1 - seg(p, T.meter[2], T.meter[3])));
       meterVal.textContent = `${Math.round(built * 100)}%`;
       meterBar.style.transform = `scaleX(${built})`;
@@ -249,6 +314,7 @@
     window.addEventListener("orientationchange", () => { size(); request(); });
 
     // Links into the stage (e.g. "#top") land on the hero; the showcase link lands expanded.
+    readTint();
     size();
     frame();
     preload();

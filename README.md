@@ -12,7 +12,7 @@ I turn 2D drawings into Revit models a site team can build from. Three years mod
 
 ## A site that keeps changing
 
-Scroll the first screen and a Revit tower builds floor by floor, then opens into the project showcase.
+Scroll the first screen and a BIM model assembles itself: columns, beams and slabs fly into place storey by storey, the floors pull apart into an exploded view, then the model opens into the project showcase.
 
 
 - **Monday, Wednesday and Friday mornings** the whole portfolio is rebuilt with a new layout, inspired by what's trending in web design.

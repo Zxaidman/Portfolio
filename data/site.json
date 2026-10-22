@@ -15,9 +15,14 @@
     "s14",
     "s15"
   ],
-  "version": "4.0.0",
+  "version": "4.1.0",
   "date": "2026-10-22",
   "revisions": [
+    {
+      "rev": "4.1.0",
+      "date": "2026-10-22",
+      "note": "Signature: hero rebuilt from a real IFC model (fly-in assembly, exploded view, theme tint)"
+    },
     {
       "rev": "4.0.0",
       "date": "2026-10-22",

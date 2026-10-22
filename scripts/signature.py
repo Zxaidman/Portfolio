@@ -3,11 +3,13 @@ signature.py — the permanent signature sections of the portfolio.
 
 Two sections stay on the site through every redesign; designs restyle them, never remove them:
 
-  stage_html()   The scroll stage. A pinned hero where scrolling plays the Revit build-up
-                 (and later an optional clip of Zaid) frame by frame on a canvas. The name
-                 fades out, two HUD cards float in either side of the tower, a meter shows
-                 how much is built, then the camera pushes in and a Revit-style viewport
-                 opens and expands into the project showcase.
+  stage_html()   The scroll stage. A pinned hero where scrolling plays the build frame by
+                 frame on a canvas: a 3D BIM model rendered from an IFC (elements fly into
+                 place storey by storey, exploded view, orbit), tinted to the current theme;
+                 or a Revit build-up video; then an optional clip of Zaid. The name fades
+                 out, two HUD cards float in either side, a meter shows how much is built and
+                 which level is being placed, then the camera pushes in and a Revit-style
+                 viewport opens and expands into the project showcase.
   skills_html()  The skill cards: category tabs and a grid of cards with a glyph tile,
                  badge, name, one-line description and a link to evidence on the page.
 
@@ -139,6 +141,12 @@ def _showcase(projects: list[dict], show: dict, profile: dict, opener) -> str:
     </div>"""
 
 
+POSTER_ALT = {
+    "model": "Completed 3D BIM model of a residential building, structure and facade",
+    "buildup": "Completed Revit model of a residential tower",
+}
+
+
 def stage_html(profile: dict, projects: list[dict], opener, anchor: str = "top") -> str:
     """The pinned scroll stage. `opener(slug, href, inner, cls, label=...)` is the design's
     viewer-link helper, so showcase cards open the same gallery as the rest of the page."""
@@ -162,7 +170,7 @@ def stage_html(profile: dict, projects: list[dict], opener, anchor: str = "top")
 <section class="sig-stage" id="{e(anchor)}" data-sig="stage" aria-labelledby="sig-name">
   <script type="application/json" id="sig-stage-data">{manifest}</script>
   <div class="sig-pin">
-    <img class="sig-poster" src="{e(first["desktop"]["dir"])}/f{first["count"]:03d}.webp" alt="Completed Revit model of a residential tower" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="lazy">
+    <img class="sig-poster" src="{e(first.get("poster") or f'{first["desktop"]["dir"]}/f{first["count"]:03d}.webp')}" alt="{e(POSTER_ALT.get(first["id"], POSTER_ALT["buildup"]))}" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="lazy">
     <canvas class="sig-canvas" aria-hidden="true"></canvas>
     <div class="sig-hero">
       <div class="sig-hero-top"><span>{e(st["eyebrow"])}</span>{status}</div>
@@ -177,7 +185,7 @@ def stage_html(profile: dict, projects: list[dict], opener, anchor: str = "top")
     </div>
     {_hud(left, "sig-hud-l")}
     {_hud(right, "sig-hud-r")}
-    <div class="sig-meter" aria-hidden="true"><span>{e(st["meter_label"])}</span><b data-sig-meter>0%</b><i><em data-sig-bar></em></i></div>
+    <div class="sig-meter" aria-hidden="true"><span>{e(st["meter_label"])}</span><b data-sig-meter>0%</b><i><em data-sig-bar></em></i><small data-sig-phase></small></div>
     <p class="sig-hint" aria-hidden="true"><span class="sig-hint-arrow">↓</span>{e(st["hint"])}</p>
     {_showcase(projects, st["showcase"], profile, opener)}
   </div>

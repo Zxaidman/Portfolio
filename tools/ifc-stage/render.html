@@ -1,0 +1,201 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>IFC stage renderer</title>
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+</head><body>
+<script type="module">
+/*
+ * Offline renderer for the portfolio scroll stage.
+ * Loads geometry-only meshes (geom.bin/json from extract.py) and renders the
+ * choreography at any normalised time u in [0,1] to a transparent PNG.
+ *
+ * Choreography (u):
+ *   0.03-0.60  assembly, storey by storey; inside a storey: columns grow, beams slide in,
+ *              slabs drop, walls rise, stairs drop, openings/glazing fly in from outside
+ *   0.62-0.94  exploded view: storeys separate vertically, then close up again
+ *   whole run  slow camera orbit (rotated view)
+ */
+import * as THREE from "three";
+
+const P = new URLSearchParams(location.search);
+const W = +P.get("w") || 1800, H = +P.get("h") || 1350;
+const AZ0 = +(P.get("az0") ?? 32), AZSPAN = +(P.get("azspan") ?? 105);
+const FOV = +(P.get("fov") ?? 26), RADIUS = +(P.get("r") ?? 0);
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ramp = (u, a, b) => clamp((u - a) / (b - a));
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+// deterministic jitter, so every render of the same u is identical
+const jitter = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, premultipliedAlpha: false, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(FOV, W / H, 1, 2000);
+
+// Neutral "clay" palette; the page tints it to the current theme at runtime.
+const MAT = {
+  struct: new THREE.MeshStandardMaterial({ color: 0xf1eee9, roughness: .9, metalness: 0 }),
+  wall:   new THREE.MeshStandardMaterial({ color: 0xdedad4, roughness: .95, metalness: 0 }),
+  joinery:new THREE.MeshStandardMaterial({ color: 0xcdc8c0, roughness: .8, metalness: 0 }),
+  glass:  new THREE.MeshStandardMaterial({ color: 0xd2dade, roughness: .2, metalness: 0, transparent: true, opacity: .42, depthWrite: false }),
+};
+const EDGE = new THREE.LineBasicMaterial({ color: 0x3a3a3a, transparent: true, opacity: .3 });
+// Ghost: faint outline of the finished building, visible before and during assembly.
+const GHOST = new THREE.LineBasicMaterial({ color: 0x6b6b6b, transparent: true, opacity: .2, depthWrite: false });
+const ghostRoot = new THREE.Group();
+const KIND = {
+  IfcColumn: "column", IfcBeam: "beam", IfcSlab: "slab", IfcWall: "wall",
+  IfcStair: "stair", IfcStairFlight: "stair", IfcRailing: "stair",
+  IfcMember: "opening", IfcPlate: "opening", IfcWindow: "opening", IfcDoor: "opening",
+};
+const MATOF = { column: "struct", beam: "struct", slab: "struct", wall: "wall", stair: "struct", opening: "joinery" };
+// [start, end] of each kind inside its storey window (fractions of the window)
+const PHASE = { column: [0, .34], beam: [.18, .56], slab: [.42, .78], wall: [.52, .88], stair: [.6, .9], opening: [.68, 1] };
+const ORDER = ["column", "beam", "slab", "wall", "stair", "opening"];
+
+const A0 = .03, A1 = .60;           // assembly span
+const DUR = .03;                     // one element's flight time (in u)
+const EX = [.62, .74, .82, .94];     // explode: open, hold, close
+const EXGAP = 4.4;                   // metres between exploded storeys
+
+let items = [], bounds, nStoreys, centreY, phases = [];
+
+async function setup() {
+  const [meta, buf] = await Promise.all([
+    fetch(".work/geom.json").then(r => r.json()),
+    fetch(".work/geom.bin").then(r => r.arrayBuffer()),
+  ]);
+  const pos = new Float32Array(buf, 0, meta.nverts * 3);
+  const idx = new Uint32Array(buf, meta.nverts * 12, meta.nidx);
+
+  // IFC is Z-up; three is Y-up. Centre the footprint, sit the lowest point on y=0.
+  let lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9];
+  for (const e of meta.elements) for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], e.lo[k]); hi[k] = Math.max(hi[k], e.hi[k]); }
+  const cx = (lo[0] + hi[0]) / 2, cy = (lo[1] + hi[1]) / 2, z0 = lo[2];
+  const map = (x, y, z) => [x - cx, z - z0, -(y - cy)];
+  bounds = { w: hi[0] - lo[0], d: hi[1] - lo[1], h: hi[2] - lo[2] };
+
+  // storeys: fold the tiny tank levels into the terrace window
+  const sCount = meta.storeys.length;
+  nStoreys = Math.min(sCount, 7);
+  const sOf = s => Math.min(Math.max(s, 0), nStoreys - 1);
+  const step = (A1 - A0 - DUR) / (nStoreys - 1 + 1.5), win = step * 1.5;
+
+  const root = new THREE.Group(); scene.add(root); scene.add(ghostRoot);
+  const byKey = {};
+  meta.elements.forEach((e, n) => {
+    const kind = KIND[e.c]; if (!kind) return;
+    const s = sOf(e.s);
+    const [vo, vc] = e.v, [io, ic] = e.i;
+    // element-local geometry around its base centre (pivot for grow/drop moves)
+    const a = map(e.lo[0], e.lo[1], e.lo[2]), b = map(e.hi[0], e.hi[1], e.hi[2]);
+    const pivot = [(a[0] + b[0]) / 2, Math.min(a[1], b[1]), (a[2] + b[2]) / 2];
+    const p = new Float32Array(vc * 3);
+    for (let i = 0; i < vc; i++) {
+      const m = map(pos[(vo + i) * 3], pos[(vo + i) * 3 + 1], pos[(vo + i) * 3 + 2]);
+      p[i * 3] = m[0] - pivot[0]; p[i * 3 + 1] = m[1] - pivot[1]; p[i * 3 + 2] = m[2] - pivot[2];
+    }
+    const ix = new Uint32Array(ic);
+    for (let i = 0; i < ic; i++) ix[i] = idx[io + i] - 0; // indices are element-local already
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(p, 3));
+    g.setIndex(new THREE.BufferAttribute(ix, 1));
+    g.computeVertexNormals();
+    const isGlass = e.c === "IfcPlate" || e.c === "IfcWindow";
+    const mesh = new THREE.Mesh(g, isGlass ? MAT.glass : MAT[MATOF[kind]]);
+    mesh.castShadow = !isGlass; mesh.receiveShadow = true;
+    const grp = new THREE.Group(); grp.add(mesh);
+    const edges = new THREE.EdgesGeometry(g, 28);
+    if (!isGlass) grp.add(new THREE.LineSegments(edges, EDGE));
+    if (kind !== "opening") { const gl = new THREE.LineSegments(edges, GHOST); gl.position.set(...pivot); ghostRoot.add(gl); }
+    grp.position.set(...pivot);
+    root.add(grp);
+    const ext = [Math.abs(b[0] - a[0]), Math.abs(b[2] - a[2])];
+    const out = new THREE.Vector2(pivot[0], pivot[2]); if (out.lengthSq() < 1e-6) out.set(1, 0); out.normalize();
+    const it = { grp, kind, s, pivot, out, ext, n };
+    (byKey[s + kind] ||= []).push(it);
+    items.push(it);
+  });
+
+  // arrival times: storey window + kind phase + a sweep across the footprint (+ jitter)
+  for (let s = 0; s < nStoreys; s++) {
+    const t0 = A0 + s * step;
+    for (const kind of ORDER) {
+      const list = byKey[s + kind] || []; if (!list.length) continue;
+      const [ka, kb] = PHASE[kind];
+      list.forEach(it => {
+        const sweep = clamp((it.pivot[0] / bounds.w) + .5);
+        it.t = t0 + win * (ka + (kb - ka) * clamp(sweep * .8 + jitter(it.n) * .2));
+      });
+      phases.push({ at: +(t0 + win * ka).toFixed(4), storey: s, kind });
+    }
+  }
+  phases.sort((p, q) => p.at - q.at);
+
+  // ground shadow catcher (transparent apart from the shadow)
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.ShadowMaterial({ opacity: .16 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -.02; ground.receiveShadow = true; scene.add(ground);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8580, 1.35));
+  const sun = new THREE.DirectionalLight(0xffffff, 2.1);
+  sun.position.set(-40, 70, 45); sun.castShadow = true;
+  const sc = sun.shadow.camera; sc.left = -60; sc.right = 60; sc.top = 60; sc.bottom = -60; sc.near = 1; sc.far = 250;
+  sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -.0004; sun.shadow.radius = 4;
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xffffff, .55); fill.position.set(50, 30, -40); scene.add(fill);
+
+  centreY = bounds.h / 2;
+  return { elements: items.length, storeys: nStoreys, bounds, phases };
+}
+
+function pose(u) {
+  const ghost = .2 * (1 - ramp(u, .08, .5));
+  GHOST.opacity = ghost; ghostRoot.visible = ghost > .004;
+  const ex = u < EX[0] ? 0 : u < EX[1] ? easeInOut(ramp(u, EX[0], EX[1])) : u < EX[2] ? 1 : easeInOut(1 - ramp(u, EX[2], EX[3]));
+  for (const it of items) {
+    const g = it.grp;
+    const raw = (u - it.t) / DUR;
+    if (raw <= 0) { g.visible = false; continue; }
+    g.visible = true;
+    const p = easeOut(clamp(raw)), q = 1 - p;
+    let dx = 0, dy = 0, dz = 0, sy = 1;
+    switch (it.kind) {
+      case "column": sy = Math.max(.001, p); break;
+      case "wall": sy = Math.max(.001, p); dy = -q * 1.5; break;
+      case "beam": {
+        const along = it.ext[0] >= it.ext[1] ? 0 : 1; // slide along its own length, from the outside in
+        const sgn = Math.sign(along === 0 ? it.pivot[0] : it.pivot[2]) || 1;
+        if (along === 0) dx = sgn * q * 14; else dz = sgn * q * 14;
+        dy = q * 2.5; break;
+      }
+      case "slab": dy = q * 9; break;
+      case "stair": dy = q * 6; break;
+      case "opening": dx = it.out.x * q * 8; dz = it.out.y * q * 8; break;
+    }
+    g.position.set(it.pivot[0] + dx, it.pivot[1] + dy + it.s * EXGAP * ex, it.pivot[2] + dz);
+    g.scale.set(1, sy, 1);
+  }
+  // camera: slow orbit, lower and wider while exploded
+  const az = THREE.MathUtils.degToRad(AZ0 + AZSPAN * easeInOut(u));
+  const el = THREE.MathUtils.degToRad(24 - 7 * ex);
+  const h = bounds.h + (nStoreys - 1) * EXGAP * ex;
+  const span = Math.max(Math.hypot(bounds.w, bounds.d), h * 1.25);
+  const R = RADIUS || (span / 2) / Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * 1.12;
+  const ty = h / 2;
+  camera.position.set(Math.sin(az) * Math.cos(el) * R, ty + Math.sin(el) * R, Math.cos(az) * Math.cos(el) * R);
+  camera.lookAt(0, ty, 0);
+}
+
+window.setup = setup;
+window.renderAt = u => { pose(u); renderer.render(scene, camera); return renderer.domElement.toDataURL("image/png"); };
+window.ready = true;
+</script></body></html>
