@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [4.2.2] - 2026-10-22 (night)
+- Night theme and asset change: Synced new project media. Featured G+10 residential block model, quench theme.
+
 ## [4.2.1] - 2026-10-22 (fix)
 - Hero models: the ground shadow is now a soft contact shadow that fades with distance from the building; the tall tower's long shadow no longer ends in a hard straight edge.
 

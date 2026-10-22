@@ -1,23 +1,30 @@
 {
-  "featured": "s21",
-  "theme": "galvanised",
+  "featured": "s11",
+  "theme": "quench",
   "reel": [
-    "s21",
-    "s22",
-    "s05",
-    "s06",
-    "s07",
-    "s09",
-    "s10",
     "s11",
     "s12",
     "s13",
     "s14",
-    "s15"
+    "s15",
+    "s21",
+    "s22",
+    "s04",
+    "s05",
+    "s06",
+    "s07",
+    "s08",
+    "s09",
+    "s10"
   ],
-  "version": "4.2.1",
+  "version": "4.2.2",
   "date": "2026-10-22",
   "revisions": [
+    {
+      "rev": "4.2.2",
+      "date": "2026-10-22",
+      "note": "Synced new project media. Featured G+10 residential block model, quench theme"
+    },
     {
       "rev": "4.2.1",
       "date": "2026-10-22",
@@ -37,13 +44,8 @@
       "rev": "4.0.0",
       "date": "2026-10-22",
       "note": "Signature: scroll-to-build stage and skill cards"
-    },
-    {
-      "rev": "3.1.1",
-      "date": "2026-10-22",
-      "note": "Synced new project media. Featured Residential block model, galvanised theme"
     }
   ],
-  "slot": "2026-10-22 afternoon",
+  "slot": "2026-10-22 night",
   "stage_model": 1
 }
