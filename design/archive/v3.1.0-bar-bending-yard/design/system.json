@@ -1,0 +1,32 @@
+{
+  "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
+  "name": "Bar bending yard",
+  "introduced": "3.1.0",
+  "concept": "The tower is still read roof to foundation, but every surface now comes from the bar bending yard: slabs end on a ribbed TMT bar instead of a flat edge, buttons and chips are punched bar-mark tags, frames have the soft corners of a bent bar (bend radius, not a sharp corner), and headings are forged as they arrive, stretching from a thin, narrow cut length to a heavy, wide bar.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=Instrument+Sans:wdth,wght@75..100,400..700&family=Martian+Mono:wdth,wght@75..112.5,300..700&display=swap",
+    "body": "\"Instrument Sans\", \"Segoe UI\", system-ui, sans-serif",
+    "display": "\"Anybody\", \"Arial Black\", system-ui, sans-serif",
+    "mono": "\"Martian Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
+  },
+  "scale": {
+    "--step--1": "clamp(0.76rem, 0.74rem + 0.1vw, 0.84rem)",
+    "--step-0": "clamp(1rem, 0.97rem + 0.18vw, 1.09rem)",
+    "--step-1": "clamp(1.2rem, 1.08rem + 0.55vw, 1.5rem)",
+    "--step-2": "clamp(1.55rem, 1.2rem + 1.5vw, 2.5rem)",
+    "--step-3": "clamp(2.1rem, 1.3rem + 3.6vw, 4.4rem)",
+    "--step-hero": "clamp(3.2rem, 0.6rem + 8.4vw, 9.2rem)",
+    "--gutter": "clamp(16px, 3.2vw, 48px)",
+    "--rail": "clamp(0px, 12vw, 172px)",
+    "--storey": "clamp(60px, 8.5vw, 128px)",
+    "--max": "1260px",
+    "--radius": "14px",
+    "--slab": "10px"
+  },
+  "themes": {
+    "bartag":     { "scheme": "light", "paper": "#f7efb4", "panel": "#efe59c", "ink": "#16150d", "muted": "#504b2c", "line": "#b3a75c", "accent": "#1438a6", "on-accent": "#ffffff", "viewport": "#ebe5c3" },
+    "millscale":  { "scheme": "dark",  "paper": "#1b1a23", "panel": "#25242f", "ink": "#eeedf3", "muted": "#a9a7b8", "line": "#4c4a5b", "accent": "#ffd23a", "on-accent": "#1b1a23", "viewport": "#d9d8df" },
+    "galvanised": { "scheme": "light", "paper": "#e7eaee", "panel": "#d8dde3", "ink": "#10161c", "muted": "#47525d", "line": "#9aa6b1", "accent": "#07734a", "on-accent": "#ffffff", "viewport": "#dde1e6" },
+    "quench":     { "scheme": "dark",  "paper": "#2a100c", "panel": "#361712", "ink": "#fbefe8", "muted": "#d6b2a6", "line": "#6e3d33", "accent": "#5fd8ff", "on-accent": "#2a100c", "viewport": "#e3d9d5" }
+  }
+}

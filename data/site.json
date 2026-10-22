@@ -1,8 +1,7 @@
 {
-  "featured": "s14",
-  "theme": "formwork",
+  "featured": "s15",
+  "theme": "millscale",
   "reel": [
-    "s14",
     "s15",
     "s21",
     "s22",
@@ -13,11 +12,17 @@
     "s10",
     "s11",
     "s12",
-    "s13"
+    "s13",
+    "s14"
   ],
-  "version": "3.0.2",
-  "date": "2026-10-21",
+  "version": "3.1.0",
+  "date": "2026-10-22",
   "revisions": [
+    {
+      "rev": "3.1.0",
+      "date": "2026-10-22",
+      "note": "Bar bending yard design system. Synced new project media. Featured Commercial tower model, millscale theme"
+    },
     {
       "rev": "3.0.2",
       "date": "2026-10-21",
@@ -37,12 +42,7 @@
       "rev": "2.0.2",
       "date": "2026-10-20",
       "note": "Synced new project media. Featured Sale and rehab building model, blueprint theme"
-    },
-    {
-      "rev": "2.0.1",
-      "date": "2026-10-19",
-      "note": "Design tokens moved into a versioned design system"
     }
   ],
-  "slot": "2026-10-21 night"
+  "slot": "2026-10-22 morning"
 }

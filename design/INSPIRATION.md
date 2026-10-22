@@ -32,7 +32,7 @@ Read this before every new design system (minor, every morning) and every revamp
 - Scroll-driven reveal with CSS `animation-timeline: view()` (wrap in `@supports`, fall back to visible)
 - Build-up video scrubbed by scroll position instead of autoplay
 - View Transitions API for opening a project (`document.startViewTransition`), with a plain fallback
-- Kinetic type: variable-font width or weight animating on scroll or hover
+- Kinetic type: variable-font width or weight animating on scroll or hover *(used 3.1.0)*
 - Cursor-following media preview over a text index
 - Horizontal pinned scroll section
 - Section-box clipping reveal (a clip-path box sweeping open, like a Revit section box) *(used 3.0.0)*
@@ -47,6 +47,7 @@ Read this before every new design system (minor, every morning) and every revamp
 - Bento grids, oversized hero typography with variable fonts, scroll-driven and scroll-triggered CSS animation, dark-first palettes, restrained glassmorphism, micro-interactions on every state, mixed scroll directions, cinematic video heroes, grain and chromatic textures, accessible-first colour tokens, lightweight pages. Sources: [Line25: Web Design Trends 2026](https://line25.com/articles/web-design-trends-2026/), [Really Good Designs: Web Design Trends 2026](https://reallygooddesigns.com/web-design-trends-2026/), [Chrome: scroll-triggered animations](https://developer.chrome.com/blog/scroll-triggered-animations).
 - Each run appends a dated line here with what it found.
 - 2026-10-21 (3.0.0): Awwwards Creative Pass keeps surfacing scroll-driven data storytelling ([Scroll-driven PK modelling](https://www.awwwards.com/inspiration/scroll-driven-pk-modeling-substraterx)) and architecture studios using scroll as spatial movement ([Verticité Architecture](https://www.awwwards.com/inspiration/horizontal-scroll-verticite-architecture)). Native CSS scroll timelines (`animation-timeline: scroll()/view()`) are now enough for progress indicators and reveals without JS libraries. Used: a lift car on a scroll timeline and view-timeline section-box reveals.
+- 2026-10-22 (3.1.0): Awwwards Creative Pass variable-font collections ([Safari Riot](https://www.awwwards.com/inspiration/variable-font-animation-safari-riot), [Manrope](https://www.awwwards.com/inspiration/variable-font-animation-manrope-font)) and FontLab's [Variable fonts in motion and UI](https://blog.fontlab.com/2026/03/10/variable-fonts-in-motion-and-ui/) (Mar 2026) show type itself as the motion: width/weight axes driven by scroll instead of moving boxes. Used: headings forged from wdth 50/wght 140 to wdth 118/wght 820 on a CSS view() timeline, plus hover-stretch on project titles.
 
 ## Non-negotiables
 
