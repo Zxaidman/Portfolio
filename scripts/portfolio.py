@@ -590,6 +590,11 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
     system = read_json(ROOT / "design" / "system.json", {}) or {}
     if part in ("major", "minor"):
         note = f"{system.get('name', 'New design')} design system. " + note
+        # The hero IFC model rotates with every new design system (patches keep it).
+        models = (read_json(DATA / "stage.json", {}) or {}).get("models") or []
+        if len(models) > 1:
+            site["stage_model"] = (int(site.get("stage_model", 0)) + 1) % len(models)
+            note += f", hero model {models[site['stage_model']]['id']}"
     history.insert(0, {"rev": new_version, "date": day.isoformat(), "note": note})
     site["revisions"] = history[:5]  # the title block shows the last five
     write_json(site_path, site)
@@ -765,9 +770,12 @@ def check_signature(errors: list[str]) -> None:
     except (OSError, KeyError, json.JSONDecodeError) as exc:
         errors.append(f"signature: data/skills.json unreadable ({exc})")
     stage = read_json(DATA / "stage.json", {}) or {}
-    if not stage.get("segments"):
-        errors.append("signature: data/stage.json has no frame segments (run scripts/stage.py)")
-    for seg in stage.get("segments", []):
+    if not stage.get("segments") and not stage.get("models"):
+        errors.append("signature: data/stage.json has no models or frame segments (run scripts/stage.py)")
+    for m in stage.get("models", []):
+        if not re.fullmatch(r"m\d{1,3}", str(m.get("id", ""))):
+            errors.append(f"signature: stage model id {m.get('id')!r} must be neutral (m1, m2, ...)")
+    for seg in stage.get("models", []) + stage.get("segments", []):
         for setname in ("desktop", "mobile"):
             d = ROOT / seg[setname]["dir"]
             for i in (1, seg["count"]):

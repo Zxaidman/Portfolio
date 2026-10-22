@@ -210,12 +210,12 @@
         w = img.width * s; h = img.height * s; x = (vw - w) / 2; y = (vh - h) / 2;
       } else {
         const mobile = vw < 860;
-        h = vh * (mobile ? 0.6 : 0.82);
+        h = vh * (mobile ? 0.56 : 0.82);   // phones: leave room for the meter above
         w = img.width * (h / img.height);
         const maxW = vw * (mobile ? 0.96 : 0.9);
         if (w > maxW) { w = maxW; h = img.height * (w / img.width); }
         x = (vw - w) / 2;
-        y = (mobile ? vh * 0.46 : vh * 0.53) - h / 2;
+        y = (mobile ? vh * 0.53 : vh * 0.53) - h / 2;
       }
       // Parallax: the model rises slightly while it builds, then the camera pushes in.
       const lift = seg(st.p, 0, T.frames[1]) * vh * 0.03;

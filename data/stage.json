@@ -1,22 +1,25 @@
 {
-  "segments": [
+  "segments": [],
+  "models": [
     {
-      "id": "model",
+      "id": "m1",
+      "kind": "model",
+      "alt": "3D BIM model of a low-rise residential building, structure and facade",
       "fit": "contain",
       "tint": true,
       "count": 168,
       "complete": 0.6,
       "desktop": {
-        "dir": "media/stage/model",
+        "dir": "media/stage/m1",
         "w": 1122,
         "h": 780
       },
       "mobile": {
-        "dir": "media/stage/model-m",
+        "dir": "media/stage/m1-m",
         "w": 748,
         "h": 520
       },
-      "poster": "media/stage/model-poster.webp",
+      "poster": "media/stage/m1-poster.webp",
       "phases": [
         {
           "at": 0.0,
@@ -44,6 +47,128 @@
         },
         {
           "at": 0.462,
+          "label": "Terrace"
+        },
+        {
+          "at": 0.62,
+          "label": "Exploded view"
+        },
+        {
+          "at": 0.82,
+          "label": "Reassembling"
+        },
+        {
+          "at": 0.95,
+          "label": "Model complete"
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "kind": "model",
+      "alt": "3D BIM model of a G+20 twin-tower residential building with podium",
+      "fit": "contain",
+      "tint": true,
+      "count": 168,
+      "complete": 0.6,
+      "desktop": {
+        "dir": "media/stage/m2",
+        "w": 582,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/m2-m",
+        "w": 388,
+        "h": 520
+      },
+      "poster": "media/stage/m2-poster.webp",
+      "phases": [
+        {
+          "at": 0.0,
+          "label": "Basement"
+        },
+        {
+          "at": 0.054,
+          "label": "Ground"
+        },
+        {
+          "at": 0.078,
+          "label": "Podium 1"
+        },
+        {
+          "at": 0.102,
+          "label": "Podium 2"
+        },
+        {
+          "at": 0.126,
+          "label": "Podium 3"
+        },
+        {
+          "at": 0.15,
+          "label": "Amenity"
+        },
+        {
+          "at": 0.174,
+          "label": "Level 5"
+        },
+        {
+          "at": 0.198,
+          "label": "Level 6"
+        },
+        {
+          "at": 0.222,
+          "label": "Level 7"
+        },
+        {
+          "at": 0.246,
+          "label": "Level 8"
+        },
+        {
+          "at": 0.27,
+          "label": "Level 9"
+        },
+        {
+          "at": 0.294,
+          "label": "Level 10"
+        },
+        {
+          "at": 0.318,
+          "label": "Level 11"
+        },
+        {
+          "at": 0.342,
+          "label": "Level 12"
+        },
+        {
+          "at": 0.366,
+          "label": "Level 14"
+        },
+        {
+          "at": 0.39,
+          "label": "Level 15"
+        },
+        {
+          "at": 0.414,
+          "label": "Level 16"
+        },
+        {
+          "at": 0.438,
+          "label": "Level 17"
+        },
+        {
+          "at": 0.462,
+          "label": "Level 18"
+        },
+        {
+          "at": 0.486,
+          "label": "Level 19"
+        },
+        {
+          "at": 0.51,
+          "label": "Level 20"
+        },
+        {
+          "at": 0.534,
           "label": "Terrace"
         },
         {

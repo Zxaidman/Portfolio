@@ -65,7 +65,9 @@ const ORDER = ["column", "beam", "slab", "wall", "stair", "opening"];
 const A0 = .03, A1 = .60;           // assembly span
 const DUR = .03;                     // one element's flight time (in u)
 const EX = [.62, .74, .82, .94];     // explode: open, hold, close
-const EXGAP = 4.4;                   // metres between exploded storeys
+// metres between exploded storeys; default scales with the building (~60% of its height in total)
+const GAP_Q = +P.get("gap") || 0;
+let EXGAP = 4.4;
 
 let items = [], bounds, nStoreys, centreY, phases = [];
 
@@ -84,9 +86,10 @@ async function setup() {
   const map = (x, y, z) => [x - cx, z - z0, -(y - cy)];
   bounds = { w: hi[0] - lo[0], d: hi[1] - lo[1], h: hi[2] - lo[2] };
 
-  // storeys: fold the tiny tank levels into the terrace window
+  // storey groups: newer extracts carry generic labels and are already grouped; older ones
+  // fold their tiny top levels (tank etc.) into the 7th window
   const sCount = meta.storeys.length;
-  nStoreys = Math.min(sCount, 7);
+  nStoreys = meta.labels ? sCount : Math.min(sCount, 7);
   const sOf = s => Math.min(Math.max(s, 0), nStoreys - 1);
   const step = (A1 - A0 - DUR) / (nStoreys - 1 + 1.5), win = step * 1.5;
 
@@ -136,7 +139,7 @@ async function setup() {
         const sweep = clamp((it.pivot[0] / bounds.w) + .5);
         it.t = t0 + win * (ka + (kb - ka) * clamp(sweep * .8 + jitter(it.n) * .2));
       });
-      phases.push({ at: +(t0 + win * ka).toFixed(4), storey: s, kind });
+      phases.push({ at: +(t0 + win * ka).toFixed(4), storey: s, kind, label: meta.labels ? meta.labels[s] : undefined });
     }
   }
   phases.sort((p, q) => p.at - q.at);
@@ -148,12 +151,15 @@ async function setup() {
   scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8580, 1.35));
   const sun = new THREE.DirectionalLight(0xffffff, 2.1);
   sun.position.set(-40, 70, 45); sun.castShadow = true;
-  const sc = sun.shadow.camera; sc.left = -60; sc.right = 60; sc.top = 60; sc.bottom = -60; sc.near = 1; sc.far = 250;
+  const ext = Math.max(60, Math.max(bounds.w, bounds.d) * .7 + bounds.h * .6);
+  sun.position.set(-40, 70, 45).normalize().multiplyScalar(ext * 1.6);
+  const sc = sun.shadow.camera; sc.left = -ext; sc.right = ext; sc.top = ext; sc.bottom = -ext; sc.near = 1; sc.far = ext * 4;
   sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -.0004; sun.shadow.radius = 4;
   scene.add(sun);
   const fill = new THREE.DirectionalLight(0xffffff, .55); fill.position.set(50, 30, -40); scene.add(fill);
 
   centreY = bounds.h / 2;
+  EXGAP = GAP_Q || Math.max(1.2, .6 * bounds.h / Math.max(1, nStoreys - 1));
   return { elements: items.length, storeys: nStoreys, bounds, phases };
 }
 

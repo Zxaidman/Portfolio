@@ -15,9 +15,14 @@
     "s14",
     "s15"
   ],
-  "version": "4.1.0",
+  "version": "4.2.0",
   "date": "2026-10-22",
   "revisions": [
+    {
+      "rev": "4.2.0",
+      "date": "2026-10-22",
+      "note": "Signature: rotating hero models; G+20 twin towers added and on show"
+    },
     {
       "rev": "4.1.0",
       "date": "2026-10-22",
@@ -37,17 +42,8 @@
       "rev": "3.1.0",
       "date": "2026-10-22",
       "note": "Bar bending yard design system. Synced new project media. Featured Commercial tower model, millscale theme"
-    },
-    {
-      "rev": "3.0.2",
-      "date": "2026-10-21",
-      "note": "Synced new project media. Featured Luxury residential tower model, formwork theme"
-    },
-    {
-      "rev": "3.0.1",
-      "date": "2026-10-21",
-      "note": "Synced new project media. Featured IT park building model, chalkline theme"
     }
   ],
-  "slot": "2026-10-22 afternoon"
+  "slot": "2026-10-22 afternoon",
+  "stage_model": 1
 }

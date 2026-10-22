@@ -40,9 +40,25 @@ def e(value) -> str:
     return escape(str(value if value is not None else ""), quote=True)
 
 
+def active_model(stage: dict, site: dict) -> dict | None:
+    """The IFC model on show: models rotate, one per design system (data/site.json "stage_model",
+    advanced by `portfolio.py refresh` on every minor and major)."""
+    models = stage.get("models") or []
+    if not models:
+        return None
+    return models[int(site.get("stage_model", 0)) % len(models)]
+
+
 def load() -> tuple[dict, dict]:
+    """skills.json, and the stage manifest the page plays: the active model (if any) followed by
+    any other segments (an optional clip of Zaid). Without models, the stored segments as-is."""
     skills = json.loads((DATA / "skills.json").read_text(encoding="utf-8"))
-    stage = json.loads((DATA / "stage.json").read_text(encoding="utf-8"))
+    raw = json.loads((DATA / "stage.json").read_text(encoding="utf-8"))
+    site_path = DATA / "site.json"
+    site = json.loads(site_path.read_text(encoding="utf-8")) if site_path.exists() else {}
+    model = active_model(raw, site)
+    others = [s for s in raw.get("segments", []) if not (model and s["id"] == "buildup")]
+    stage = {"segments": ([model] if model else []) + others}
     return skills, stage
 
 
@@ -170,7 +186,7 @@ def stage_html(profile: dict, projects: list[dict], opener, anchor: str = "top")
 <section class="sig-stage" id="{e(anchor)}" data-sig="stage" aria-labelledby="sig-name">
   <script type="application/json" id="sig-stage-data">{manifest}</script>
   <div class="sig-pin">
-    <img class="sig-poster" src="{e(first.get("poster") or f'{first["desktop"]["dir"]}/f{first["count"]:03d}.webp')}" alt="{e(POSTER_ALT.get(first["id"], POSTER_ALT["buildup"]))}" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="lazy">
+    <img class="sig-poster" src="{e(first.get("poster") or f'{first["desktop"]["dir"]}/f{first["count"]:03d}.webp')}" alt="{e(first.get("alt") or POSTER_ALT.get(first["id"], POSTER_ALT["buildup"]))}" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="lazy">
     <canvas class="sig-canvas" aria-hidden="true"></canvas>
     <div class="sig-hero">
       <div class="sig-hero-top"><span>{e(st["eyebrow"])}</span>{status}</div>

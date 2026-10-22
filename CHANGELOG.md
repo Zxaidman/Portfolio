@@ -2,6 +2,12 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [4.2.0] - 2026-10-22 (signature)
+- The hero now has a rotation of IFC models and shows one at a time; every new design system (each morning's minor or major) moves to the next model, while patches keep it.
+- Added a second model: a G+20 twin-tower residential building with basement, three podium levels and an amenity floor (architecture and structure merged, 7,350 elements). It is on show now; the G+4 building returns with the next design system.
+- The meter names each level of the model being built (Basement, Podium 1-3, Amenity, Level 5 ... Level 20, Terrace) using generic labels only.
+- The ground shadow now fades out softly at the edges of the frame instead of ending in a hard line.
+
 ## [4.1.0] - 2026-10-22 (signature)
 - The scroll stage now plays a real 3D BIM model built from an IFC instead of a screen recording: a faint wireframe of the finished building, then columns grow, beams slide in, slabs drop, walls rise and the facade flies in, storey by storey, while the camera orbits. The storeys then separate into an exploded view and close up again before the push-in.
 - The model is tinted to each day's theme, keeping its shading, so it changes colour with every design system and patch.

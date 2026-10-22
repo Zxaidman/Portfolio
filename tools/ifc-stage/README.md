@@ -14,14 +14,25 @@ dropped. Keep the IFC and the extracted geometry outside the repo.
 cd tools/ifc-stage && npm install            # three.js, pinned in package.json
 pip install --break-system-packages ifcopenshell playwright
 
-python3 extract.py /path/to/model.ifc /tmp/geo             # ~1-2 min for 5k elements
-CHROMIUM=/path/to/chrome python3 drive.py /tmp/geo /tmp/frames --frames 168   # ~5 s/frame (software GL)
-cd ../.. && python3 scripts/stage.py model /tmp/frames --phases /tmp/frames/phases.json --complete 0.6
+# one or more IFCs of the same project (e.g. architecture + structure), merged
+python3 extract.py /tmp/geo /path/to/AR.ifc /path/to/ST.ifc   # seconds to ~2 min
+CHROMIUM=/path/to/chrome python3 drive.py /tmp/geo /tmp/frames --frames 168 \
+    --query "w=1300&h=1800"          # portrait canvas for towers; default 1800x1350 for low-rise
+cd ../.. && python3 scripts/stage.py model /tmp/frames --phases /tmp/frames/phases.json \
+    --complete 0.6 --alt "3D BIM model of a G+20 residential tower"   # gets the next id: m1, m2, ...
 python3 scripts/portfolio.py build
 ```
 
 Options for `--query`: `az0` (start angle, degrees), `azspan` (orbit sweep), `fov`, `r` (fixed
-camera distance), `w`/`h` (render size). The timing of the choreography is at the top of
+camera distance), `w`/`h` (render size), `gap` (metres between exploded storeys; default
+scales with the building).
+
+Storeys of different blocks at nearly the same height (A/B blocks) are grouped into one level.
+Level labels on the meter are generic (Basement, Ground, Podium 1, Level 7, Terrace), built from
+keywords and numbers only; the model's own level names are never written.
+
+Models rotate on the site: one is shown at a time and every new design system (minor or major)
+moves to the next. Model ids are neutral (`m1`, `m2`...), never a project name. The timing of the choreography is at the top of
 `render.html` (`A0`, `A1`, `EX`, `EXGAP`, `PHASE`); `--complete` must match `A1` (when the
 building is fully assembled).
 
