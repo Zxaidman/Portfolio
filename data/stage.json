@@ -11,12 +11,12 @@
       "complete": 0.6,
       "desktop": {
         "dir": "media/stage/m1",
-        "w": 1122,
+        "w": 1090,
         "h": 780
       },
       "mobile": {
         "dir": "media/stage/m1-m",
-        "w": 748,
+        "w": 726,
         "h": 520
       },
       "poster": "media/stage/m1-poster.webp",

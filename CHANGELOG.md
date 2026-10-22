@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [4.2.1] - 2026-10-22 (fix)
+- Hero models: the ground shadow is now a soft contact shadow that fades with distance from the building; the tall tower's long shadow no longer ends in a hard straight edge.
+
 ## [4.2.0] - 2026-10-22 (signature)
 - The hero now has a rotation of IFC models and shows one at a time; every new design system (each morning's minor or major) moves to the next model, while patches keep it.
 - Added a second model: a G+20 twin-tower residential building with basement, three podium levels and an amenity floor (architecture and structure merged, 7,350 elements). It is on show now; the G+4 building returns with the next design system.

@@ -151,10 +151,11 @@ async function setup() {
   scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8580, 1.35));
   const sun = new THREE.DirectionalLight(0xffffff, 2.1);
   sun.position.set(-40, 70, 45); sun.castShadow = true;
-  const ext = Math.max(60, Math.max(bounds.w, bounds.d) * .7 + bounds.h * .6);
+  // shadow frustum must cover the longest shadow (tall towers cast far); keep >= 60 m (low-rise)
+  const ext = Math.max(60, Math.max(bounds.w, bounds.d) * .8 + bounds.h * 1.4);
   sun.position.set(-40, 70, 45).normalize().multiplyScalar(ext * 1.6);
   const sc = sun.shadow.camera; sc.left = -ext; sc.right = ext; sc.top = ext; sc.bottom = -ext; sc.near = 1; sc.far = ext * 4;
-  sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -.0004; sun.shadow.radius = 4;
+  sun.shadow.mapSize.set(ext > 90 ? 4096 : 2048, ext > 90 ? 4096 : 2048); sun.shadow.bias = -.0004; sun.shadow.radius = 4;
   scene.add(sun);
   const fill = new THREE.DirectionalLight(0xffffff, .55); fill.position.set(50, 30, -40); scene.add(fill);
 

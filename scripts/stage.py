@@ -154,20 +154,31 @@ SHADOW_ALPHA = 60     # model renders: pixels fainter than this are the ground s
 EDGE_FADE = 160       # px: shadows fade out over this distance from the canvas edge
 
 
+CONTACT = 0.16       # shadow fades to nothing at this share of the canvas size from the model
+
+
 def soften_edges(img: Image.Image) -> Image.Image:
-    """The ground shadow can run off the render canvas, which would show as a hard straight cut
-    on the page. Fade only the faint shadow pixels near the canvas border; the model is opaque
-    and stays untouched."""
+    """Turn the ground shadow into a soft contact shadow: it fades with distance from the model
+    (so a tall tower's long shadow never runs off the frame as a hard cut) and also near the
+    canvas border. Only the faint shadow pixels change; the model itself is untouched."""
     import numpy as np
+    from scipy import ndimage
     a = np.asarray(img).copy()
     h, w = a.shape[:2]
-    ys, xs = np.mgrid[0:h, 0:w]
-    dist = np.minimum.reduce([xs, w - 1 - xs, ys, h - 1 - ys]).astype(np.float32)
-    ramp = np.clip(dist / EDGE_FADE, 0, 1)
-    ramp = ramp * ramp * (3 - 2 * ramp)  # smoothstep
     alpha = a[:, :, 3].astype(np.float32)
     shadow = alpha < SHADOW_ALPHA
-    alpha[shadow] *= ramp[shadow]
+    smooth = lambda t: t * t * (3 - 2 * t)
+    # distance from the nearest model pixel (model = everything that is not shadow or empty)
+    model = alpha >= SHADOW_ALPHA
+    if model.any():
+        near = ndimage.distance_transform_edt(~model)
+        contact = smooth(np.clip(1 - near / (CONTACT * max(h, w)), 0, 1))
+    else:
+        contact = np.ones_like(alpha)
+    ys, xs = np.mgrid[0:h, 0:w]
+    border = np.minimum.reduce([xs, w - 1 - xs, ys, h - 1 - ys]).astype(np.float32)
+    edge = smooth(np.clip(border / EDGE_FADE, 0, 1))
+    alpha[shadow] *= (contact * edge)[shadow]
     a[:, :, 3] = alpha.astype(np.uint8)
     return Image.fromarray(a, "RGBA")
 
