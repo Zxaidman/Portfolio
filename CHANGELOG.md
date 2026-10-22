@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [3.1.1] - 2026-10-22 (afternoon)
+- Afternoon theme and asset change: Synced new project media. Featured Residential block model, galvanised theme.
+
 ## [3.1.0] - 2026-10-22 (morning)
 - New design system: Bar bending yard design system. Synced new project media. Featured Commercial tower model, millscale theme.
 

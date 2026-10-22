@@ -1,8 +1,7 @@
 {
-  "featured": "s15",
-  "theme": "millscale",
+  "featured": "s21",
+  "theme": "galvanised",
   "reel": [
-    "s15",
     "s21",
     "s22",
     "s05",
@@ -13,11 +12,17 @@
     "s11",
     "s12",
     "s13",
-    "s14"
+    "s14",
+    "s15"
   ],
-  "version": "3.1.0",
+  "version": "3.1.1",
   "date": "2026-10-22",
   "revisions": [
+    {
+      "rev": "3.1.1",
+      "date": "2026-10-22",
+      "note": "Synced new project media. Featured Residential block model, galvanised theme"
+    },
     {
       "rev": "3.1.0",
       "date": "2026-10-22",
@@ -37,12 +42,7 @@
       "rev": "3.0.0",
       "date": "2026-10-21",
       "note": "Storey stack design system. Synced new project media. Featured Luxury residential tower model, survey theme"
-    },
-    {
-      "rev": "2.0.2",
-      "date": "2026-10-20",
-      "note": "Synced new project media. Featured Sale and rehab building model, blueprint theme"
     }
   ],
-  "slot": "2026-10-22 morning"
+  "slot": "2026-10-22 afternoon"
 }
