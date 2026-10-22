@@ -1,0 +1,261 @@
+/* ==========================================================================
+   signature.css — the permanent signature sections (scroll stage + skill cards).
+   Uses only design tokens, so every design system restyles it automatically:
+     --paper --panel --ink --muted --line --accent --on-accent --viewport
+     --font --font-display --font-mono --radius --gutter --max
+   A design may override any rule in its own main.css; it must not remove the sections.
+   Without JavaScript, or with reduced motion, everything renders as a static layout.
+   ========================================================================== */
+
+.sig-stage, .sig-skills {
+  --sig-radius: var(--radius, 14px);
+  --sig-safe-bottom: 0px; /* a design with a fixed bottom bar sets this to the bar's height */
+  --sig-glass: color-mix(in srgb, var(--panel) 84%, transparent);
+  --sig-hair: color-mix(in srgb, var(--ink) 13%, transparent);
+  --sig-hair-strong: color-mix(in srgb, var(--ink) 30%, transparent);
+  --sig-shadow: 0 18px 48px rgb(0 0 0 / 0.22);
+  --sig-display: var(--font-display, var(--font));
+  --sig-mono: var(--font-mono, ui-monospace, monospace);
+}
+.sig-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sig-eyebrow { margin: 0; font-family: var(--sig-mono); font-size: 0.74rem; letter-spacing: 0.06em; color: var(--muted); }
+
+/* ---------- Buttons ---------- */
+.sig-btn {
+  display: inline-flex; align-items: center; gap: 0.5em; min-height: 44px; padding: 0.6em 1.15em;
+  border: 1px solid var(--sig-hair-strong); border-radius: 999px; color: var(--ink);
+  font: 600 0.92rem/1 var(--font); text-decoration: none; background: transparent;
+  transition: background-color .25s, color .25s, border-color .25s, transform .25s;
+}
+.sig-btn:hover { border-color: var(--ink); }
+.sig-btn:active { transform: scale(0.98); }
+.sig-btn-solid { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.sig-btn-solid:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.sig-stage :focus-visible, .sig-skills :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ==========================================================================
+   SCROLL STAGE — static base (no JS / reduced motion)
+   ========================================================================== */
+.sig-stage { position: relative; background: var(--paper); color: var(--ink); }
+.sig-pin {
+  position: relative; display: grid; gap: clamp(20px, 3vw, 40px);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  grid-template-areas: "hero poster" "hudl hudr" "screen screen";
+  padding: clamp(72px, 9vw, 120px) var(--gutter, 24px) clamp(48px, 6vw, 80px);
+  max-width: var(--max, 1280px); margin-inline: auto;
+}
+.sig-canvas, .sig-meter, .sig-hint { display: none; }
+.sig-poster { grid-area: poster; width: 100%; height: auto; max-height: 72vh; object-fit: contain; align-self: center; }
+.sig-hero { grid-area: hero; display: flex; flex-direction: column; justify-content: center; gap: 1.4rem; }
+.sig-hud-l { grid-area: hudl; } .sig-hud-r { grid-area: hudr; }
+.sig-screen { grid-area: screen; }
+
+.sig-hero-top { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; justify-content: space-between; align-items: center;
+  font-family: var(--sig-mono); font-size: 0.8rem; color: var(--muted); }
+.sig-dot { display: inline-flex; align-items: center; gap: 0.5em; }
+.sig-dot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); }
+.sig-name { margin: 0; font-family: var(--sig-display); font-weight: 900; line-height: 0.88; letter-spacing: -0.035em;
+  font-size: clamp(2.8rem, 7.5vw, 8.5rem); color: var(--ink); }
+.sig-name-row { display: inline-flex; flex-wrap: wrap; }
+.sig-live .sig-name { font-size: clamp(3rem, 11.5vw, 13.5rem); white-space: nowrap; }
+.sig-live .sig-name-row { flex-wrap: nowrap; }
+.sig-l { display: inline-block; }
+.sig-w { display: inline-flex; white-space: nowrap; }
+.sig-gap { display: inline-block; width: 0.28em; }
+.sig-hero-foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem 2rem; }
+.sig-lede { margin: 0; max-width: 34ch; font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.45rem); line-height: 1.3; }
+.sig-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* HUD cards */
+.sig-hud {
+  padding: clamp(18px, 2vw, 24px); border-radius: var(--sig-radius); border: 1px solid var(--sig-hair);
+  background: var(--sig-glass); box-shadow: var(--sig-shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2);
+}
+.sig-hud h3 { margin: 0.45rem 0 0.4rem; font-family: var(--sig-display); font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.4rem); line-height: 1.15; }
+.sig-hud p { margin: 0; font-size: 0.9rem; line-height: 1.5; color: color-mix(in srgb, var(--ink) 78%, var(--paper)); }
+.sig-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; padding: 0; list-style: none; }
+.sig-tags li { padding: 3px 10px; border-radius: 999px; border: 1px solid var(--sig-hair);
+  background: color-mix(in srgb, var(--ink) 5%, transparent); font: 600 0.72rem/1.6 var(--sig-mono); }
+
+/* Showcase (the viewport that the camera flies into) */
+.sig-screen { position: relative; background: var(--paper); border: 1px solid var(--sig-hair-strong);
+  border-radius: var(--sig-radius); overflow: hidden; display: flex; flex-direction: column; }
+.sig-chrome { display: flex; align-items: center; gap: 14px; min-height: 44px; padding: 0 16px;
+  border-bottom: 1px solid var(--sig-hair); background: color-mix(in srgb, var(--panel) 70%, var(--paper));
+  font: 500 0.78rem/1 var(--sig-mono); color: var(--muted); }
+.sig-chrome-tab { color: var(--ink); padding: 6px 10px; border: 1px solid var(--sig-hair); border-radius: calc(var(--sig-radius) * 0.6);
+  background: var(--paper); }
+.sig-chrome-path { flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sig-status { display: inline-flex; align-items: center; gap: 0.5em; color: var(--ink); }
+.sig-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.sig-screen-body { display: grid; grid-template-columns: minmax(200px, 250px) minmax(0, 1fr); flex: 1; min-height: 0; }
+.sig-side { display: flex; flex-direction: column; gap: 14px; padding: 24px 18px; border-right: 1px solid var(--sig-hair); }
+.sig-tabs { display: grid; gap: 6px; }
+.sig-tab { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 42px; padding: 0 12px;
+  border: 1px solid transparent; border-radius: calc(var(--sig-radius) * 0.7); background: transparent; color: var(--muted);
+  font: 600 0.92rem/1 var(--font); cursor: pointer; text-align: left; transition: background-color .2s, color .2s, border-color .2s; }
+.sig-tab:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.sig-tab[aria-selected="true"] { color: var(--ink); border-color: var(--sig-hair); background: var(--panel); }
+.sig-count { font: 600 0.75rem/1 var(--sig-mono); color: var(--muted); }
+.sig-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0 0; padding: 0; list-style: none; }
+.sig-stats li { padding: 10px; border: 1px solid var(--sig-hair); border-radius: calc(var(--sig-radius) * 0.7); display: grid; gap: 2px; }
+.sig-stats li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.sig-stats b { font-family: var(--sig-display); font-size: 1.05rem; }
+.sig-stats span { font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
+.sig-side-foot { margin-top: auto; display: grid; gap: 4px; justify-items: start; }
+.sig-side-foot span { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+.sig-panels { padding: clamp(20px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 14px; min-width: 0; overflow: auto; }
+.sig-screen-title { margin: 0; font-family: var(--sig-display); font-weight: 800; letter-spacing: -0.02em; line-height: 1;
+  font-size: clamp(1.8rem, 1rem + 3vw, 3.6rem); }
+.sig-panel-title { margin: 0; font-family: var(--sig-mono); font-size: 0.8rem; color: var(--muted); }
+.sig-proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 12px; }
+.sig-proj { display: grid; grid-template-rows: auto 1fr; border: 1px solid var(--sig-hair); border-radius: var(--sig-radius);
+  overflow: hidden; color: var(--ink); text-decoration: none; background: color-mix(in srgb, var(--panel) 55%, var(--paper));
+  transition: transform .3s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .3s; }
+.sig-proj:hover, .sig-proj:focus-visible { transform: translateY(-4px); border-color: var(--sig-hair-strong); box-shadow: var(--sig-shadow); }
+.sig-proj-img { display: block; aspect-ratio: 4 / 3; background: var(--viewport); }
+.sig-proj-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.sig-proj-copy { display: grid; gap: 6px; padding: 12px 14px 14px; }
+.sig-proj-copy b { font-size: 1rem; line-height: 1.25; }
+.sig-proj-foot { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); }
+.sig-next { align-self: flex-start; margin-top: 4px; color: var(--ink); font-weight: 600; text-underline-offset: 0.2em; }
+
+@media (max-width: 860px) {
+  .sig-pin { grid-template-columns: 1fr; grid-template-areas: "hero" "poster" "hudl" "hudr" "screen"; }
+  .sig-screen-body { grid-template-columns: 1fr; }
+  .sig-side { border-right: 0; border-bottom: 1px solid var(--sig-hair); padding: 14px; }
+  .sig-tabs { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; }
+  .sig-stats, .sig-side-foot, .sig-side > .sig-eyebrow { display: none; }
+  .sig-chrome-path { display: none; }
+}
+
+/* Name entrance (motion allowed only) */
+@media (prefers-reduced-motion: no-preference) {
+  .sig-l { animation: sig-letter 0.9s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(0.18s + var(--i) * 0.045s); }
+  @keyframes sig-letter { from { opacity: 0; transform: translateY(0.32em) scale(0.96); filter: blur(12px); } to { opacity: 1; transform: none; filter: blur(0); } }
+  .sig-hero-top, .sig-hero-foot { animation: sig-fade 0.8s cubic-bezier(.16,1,.3,1) 0.55s both; }
+  @keyframes sig-fade { from { opacity: 0; transform: translateY(12px); filter: blur(8px); } to { opacity: 1; transform: none; filter: blur(0); } }
+}
+
+/* ==========================================================================
+   SCROLL STAGE — live mode (signature.js adds .sig-live when motion is allowed)
+   ========================================================================== */
+.sig-stage.sig-live { height: 560vh; }
+.sig-live .sig-pin {
+  position: sticky; top: 0; display: block; height: 100vh; height: 100dvh; max-width: none; padding: 0; overflow: hidden;
+}
+.sig-live .sig-canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+.sig-live .sig-poster { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 80vh; width: auto; max-height: none;
+  z-index: 1; opacity: 0.0; transition: opacity .4s; }
+.sig-live .sig-hero {
+  position: absolute; inset: 0; z-index: 3; justify-content: space-between; gap: 0;
+  padding: clamp(84px, 9vh, 110px) var(--gutter, 24px) calc(clamp(28px, 5vh, 52px) + var(--sig-safe-bottom)); max-width: var(--max, 1280px); margin-inline: auto;
+  will-change: opacity, transform, filter;
+}
+.sig-live .sig-name { align-self: center; text-align: center; }
+.sig-live .sig-hero::before { /* soft wash so the name reads over the first frames */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--paper) 35%, transparent) 0%, transparent 70%);
+}
+.sig-live .sig-hud { position: absolute; top: 50%; width: min(340px, 28vw); z-index: 2; opacity: 0; will-change: opacity, transform, filter; pointer-events: none; }
+.sig-live .sig-hud-l { left: clamp(16px, 4vw, 64px); translate: 0 -50%; }
+.sig-live .sig-hud-r { right: clamp(16px, 4vw, 64px); translate: 0 -50%; }
+.sig-live .sig-meter {
+  display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 4px 10px; position: absolute; z-index: 2;
+  left: clamp(16px, 4vw, 64px); bottom: clamp(20px, 5vh, 48px); opacity: 0; font-family: var(--sig-mono); font-size: 0.78rem; color: var(--muted);
+}
+.sig-meter b { font-family: var(--sig-display); font-size: clamp(1.6rem, 1rem + 2vw, 2.6rem); color: var(--ink); font-variant-numeric: tabular-nums; }
+.sig-meter i { grid-column: 1 / -1; display: block; width: clamp(120px, 16vw, 200px); height: 3px; background: var(--sig-hair); border-radius: 3px; overflow: hidden; }
+.sig-meter em { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+.sig-live .sig-hint {
+  display: inline-flex; align-items: center; gap: 8px; position: absolute; z-index: 2; left: 50%; bottom: calc(clamp(20px, 5vh, 44px) + var(--sig-safe-bottom)); translate: -50% 0;
+  padding: 7px 14px; border-radius: 999px; border: 1px solid var(--sig-hair); background: var(--sig-glass);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); font-size: 0.8rem; color: var(--ink); opacity: 0; margin: 0;
+}
+.sig-hint-arrow { animation: sig-bob 1.4s ease-in-out infinite; }
+@keyframes sig-bob { 50% { transform: translateY(3px); } }
+.sig-live .sig-screen {
+  position: absolute; inset: 0; z-index: 4; border-radius: 0; border: 0; opacity: 0;
+  clip-path: inset(var(--sig-t, 20%) var(--sig-x, 20%) var(--sig-b, 20%) var(--sig-x, 20%) round var(--sig-r, 18px));
+  box-shadow: inset 0 0 0 1px var(--sig-hair-strong);
+}
+.sig-live .sig-screen-body { transform: scale(var(--sig-k, 0.94)); transform-origin: 50% 40%; }
+.sig-live .sig-screen[inert] { pointer-events: none; }
+
+@media (max-width: 860px) {
+  .sig-stage.sig-live { height: 480vh; }
+  .sig-live .sig-hud { top: auto; bottom: calc(clamp(70px, 11vh, 110px) + var(--sig-safe-bottom)); left: 16px; right: 16px; width: auto; max-width: 420px; margin-inline: auto; translate: none; }
+  .sig-live .sig-hud p { font-size: 0.84rem; }
+  .sig-live .sig-meter { left: 16px; top: clamp(76px, 11vh, 96px); bottom: auto; }
+  .sig-live .sig-hero { padding-top: clamp(76px, 12vh, 104px); }
+  .sig-live .sig-name { font-size: clamp(2.6rem, 13vw, 6rem); }
+}
+
+/* ==========================================================================
+   SKILL CARDS
+   ========================================================================== */
+.sig-skills { color: var(--ink); }
+.sig-skills-head { display: grid; gap: 10px; max-width: 62ch; margin-bottom: clamp(20px, 3vw, 32px); }
+.sig-skills-head h2 { margin: 0; font-family: var(--sig-display); font-weight: 800; letter-spacing: -0.025em; line-height: 0.98;
+  font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4.6rem); }
+.sig-skills-head p:last-child { margin: 0; color: var(--muted); }
+.sig-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.sig-chip { min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--sig-hair); background: transparent;
+  color: var(--ink); font: 600 0.88rem/1 var(--font); cursor: pointer; transition: background-color .2s, color .2s, border-color .2s; }
+.sig-chip span { margin-left: 4px; font-family: var(--sig-mono); font-size: 0.74rem; color: var(--muted); }
+.sig-chip:hover { border-color: var(--sig-hair-strong); }
+.sig-chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.sig-chip[aria-pressed="true"] span { color: inherit; opacity: 0.7; }
+
+.sig-skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.sig-skill {
+  --tint: oklch(68% 0.15 var(--hue));
+  position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 10px; min-height: 210px; padding: 18px;
+  border-radius: var(--sig-radius); border: 1px solid var(--sig-hair); overflow: hidden;
+  background: color-mix(in srgb, var(--panel) 60%, var(--paper));
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .35s;
+}
+.sig-skill[hidden] { display: none; }
+.sig-skill-glow {
+  position: absolute; inset: 0; z-index: -1; opacity: 0; pointer-events: none; transition: opacity .35s;
+  background:
+    radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklch, var(--tint) 26%, transparent), transparent 70%),
+    radial-gradient(circle at 50% 0%, color-mix(in oklch, var(--tint) 12%, transparent), transparent 65%);
+}
+.sig-skill:hover, .sig-skill:focus-within {
+  transform: translateY(-4px); border-color: color-mix(in oklch, var(--tint) 45%, var(--sig-hair-strong)); box-shadow: var(--sig-shadow);
+}
+.sig-skill:hover .sig-skill-glow, .sig-skill:focus-within .sig-skill-glow { opacity: 1; }
+.sig-skill-top { display: flex; justify-content: space-between; align-items: center; }
+.sig-glyph {
+  display: grid; place-items: center; width: 42px; height: 42px; border-radius: calc(var(--sig-radius) * 0.75);
+  color: color-mix(in oklch, var(--tint) 62%, var(--ink));
+  background: color-mix(in oklch, var(--tint) 14%, transparent); border: 1px solid color-mix(in oklch, var(--tint) 38%, transparent);
+  transition: transform .35s cubic-bezier(.2,.7,.2,1);
+}
+.sig-skill:hover .sig-glyph { transform: scale(1.07) rotate(-3deg); }
+.sig-badge { padding: 3px 9px; border-radius: 999px; border: 1px solid var(--sig-hair); font: 600 0.7rem/1.6 var(--sig-mono); color: var(--muted); }
+.sig-skill h3 { margin: 6px 0 0; font-size: 1.08rem; line-height: 1.2; }
+.sig-skill p { margin: 0; font-size: 0.88rem; line-height: 1.5; color: color-mix(in srgb, var(--ink) 74%, var(--paper)); }
+.sig-skill-foot {
+  margin-top: auto; padding-top: 12px; border-top: 1px solid var(--sig-hair); display: flex; justify-content: space-between; align-items: center;
+  color: var(--muted); font-size: 0.82rem; text-decoration: none;
+}
+.sig-skill-foot::after { content: ""; position: absolute; inset: 0; } /* whole card is the link target */
+.sig-skill-foot span[aria-hidden] { transition: transform .3s; }
+.sig-skill:hover .sig-skill-foot { color: var(--ink); }
+.sig-skill:hover .sig-skill-foot span[aria-hidden] { transform: translate(3px, -3px); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .sig-skill.sig-pop { animation: sig-pop 0.45s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--n, 0) * 35ms); }
+  @keyframes sig-pop { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: none; } }
+  @supports (animation-timeline: view()) {
+    .sig-skill:not(.sig-pop) { animation: sig-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; }
+    @keyframes sig-rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sig-stage *, .sig-skills * { transition: none !important; animation: none !important; }
+}

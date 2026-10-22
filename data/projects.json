@@ -3,7 +3,7 @@
     {
       "slug": "s04",
       "sheet": "A-001",
-      "title": "Podium tower model",
+      "title": "G+8 podium tower model",
       "kind": "Architectural & Structural Modelling",
       "type": "Other",
       "location": "UAE",
@@ -40,12 +40,17 @@
           "h": 296
         }
       ],
-      "video": null
+      "video": {
+        "src": "media/video/s04.mp4",
+        "poster": "media/video/s04-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
     },
     {
       "slug": "s05",
       "sheet": "A-002",
-      "title": "Residential tower complex model",
+      "title": "G+23 residential tower complex model",
       "kind": "Residential Skyscraper Complex",
       "type": "Residential",
       "location": "Mumbai",
@@ -122,7 +127,7 @@
     {
       "slug": "s06",
       "sheet": "A-003",
-      "title": "Luxury residential tower model",
+      "title": "G+41 luxury residential tower model",
       "kind": "Luxury Residential",
       "type": "Residential",
       "location": "Mumbai",
@@ -169,7 +174,7 @@
     {
       "slug": "s07",
       "sheet": "A-004",
-      "title": "IT park building model",
+      "title": "G+17 IT park building model",
       "kind": "Grade-A IT/ITES Park",
       "type": "Commercial",
       "location": "Mumbai",
@@ -222,7 +227,7 @@
     {
       "slug": "s08",
       "sheet": "A-005",
-      "title": "Residential tower model",
+      "title": "G+14 residential tower model",
       "kind": "Luxury Residential Tower",
       "type": "Residential",
       "location": "Mumbai",
@@ -253,12 +258,17 @@
           "h": 450
         }
       ],
-      "video": null
+      "video": {
+        "src": "media/video/s08.mp4",
+        "poster": "media/video/s08-poster.jpg",
+        "duration": "0:22",
+        "kind": "Build-up"
+      }
     },
     {
       "slug": "s09",
       "sheet": "A-006",
-      "title": "Residential building model",
+      "title": "G+6 residential building model",
       "kind": "Residential",
       "type": "Residential",
       "location": "Mumbai",
@@ -311,7 +321,7 @@
     {
       "slug": "s10",
       "sheet": "A-007",
-      "title": "Residential building model",
+      "title": "G+8 residential building model",
       "kind": "Architectural & Structural Modelling",
       "type": "Residential",
       "location": "",
@@ -352,7 +362,7 @@
     {
       "slug": "s11",
       "sheet": "A-008",
-      "title": "Residential block model",
+      "title": "G+10 residential block model",
       "kind": "Architectural & Structural Modelling",
       "type": "Residential",
       "location": "Bhopal",
@@ -393,7 +403,7 @@
     {
       "slug": "s12",
       "sheet": "A-009",
-      "title": "Sea-facing residential tower model",
+      "title": "G+20 sea-facing residential tower model",
       "kind": "Sea-Facing Ultra-Luxury Home",
       "type": "Residential",
       "location": "Mumbai",
@@ -440,7 +450,7 @@
     {
       "slug": "s13",
       "sheet": "A-010",
-      "title": "Sale and rehab building model",
+      "title": "G+35 sale and rehab building model",
       "kind": "Sale & Rehab Building",
       "type": "Residential",
       "location": "Mumbai",
@@ -475,7 +485,7 @@
     {
       "slug": "s14",
       "sheet": "A-011",
-      "title": "Luxury residential tower model",
+      "title": "G+14 luxury residential tower model",
       "kind": "Ultra-Luxury Residential",
       "type": "Residential",
       "location": "Mumbai",
@@ -510,7 +520,7 @@
     {
       "slug": "s15",
       "sheet": "A-012",
-      "title": "Commercial tower model",
+      "title": "G+33 commercial tower model",
       "kind": "Commercial Tower",
       "type": "Commercial",
       "location": "",
@@ -545,7 +555,7 @@
     {
       "slug": "s21",
       "sheet": "A-013",
-      "title": "Residential block model",
+      "title": "G+7 residential block model",
       "kind": "Architectural & Structural Modelling",
       "type": "Other",
       "location": "",
@@ -586,7 +596,7 @@
     {
       "slug": "s22",
       "sheet": "A-014",
-      "title": "Architectural and structural model",
+      "title": "G+19 architectural and structural model",
       "kind": "Architectural & Structural Modelling",
       "type": "Other",
       "location": "",

@@ -128,6 +128,34 @@ def main() -> int:
                             problems.append("desktop: project viewer did not open")
                         page.screenshot(path=str(args.out / "desktop-viewer.png"))
                 ctx.close()
+            # Live-motion pass: the signature scroll stage must pin, draw frames and open the showcase.
+            for label, vp in (("desktop", {"width": 1440, "height": 900}), ("mobile", {"width": 390, "height": 844})):
+                ctx = browser.new_context(viewport=vp, reduced_motion="no-preference")
+                page = ctx.new_page()
+                page.route("https://fonts.googleapis.com/**", font_route)
+                page.route("https://fonts.gstatic.com/**", font_route)
+                page.on("pageerror", lambda e, l=label: problems.append(f"{l}/motion: JS error {e}"))
+                page.goto(url, wait_until="networkidle")
+                page.wait_for_timeout(800)
+                live = page.evaluate("!!document.querySelector('.sig-stage.sig-live')")
+                if not live:
+                    problems.append(f"{label}/motion: scroll stage did not start (.sig-live missing)")
+                else:
+                    run = page.evaluate("(()=>{const s=document.querySelector('.sig-stage');return s.offsetHeight-innerHeight})()")
+                    for i, f in enumerate((0.0, 0.3, 0.5, 0.97)):
+                        page.evaluate(f"window.scrollTo(0,{int(f * run)})")
+                        page.wait_for_timeout(700)
+                        page.screenshot(path=str(args.out / f"{label}-stage-{i}.png"))
+                        if f == 0.3:
+                            drawn = page.evaluate("""(()=>{const c=document.querySelector('.sig-canvas');
+                              const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
+                              for(let i=3;i<d.length;i+=4*97){if(d[i]>0)return true}return false})()""")
+                            if not drawn:
+                                problems.append(f"{label}/motion: stage canvas is empty mid-scroll")
+                    usable = page.evaluate("!document.querySelector('.sig-screen').hasAttribute('inert')")
+                    if not usable:
+                        problems.append(f"{label}/motion: showcase did not open at the end of the stage")
+                ctx.close()
             browser.close()
     finally:
         httpd.shutdown()

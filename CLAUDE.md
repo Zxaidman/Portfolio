@@ -9,6 +9,18 @@ This file is the permanent memory for whoever maintains the site, human or AI. T
 - `design/archive/v<version>-<name>/`: a permanent snapshot of every minor and major design (tokens, CSS, JS, renderer, screenshots). Never edit or delete a snapshot, except the one created in the current run while it is still being fixed.
 - Claude Design System artifacts: one per revamp (major), linked from `design/HISTORY.md`.
 
+## The permanent signature (never removed)
+
+Two sections live in their own files and survive every minor and major:
+
+- **Scroll stage** (`scripts/signature.py` `stage_html`, `assets/js/signature.js`, `assets/css/signature.css`): the pinned hero. Scrolling plays the Revit build-up frame by frame (tower background cut out, so it floats on any theme), the name fades out, two glass HUD cards float in beside the tower, a "Built %" meter counts up, the camera pushes in, and a Revit `{3D}` viewport opens and expands into the project showcase. Frames come from `scripts/stage.py` and `data/stage.json`; an optional clip of Zaid can be added as a second segment.
+- **Skill cards** (`skills_html`): category chips and a grid of cards with a glyph tile, badge, name, one-line description and a link to evidence on the page; hover lift, category-tinted glow that follows the cursor, staggered entrance. Content: `data/skills.json` (hand-edited only).
+
+Rules for every design:
+- `render.py` must call `signature.stage_html(...)` as the first section in `<main>` (full-bleed, outside any max-width wrapper) and `signature.skills_html(...)` once, and load `signature.css` (before `main.css`) and `signature.js`. `validate` enforces this; the deploy fails without it.
+- Restyle, don't remove. The signature reads only design tokens, so a new design system restyles it automatically. A design may add overrides in its own `main.css` (radius, glass, typography, HUD position) and set `--sig-safe-bottom` if it has a fixed bottom bar. A major may re-choreograph the stage by editing the timeline constants `T` in `signature.js`, or add new behaviour there, but must keep: frame scrubbing, HUD cards, the meter, the expanding viewport/showcase, reduced-motion and no-JS fallbacks.
+- Never edit `data/skills.json`, `data/stage.json` or `media/stage/` in a scheduled run.
+
 ## How the site works
 
 The page is a static site on GitHub Pages. Its current design is described in `design/system.json` and the newest row of `design/HISTORY.md`; the page always shows the live version and recent revisions.
@@ -30,7 +42,13 @@ design/system.json      active design system: themes, fonts, scale  -> assets/cs
 design/HISTORY.md       every design shipped (no repeats)
 design/INSPIRATION.md   design brief: the bar, layout archetypes, motions, trend notes
 design/archive/         snapshot of every minor and major design, never overwritten
-scripts/qa.py           headless browser QA: errors, broken images, overflow, all themes
+scripts/qa.py           headless browser QA: errors, broken images, overflow, all themes, live scroll stage
+scripts/signature.py    permanent signature sections: scroll stage + skill cards (HTML)
+scripts/stage.py        builds the stage frame sequences from a build-up video (+ optional clip of Zaid)
+assets/css/signature.css, assets/js/signature.js   signature styling and scroll engine
+data/skills.json        HUD card and skill card content            <- edit by hand
+data/stage.json         stage frame segments                       <- written by stage.py
+media/stage/            stage frames (desktop + mobile WebP, background cut out)
 VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ```
 
@@ -48,6 +66,9 @@ python3 scripts/portfolio.py daily --source ../BIM-Portfolio
 
 # Edited data/profile.json? Re-render and check:
 python3 scripts/portfolio.py build
+
+# Add Zaid's clip after the build-up (8-10 s, steady camera); needs ffmpeg, numpy, scipy:
+python3 scripts/stage.py person path/to/zaid.mp4 --frames 120 && python3 scripts/portfolio.py build
 
 # Preview locally
 python3 -m http.server 8000      # then open http://localhost:8000

@@ -12,6 +12,9 @@ I turn 2D drawings into Revit models a site team can build from. Three years mod
 
 ## A site that keeps changing
 
+Scroll the first screen and a Revit tower builds floor by floor, then opens into the project showcase.
+
+
 - **Monday, Wednesday and Friday mornings** the whole portfolio is rebuilt with a new layout, inspired by what's trending in web design.
 - **Every other morning** the site gets a completely new design: new colours, type and motion.
 - **Twice more each day** a different project, build-up video and colour theme lead the page.

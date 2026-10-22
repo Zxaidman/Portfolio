@@ -2,7 +2,8 @@
 render.py — builds index.html from data/profile.json, data/projects.json and data/site.json.
 
 Design: "Storey stack" (v3.0.0). The page is a tower in section, read from the roof
-down to the foundation. Every section is a storey that opens on a Revit-style level
+down to the foundation. The roof is the permanent signature scroll stage (signature.py),
+and the skills storey holds the signature skill cards. Every section is a storey that opens on a Revit-style level
 datum (level tag + elevation); a fixed level rail on the left (a bottom bar on phones)
 is the navigation, and its lift car tracks scroll position.
 
@@ -20,6 +21,8 @@ import json
 from html import escape
 from pathlib import Path
 
+import signature  # permanent signature sections (scroll stage + skill cards); see signature.py
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 SITE_URL = "https://zxaidman.github.io/Portfolio/"
@@ -29,10 +32,11 @@ STOREY_HEIGHT = 3.0  # metres between level datums, for the elevation labels
 # The tower, top to bottom: (anchor id, level tag, name shown on the datum).
 LEVELS = [
     ("roof", "RF", "Roof"),
-    ("featured", "L6", "Today's slab"),
-    ("projects", "L5", "Floors"),
-    ("buildups", "L4", "Build-ups"),
-    ("rebar", "L3", "Rebar & BBS"),
+    ("featured", "L7", "Today's slab"),
+    ("projects", "L6", "Floors"),
+    ("buildups", "L5", "Build-ups"),
+    ("rebar", "L4", "Rebar & BBS"),
+    ("skills", "L3", "Skills"),
     ("about", "L2", "About"),
     ("revisions", "L1", "Revisions"),
     ("contact", "GL", "Ground"),
@@ -102,44 +106,6 @@ def rail(profile: dict) -> str:
   <div class="rail-shaft" aria-hidden="true"><span class="rail-car"></span></div>
   <p class="rail-readout" aria-hidden="true"><span>Level</span><b data-readout>RF</b></p>
 </nav>"""
-
-
-def roof(profile: dict, site: dict, featured: dict) -> str:
-    video = featured.get("video") or {}
-    stats = "".join(f'<li><b>{e(s["value"])}</b><span>{e(s["label"])}</span></li>' for s in profile["stats"])
-    where = ", ".join(x for x in (featured["kind"], featured["location"]) if x)
-    if video.get("src"):
-        media = (f'<video class="roof-video" muted loop playsinline preload="none" '
-                 f'poster="{e(video.get("poster") or featured["images"][0]["src"])}" data-src="{e(video["src"])}" '
-                 f'aria-label="Build-up animation of {e(featured["title"])}"></video>')
-    else:
-        media = img_tag(featured["images"][0], featured["title"], "roof-video", eager=True)
-    status = '<p class="roof-status">Open to BIM roles</p>' if profile.get("available") else ""
-    open_link = opener(featured["slug"], featured["images"][0]["src"], e(featured["title"]), "roof-link",
-                       label=f'Open {featured["title"]} gallery')
-    return f"""
-<section class="storey storey-roof" id="roof" aria-labelledby="hero-title">
-  <header class="datum datum-roof">
-    <p class="datum-line" aria-hidden="true"><span class="datum-tag">RF</span><span class="datum-el">{e(elevation("roof"))}</span><span class="datum-name">Roof</span><span class="datum-rule"></span></p>
-  </header>
-  <div class="roof-grid">
-    <div class="roof-copy">
-      <p class="roof-role">{e(profile["role"])}</p>
-      <h1 id="hero-title" class="roof-name">{"<br>".join(e(w) for w in profile["name"].split(" ", 1))}</h1>
-      <p class="roof-lede">{e(profile["headline"])}</p>
-      <div class="actions">
-        <a class="btn btn-solid" href="#projects">Take the stairs down</a>
-        <a class="btn btn-line" href="mailto:{e(profile["email"])}">Email Zaid</a>
-      </div>
-      {status}
-    </div>
-    <figure class="roof-media">
-      <span class="sbox"><span class="sbox-frame">{media}</span></span>
-      <figcaption><span class="mono">Build-up</span>{open_link}<span>{e(where)}</span></figcaption>
-    </figure>
-  </div>
-  <ul class="columns" aria-label="At a glance">{stats}<li><b>Rev {e(site["version"])}</b><span>this tower, {e(fmt_date(site["date"]))}</span></li></ul>
-</section>"""
 
 
 def featured_storey(p: dict) -> str:
@@ -241,6 +207,15 @@ def rebar(bbs: list[dict]) -> str:
   <ul class="bbs-grid" data-collapsed="true">{items}</ul>
   {more}
 </section>"""
+
+
+def skills_storey() -> str:
+    """The signature skill cards, opened by this design's level datum."""
+    skills, _ = signature.load()
+    sk = skills["skills"]
+    head = datum("skills", "sig-skills-title", sk["title"], sk["intro"])
+    return signature.skills_html(header_html=head, anchor="skills").replace(
+        'class="sig-skills"', 'class="storey storey-skills sig-skills"', 1)
 
 
 def about(profile: dict) -> str:
@@ -389,21 +364,25 @@ def build() -> Path:
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{e(system["fonts"]["stylesheet"])}">
 <link rel="stylesheet" href="assets/css/tokens.css?v={v}">
+<link rel="stylesheet" href="{signature.CSS_HREF}?v={v}">
 <link rel="stylesheet" href="assets/css/main.css?v={v}">
 <script type="application/ld+json">{ld}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 {rail(profile)}
-<main id="main" class="tower">
-{roof(profile, site, featured)}
+<main id="main">
+{signature.stage_html(profile, projects, opener, anchor="roof")}
+<div class="tower">
 {featured_storey(featured)}
 {floors(projects)}
 {buildups(by_slug, site.get("reel", list(by_slug)))}
 {rebar(data.get("bbs", []))}
+{skills_storey()}
 {about(profile)}
 {revisions(site)}
 {contact(profile)}
+</div>
 </main>
 <footer class="foundation">
   <p class="mono">Foundation &minus;1.500 &middot; Rev {v} &middot; updated {e(fmt_date(site["date"]))}</p>
@@ -426,6 +405,7 @@ def build() -> Path:
 </dialog>
 <script id="viewer-data" type="application/json">{viewer_json}</script>
 <script src="assets/js/main.js?v={v}" defer></script>
+<script src="{signature.JS_SRC}?v={v}" defer></script>
 </body>
 </html>
 """

@@ -36,6 +36,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -326,6 +327,8 @@ class MediaSync:
         """Delete media files no longer produced by the source (e.g. a project removed or renamed)."""
         removed = []
         for f in MEDIA.rglob("*"):
+            if f.is_relative_to(MEDIA / "stage"):
+                continue  # owned by scripts/stage.py (the signature scroll stage), never synced
             if f.is_file() and f not in self.touched:
                 f.unlink()
                 removed.append(str(f.relative_to(MEDIA)))
@@ -357,11 +360,22 @@ def project_id(first_image: str) -> str:
     return f"s{int(m.group(1)):02d}"
 
 
-def public_title(label: dict) -> str:
-    """'G+20 residential tower model' when storeys are known, else 'Residential tower model'."""
+STOREYS_RX = re.compile(r"\bG\s*\+\s*(\d{1,3})\b", re.I)
+
+
+def storeys_in(text: str) -> int | None:
+    """'G+20' (as the source now titles its buildings) -> 20."""
+    m = STOREYS_RX.search(text or "")
+    return int(m.group(1)) if m else None
+
+
+def public_title(label: dict, storeys: int | None = None) -> str:
+    """'G+20 residential tower model' when storeys are known, else 'Residential tower model'.
+    data/labels.json storeys win; otherwise the storey count read from the source is used."""
     base = label.get("title") or "structural model"
-    if label.get("storeys"):
-        return f"G+{label['storeys']} {base}"
+    n = label.get("storeys") or storeys
+    if n:
+        return f"G+{n} {base}"
     return base[:1].upper() + base[1:]
 
 
@@ -374,7 +388,8 @@ def name_tokens(titles: list[str]) -> set[str]:
     """Distinctive words from confidential project names, for the leak check.
     Generic building words are skipped so 'tower' or 'park' in our own copy is fine."""
     generic = {"tower", "towers", "park", "business", "bank", "home", "homes", "the", "and",
-               "residency", "heights", "uae", "mumbai", "bhopal"}
+               "residency", "heights", "uae", "mumbai", "bhopal", "build", "poster", "hero",
+               "mp4", "jpg", "png", "webp"}
     out = set()
     for t in titles:
         for w in re.findall(r"[a-z]+", t.lower()):
@@ -396,16 +411,35 @@ def cmd_sync(source: Path) -> tuple[bool, set[str]]:
         raise SystemExit("Parsed 0 projects from the source; refusing to overwrite data/projects.json.")
 
     labels = read_json(DATA / "labels.json", {}) or {}
-    secrets = name_tokens([p.title for p in parser.projects] + [v.title for v in parser.videos])
+    # Confidential name words: from titles (older source) and from the video file names, which
+    # still carry project names even after the source switched its titles to "G+<storeys>".
+    secrets = name_tokens([p.title for p in parser.projects] + [v.title for v in parser.videos]
+                          + [Path(v.src).stem.replace("-", " ") for v in parser.videos]
+                          + ([Path(f).stem.replace("-", " ") for f in os.listdir(assets / "videos")
+                              if f.endswith(".mp4")] if (assets / "videos").exists() else []))
     media = MediaSync()
 
-    # Map source video slug -> project id, so videos are stored under neutral names.
-    slug_to_id = {slugify(p.title): project_id(p.images[0]) for p in parser.projects if p.images}
+    # Map each build-up video to its project id (videos are stored under neutral names).
+    with_images = [p for p in parser.projects if p.images]
+    norm = lambda t: re.sub(r"[^a-z0-9+]", "", (t or "").lower())
+    video_pid: dict[int, str] = {}
+    if len(parser.videos) == len(with_images) and all(
+            norm(v.title) == norm(p.title) for v, p in zip(parser.videos, with_images)):
+        # Same order and matching captions (the source lists both in the same order).
+        video_pid = {k: project_id(p.images[0]) for k, p in enumerate(with_images)}
+    else:
+        slug_to_id = {slugify(p.title): project_id(p.images[0]) for p in with_images}
+        for k, v in enumerate(parser.videos):
+            vslug = slugify(v.title)
+            hit = vslug if vslug in slug_to_id else match_video(vslug, {x: x for x in slug_to_id})
+            if hit:
+                video_pid[k] = slug_to_id[hit]
+        if not video_pid and len(parser.videos) == len(with_images):
+            log("WARN video captions do not match project titles; pairing them by order")
+            video_pid = {k: project_id(p.images[0]) for k, p in enumerate(with_images)}
     videos: dict[str, dict] = {}
-    for v in parser.videos:
-        vslug = slugify(v.title)
-        hit = match_video(vslug, {k: k for k in slug_to_id}) if vslug not in slug_to_id else vslug
-        pid = slug_to_id.get(hit) if hit else None
+    for k, v in enumerate(parser.videos):
+        pid = video_pid.get(k)
         if not pid:
             log("WARN a build-up video has no matching project; skipped")
             continue
@@ -448,7 +482,7 @@ def cmd_sync(source: Path) -> tuple[bool, set[str]]:
         projects.append({
             "slug": pid,
             "sheet": f"A-{i:03d}",
-            "title": public_title(label),
+            "title": public_title(label, storeys_in(p.title)),
             "kind": kind,
             "type": label.get("type") or classify(f"{p.category} {p.description}"),
             "location": label.get("location", city_only(location)),
@@ -707,6 +741,40 @@ def is_major_day(day: dt.date) -> bool:
     return day.weekday() in MAJOR_WEEKDAYS
 
 
+def check_signature(errors: list[str]) -> None:
+    """The permanent signature (scripts/signature.py) must survive every redesign:
+    the scroll stage as the first section in <main>, the skill cards, their CSS/JS, and frames."""
+    html = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
+    main = html.split("<main", 1)[-1]
+    first_section = re.search(r"<section\b[^>]*>", main)
+    if html.count('data-sig="stage"') != 1:
+        errors.append("signature: index.html must contain the scroll stage exactly once (signature.stage_html)")
+    elif not first_section or 'data-sig="stage"' not in first_section.group(0):
+        errors.append("signature: the scroll stage must be the first section inside <main>")
+    if html.count('data-sig="skills"') != 1:
+        errors.append("signature: index.html must contain the skill cards exactly once (signature.skills_html)")
+    for ref in ("assets/css/signature.css", "assets/js/signature.js"):
+        if ref not in html:
+            errors.append(f"signature: index.html does not load {ref}")
+        if not (ROOT / ref).exists():
+            errors.append(f"signature: {ref} is missing")
+    try:
+        skills = json.loads((DATA / "skills.json").read_text(encoding="utf-8"))
+        if len(skills["skills"]["cards"]) < 8 or len(skills["stage"]["cards"]) < 2:
+            errors.append("signature: data/skills.json needs >= 8 skill cards and 2 stage cards")
+    except (OSError, KeyError, json.JSONDecodeError) as exc:
+        errors.append(f"signature: data/skills.json unreadable ({exc})")
+    stage = read_json(DATA / "stage.json", {}) or {}
+    if not stage.get("segments"):
+        errors.append("signature: data/stage.json has no frame segments (run scripts/stage.py)")
+    for seg in stage.get("segments", []):
+        for setname in ("desktop", "mobile"):
+            d = ROOT / seg[setname]["dir"]
+            for i in (1, seg["count"]):
+                if not (d / f"f{i:03d}.webp").exists():
+                    errors.append(f"signature: missing stage frame {d.relative_to(ROOT)}/f{i:03d}.webp")
+
+
 def cadence(day: dt.date, slot: str = "morning") -> str:
     """What a run ships. Morning: major on a major day, otherwise minor (every day, Sunday
     included). Afternoon and night: patch (every day, Sunday included)."""
@@ -773,6 +841,7 @@ def cmd_validate() -> int:
         errors.append("profile.json: missing name")
     check_design(errors)
     check_unique(errors)
+    check_signature(errors)
     for rel in ("index.html", "assets/css/main.css", "assets/css/tokens.css", "assets/js/main.js", ".nojekyll"):
         need(rel, "site")
     html = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""

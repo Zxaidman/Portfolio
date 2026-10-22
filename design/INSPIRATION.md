@@ -5,10 +5,22 @@ Read this before every new design system (minor, every morning) and every revamp
 ## The bar
 
 - **Minor (new design system, Tue/Thu/Sat/Sun mornings):** a change someone notices in one second. New palette family (≥ 3 themes), a new type pairing, new spacing and corner language, new button/chip/row treatments, and **one new signature motion**. Same page structure.
-- **Major (Mon/Wed/Fri mornings):** a whole revamp. New concept, **new layout archetype**, new navigation pattern, new interactions, new motion system. The page structure in `scripts/render.py` and behaviour in `assets/js/main.js` are rewritten. All content stays: hero, featured project, all 14 projects, build-up videos, rebar/BBS drawings, about, contact, the version and revision history, the image viewer.
+- **Major (Mon/Wed/Fri mornings):** a whole revamp. New concept, **new layout archetype**, new navigation pattern, new interactions, new motion system. The page structure in `scripts/render.py` and behaviour in `assets/js/main.js` are rewritten. All content stays: the signature scroll stage and skill cards (restyled, never removed), featured project, all 14 projects, build-up videos, rebar/BBS drawings, about, contact, the version and revision history, the image viewer.
 - **Never repeat** a layout archetype, a font pairing, a palette family or a signature motion already listed in `design/HISTORY.md`.
 - **Research fresh each run.** Search the web for what's current (Awwwards / CSS Design Awards sites of the day, motion sites, trending portfolio posts on LinkedIn, Instagram, X, Dribbble, Behance). Note one or two concrete inspirations in the HISTORY.md row.
 - **Ground it in the subject.** BIM, Revit, structural RCC, rebar, construction sequencing, site drawings. The work is the imagery: Revit renders, build-up videos, BBS drawings.
+
+## The permanent signature (never removed)
+
+Two sections live in their own files and survive every minor and major:
+
+- **Scroll stage** (`scripts/signature.py` `stage_html`, `assets/js/signature.js`, `assets/css/signature.css`): the pinned hero. Scrolling plays the Revit build-up frame by frame (tower background cut out, so it floats on any theme), the name fades out, two glass HUD cards float in beside the tower, a "Built %" meter counts up, the camera pushes in, and a Revit `{3D}` viewport opens and expands into the project showcase. Frames come from `scripts/stage.py` and `data/stage.json`; an optional clip of Zaid can be added as a second segment.
+- **Skill cards** (`skills_html`): category chips and a grid of cards with a glyph tile, badge, name, one-line description and a link to evidence on the page; hover lift, category-tinted glow that follows the cursor, staggered entrance. Content: `data/skills.json` (hand-edited only).
+
+Rules for every design:
+- `render.py` must call `signature.stage_html(...)` as the first section in `<main>` (full-bleed, outside any max-width wrapper) and `signature.skills_html(...)` once, and load `signature.css` (before `main.css`) and `signature.js`. `validate` enforces this; the deploy fails without it.
+- Restyle, don't remove. The signature reads only design tokens, so a new design system restyles it automatically. A design may add overrides in its own `main.css` (radius, glass, typography, HUD position) and set `--sig-safe-bottom` if it has a fixed bottom bar. A major may re-choreograph the stage by editing the timeline constants `T` in `signature.js`, or add new behaviour there, but must keep: frame scrubbing, HUD cards, the meter, the expanding viewport/showcase, reduced-motion and no-JS fallbacks.
+- Never edit `data/skills.json`, `data/stage.json` or `media/stage/` in a scheduled run.
 
 ## Layout archetypes (majors pick one not yet used)
 

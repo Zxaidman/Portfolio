@@ -15,9 +15,14 @@
     "s14",
     "s15"
   ],
-  "version": "3.1.1",
+  "version": "4.0.0",
   "date": "2026-10-22",
   "revisions": [
+    {
+      "rev": "4.0.0",
+      "date": "2026-10-22",
+      "note": "Signature: scroll-to-build stage and skill cards"
+    },
     {
       "rev": "3.1.1",
       "date": "2026-10-22",
@@ -37,11 +42,6 @@
       "rev": "3.0.1",
       "date": "2026-10-21",
       "note": "Synced new project media. Featured IT park building model, chalkline theme"
-    },
-    {
-      "rev": "3.0.0",
-      "date": "2026-10-21",
-      "note": "Storey stack design system. Synced new project media. Featured Luxury residential tower model, survey theme"
     }
   ],
   "slot": "2026-10-22 afternoon"

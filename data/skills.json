@@ -1,0 +1,57 @@
+{
+  "_readme": "Content for the permanent signature sections (scroll stage HUD cards and skill cards). Edit by hand; the scheduled job never edits this file. glyph = an icon key from scripts/signature.py GLYPHS. link = an anchor on the page that shows evidence for the skill.",
+  "stage": {
+    "eyebrow": "BIM Specialist Modeller & Coordinator",
+    "hint": "Scroll to build",
+    "meter_label": "Built",
+    "cards": [
+      {
+        "side": "left",
+        "eyebrow": "Modelling",
+        "title": "Revit Structure to LOD 350",
+        "text": "Concrete frames, slabs and foundations modelled bar by bar, so schedules come straight off the model.",
+        "tags": ["Revit Structure", "Rebar", "BBS", "RC-CADS"]
+      },
+      {
+        "side": "right",
+        "eyebrow": "Coordination & delivery",
+        "title": "Clash-free models, site-ready sheets",
+        "text": "Architecture, structure and MEPF federated in Navisworks, then issued as BOQs and GFC drawings.",
+        "tags": ["Navisworks", "MEPF", "BOQ", "GFC"]
+      }
+    ],
+    "showcase": {
+      "path": "zaid / selected-work",
+      "status": "Open to BIM roles",
+      "heading": "Built, floor by floor."
+    }
+  },
+  "skills": {
+    "title": "Skills and tools",
+    "intro": "What I use every day to take a project from 2D drawings to a coordinated, schedulable model.",
+    "categories": [
+      { "id": "modelling", "label": "Modelling", "hue": 28 },
+      { "id": "coordination", "label": "Coordination", "hue": 205 },
+      { "id": "documentation", "label": "Documentation", "hue": 150 },
+      { "id": "software", "label": "Software", "hue": 285 }
+    ],
+    "cards": [
+      { "name": "Revit Structure", "badge": "Core", "category": "modelling", "glyph": "frame", "text": "Columns, beams, slabs, walls and foundations modelled to LOD 350.", "link": "#projects" },
+      { "name": "Rebar detailing", "badge": "LOD 350", "category": "modelling", "glyph": "rebar", "text": "Bar-by-bar reinforcement with shapes, hooks and laps checked in the model.", "link": "#rebar" },
+      { "name": "Revit Architecture", "badge": "Daily", "category": "modelling", "glyph": "plan", "text": "Walls, openings, finishes and layouts built from 2D concept drawings.", "link": "#projects" },
+      { "name": "Parametric families", "badge": "Library", "category": "modelling", "glyph": "family", "text": "Custom Revit families that grow the office library and speed up modelling.", "link": "#about" },
+      { "name": "Clash detection", "badge": "Navisworks", "category": "coordination", "glyph": "clash", "text": "Federated models checked and conflicts resolved before they reach site.", "link": "#about" },
+      { "name": "MEPF coordination", "badge": "Federation", "category": "coordination", "glyph": "pipes", "text": "Architecture, structure and services brought into one coordinated model.", "link": "#about" },
+      { "name": "2D to 3D conversion", "badge": "Workflow", "category": "coordination", "glyph": "extrude", "text": "AutoCAD concepts turned into detailed, coordinated Revit models.", "link": "#projects" },
+      { "name": "BIM standards and training", "badge": "Team", "category": "coordination", "glyph": "team", "text": "Day-to-day modelling standards, and Revit training for architects and engineers.", "link": "#about" },
+      { "name": "Bar bending schedules", "badge": "BBS", "category": "documentation", "glyph": "bend", "text": "Beam, column, footing and slab BBS taken straight from the model.", "link": "#rebar" },
+      { "name": "BOQ extraction", "badge": "Quantities", "category": "documentation", "glyph": "table", "text": "Bills of quantities extracted from Revit, ready for costing.", "link": "#about" },
+      { "name": "GFC shop drawings", "badge": "Sheets", "category": "documentation", "glyph": "sheet", "text": "Good-for-construction plans, sections and details, issued from the model.", "link": "#rebar" },
+      { "name": "As-built and IFC", "badge": "Handover", "category": "documentation", "glyph": "export", "text": "As-built drawing sets and IFC exports for handover.", "link": "#about" },
+      { "name": "Autodesk Revit", "badge": "3 yrs", "category": "software", "glyph": "cube", "text": "Architecture and Structure on live projects since 2023.", "link": "#projects" },
+      { "name": "Navisworks", "badge": "Clash", "category": "software", "glyph": "layers", "text": "Model federation, clash tests and coordination reviews.", "link": "#about" },
+      { "name": "AutoCAD", "badge": "2D", "category": "software", "glyph": "compass", "text": "2D drafting, drawing clean-up and IFC extraction.", "link": "#about" },
+      { "name": "RC-CADS and Excel", "badge": "Detailing", "category": "software", "glyph": "grid", "text": "Reinforcement detailing in RC-CADS, schedules and checks in Excel.", "link": "#rebar" }
+    ]
+  }
+}

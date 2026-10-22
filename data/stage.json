@@ -1,0 +1,20 @@
+{
+  "segments": [
+    {
+      "id": "buildup",
+      "fit": "contain",
+      "count": 144,
+      "desktop": {
+        "dir": "media/stage/buildup",
+        "w": 589,
+        "h": 900
+      },
+      "mobile": {
+        "dir": "media/stage/buildup-m",
+        "w": 366,
+        "h": 560
+      },
+      "poster": "media/stage/buildup-poster.webp"
+    }
+  ]
+}

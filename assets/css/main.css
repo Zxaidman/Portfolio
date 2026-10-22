@@ -446,3 +446,8 @@ a.sbox:hover .sbox-frame, .bu-link:hover .sbox-frame { box-shadow: 0 0 0 3px var
   body { padding: 0; }
   .rail, .viewer { display: none; }
 }
+
+/* ---------- Signature sections, tuned for this design ---------- */
+/* The phone level bar is fixed at the bottom (64px): keep stage content clear of it. */
+@media (max-width: 860px) { .sig-stage { --sig-safe-bottom: 64px; } }
+.storey-skills .sig-chips { margin-top: 6px; }

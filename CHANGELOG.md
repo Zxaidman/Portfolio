@@ -2,6 +2,11 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [4.0.0] - 2026-10-22 (signature)
+- Signature scroll stage: the hero is now pinned and scrolling builds a Revit tower floor by floor (144 frames, background cut out so it floats on every theme). The name fades out, HUD cards float in beside the tower, a "Built %" meter counts up, then the camera pushes into a Revit {3D} viewport that expands into the project showcase.
+- Signature skill cards: 16 cards in four categories with filter chips, glyph tiles, badges, links to evidence, hover lift and a cursor-following glow.
+- Both are permanent: every future design system and revamp restyles them but cannot remove them (enforced by validate and the deploy check). Reduced-motion and no-JavaScript visitors get a static layout.
+
 ## [3.1.1] - 2026-10-22 (afternoon)
 - Afternoon theme and asset change: Synced new project media. Featured Residential block model, galvanised theme.
 
