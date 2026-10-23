@@ -184,7 +184,10 @@ def gantt(projects: list[dict], start: dt.date) -> str:
     counts: dict[str, int] = {}
     for p in projects:
         counts[p["type"]] = counts.get(p["type"], 0) + 1
-    order = [t for t in ("Residential", "Commercial", "Other") if t in counts]
+    # every type gets a chip: the usual ones first, any new type (e.g. Mixed-use) next, Other last
+    known = ["Residential", "Commercial", "Mixed-use"]
+    order = ([t for t in known if t in counts] + sorted(t for t in counts if t not in known + ["Other"])
+             + (["Other"] if "Other" in counts else []))
     filters = f'<button type="button" class="chip" aria-pressed="true" data-filter="all">All <span>{len(projects)}</span></button>'
     filters += "".join(
         f'<button type="button" class="chip" aria-pressed="false" data-filter="{e(t)}">{e(t)} <span>{counts[t]}</span></button>'

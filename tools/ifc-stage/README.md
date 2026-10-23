@@ -38,3 +38,10 @@ building is fully assembled).
 
 Tips: export from Revit as IFC4 or IFC4x3, any model view; rebar and furniture are skipped.
 A building of 3-30 storeys works best. Models over ~1.5 M triangles render slowly.
+
+## Gallery stills
+
+`python3 stills.py GEO OUT` renders seven views of the finished model on a soft studio
+background, each cropped to the model at 3:2: two corners, side, street level, aerial, exploded
+and the structure on its own. Publish them as a hand-added project's images with
+`python3 scripts/portfolio.py extra-images x01 OUT` (see CLAUDE.md, "Projects added by hand").

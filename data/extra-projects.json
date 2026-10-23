@@ -1,0 +1,115 @@
+{
+  "_readme": "Projects added by hand (not in the BIM-Portfolio source), e.g. from IFC models Zaid shares. Merged first into data/projects.json by `portfolio.py sync`; images live in media/extra/<slug>/ (publish rendered stills with `portfolio.py extra-images <slug> <folder>`). Neutral slugs only (x01, x02, ...). Never put a project or client name here. stage_model links the project to its hero model in data/stage.json.",
+  "projects": [
+    {
+      "slug": "x01",
+      "sheet": "A-015",
+      "title": "G+4 residential building model",
+      "kind": "Architectural & Structural Modelling",
+      "type": "Residential",
+      "location": "Mumbai",
+      "summary": "Revit model of a G+4 residential building, exported to IFC: RCC frame, slabs, walls, stairs, windows and doors. Seven views from the model, including an exploded view of the storeys and the structural frame on its own.",
+      "stage_model": "m1",
+      "images": [
+        {
+          "src": "media/extra/x01/01.jpg",
+          "thumb": "media/extra/x01/01-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x01/02.jpg",
+          "thumb": "media/extra/x01/02-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x01/03.jpg",
+          "thumb": "media/extra/x01/03-thumb.jpg",
+          "w": 1800,
+          "h": 1201
+        },
+        {
+          "src": "media/extra/x01/04.jpg",
+          "thumb": "media/extra/x01/04-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x01/05.jpg",
+          "thumb": "media/extra/x01/05-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x01/06.jpg",
+          "thumb": "media/extra/x01/06-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x01/07.jpg",
+          "thumb": "media/extra/x01/07-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        }
+      ],
+      "video": null
+    },
+    {
+      "slug": "x02",
+      "sheet": "A-016",
+      "title": "G+18 mixed-use tower model",
+      "kind": "Architectural & Structural Modelling",
+      "type": "Mixed-use",
+      "location": "Mumbai",
+      "summary": "Coordinated structural and architectural Revit models of a G+18 mixed-use tower on a three-level basement podium, merged from IFC: columns, beams, slabs, ramps, stairs, walls and facade. Seven views, including an exploded view of the storeys and the structural frame on its own.",
+      "stage_model": "m3",
+      "images": [
+        {
+          "src": "media/extra/x02/01.jpg",
+          "thumb": "media/extra/x02/01-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x02/02.jpg",
+          "thumb": "media/extra/x02/02-thumb.jpg",
+          "w": 1800,
+          "h": 1199
+        },
+        {
+          "src": "media/extra/x02/03.jpg",
+          "thumb": "media/extra/x02/03-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x02/04.jpg",
+          "thumb": "media/extra/x02/04-thumb.jpg",
+          "w": 1796,
+          "h": 1198
+        },
+        {
+          "src": "media/extra/x02/05.jpg",
+          "thumb": "media/extra/x02/05-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        },
+        {
+          "src": "media/extra/x02/06.jpg",
+          "thumb": "media/extra/x02/06-thumb.jpg",
+          "w": 1800,
+          "h": 1201
+        },
+        {
+          "src": "media/extra/x02/07.jpg",
+          "thumb": "media/extra/x02/07-thumb.jpg",
+          "w": 1800,
+          "h": 1200
+        }
+      ],
+      "video": null
+    }
+  ]
+}

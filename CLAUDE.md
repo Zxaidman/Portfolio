@@ -53,6 +53,17 @@ media/stage/            stage frames (desktop + mobile WebP, transparent)
 VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ```
 
+### Projects added by hand
+
+Projects that are not in the BIM-Portfolio source (e.g. built from an IFC Zaid shares) live in
+`data/extra-projects.json` (neutral slugs `x01`, `x02`...; title, type, city, summary) with their
+images in `media/extra/<slug>/`. `sync` puts them first in `data/projects.json` and never prunes
+them. Gallery stills come from the IFC: `tools/ifc-stage/stills.py GEO OUT` renders seven views
+(two corners, side, street, aerial, exploded, structure only) and
+`python3 scripts/portfolio.py extra-images <slug> OUT` publishes them. Scheduled runs never edit
+these. Every project type must have a filter chip (`validate` checks), so a new type such as
+Mixed-use stays reachable in every design.
+
 ### Media lives in Git LFS
 
 Everything under `media/` that is an image, video or frame (`*.jpg`, `*.webp`, `*.mp4`; see

@@ -2,6 +2,10 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.3.0] - 2026-10-23
+- Two new projects in the list, built from the IFC models Zaid shared: a G+4 residential building model and a G+18 mixed-use tower model on a three-level basement podium (both Mumbai). Each has seven views rendered from the model: two corners, side, street level, aerial, an exploded view of the storeys and the structural frame on its own.
+- Hand-added projects now live in their own data file and media folder, so the twice-daily sync from the source keeps them.
+
 ## [5.2.0] - 2026-10-23 (signature)
 - New hero model: a G+18 tower on a three-level basement podium, built from its structural and architectural IFCs merged into one model. The frame (columns, beams, slabs, stairs, ramps) and the architecture (walls, facade panels, railings) assemble storey by storey, structure first. It is on show now.
 - The twin-tower model and its build-up video stay in the rotation as separate items, placed as far apart as possible; IFC models are spread evenly through the videos.

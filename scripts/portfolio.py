@@ -337,8 +337,8 @@ class MediaSync:
         """Delete media files no longer produced by the source (e.g. a project removed or renamed)."""
         removed = []
         for f in MEDIA.rglob("*"):
-            if f.is_relative_to(MEDIA / "stage"):
-                continue  # owned by scripts/stage.py (the signature scroll stage), never synced
+            if f.is_relative_to(MEDIA / "stage") or f.is_relative_to(MEDIA / "extra"):
+                continue  # owned by stage.py / extra-projects.json, never synced from the source
             if f.is_file() and f not in self.touched:
                 f.unlink()
                 removed.append(str(f.relative_to(MEDIA)))
@@ -500,6 +500,11 @@ def cmd_sync(source: Path) -> tuple[bool, set[str]]:
             "images": images,
             "video": videos.get(pid),
         })
+
+    # Projects added by hand (e.g. from IFC models Zaid shares) are not in the source repo: they
+    # live in data/extra-projects.json with their images under media/extra/, and come first.
+    extras = (read_json(DATA / "extra-projects.json", {}) or {}).get("projects", [])
+    projects = [x for x in extras if not x.get("exclude")] + projects
 
     bbs_exclude = set(labels.get("_bbs_exclude", []))
     bbs = []
@@ -759,6 +764,13 @@ def is_major_day(day: dt.date) -> bool:
     return day.weekday() in MAJOR_WEEKDAYS
 
 
+def check_filters(html: str, projects: list[dict], errors: list[str]) -> None:
+    """Every project type must have a filter chip, so no project is unreachable by filtering."""
+    for t in sorted({p["type"] for p in projects}):
+        if f'data-filter="{t}"' not in html:
+            errors.append(f"filters: no filter chip for project type '{t}' (render.py must list every type)")
+
+
 def check_signature(errors: list[str]) -> None:
     """The permanent signature (scripts/signature.py) must survive every redesign:
     the scroll stage as the first section in <main>, the skill cards, their CSS/JS, and frames."""
@@ -866,6 +878,9 @@ def cmd_validate() -> int:
     check_design(errors)
     check_unique(errors)
     check_signature(errors)
+    if (ROOT / "index.html").exists():
+        check_filters((ROOT / "index.html").read_text(encoding="utf-8"),
+                      (read_json(DATA / "projects.json", {}) or {}).get("projects", []), errors)
     for rel in ("index.html", "assets/css/main.css", "assets/css/tokens.css", "assets/js/main.js", ".nojekyll"):
         need(rel, "site")
     html = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
@@ -881,6 +896,41 @@ def cmd_validate() -> int:
 # --------------------------------------------------------------------------- #
 # CLI
 # --------------------------------------------------------------------------- #
+def cmd_extra_images(slug: str, folder: Path) -> int:
+    """Turn rendered stills (PNG/JPG in `folder`, in name order) into the image set of a hand-added
+    project in data/extra-projects.json: media/extra/<slug>/NN.jpg (+ -thumb.jpg), same sizes and
+    quality as synced project images. Replaces that project's previous images."""
+    from PIL import Image
+    path = DATA / "extra-projects.json"
+    data = read_json(path, {}) or {}
+    proj = next((x for x in data.get("projects", []) if x["slug"] == slug), None)
+    if proj is None:
+        raise SystemExit(f"{slug}: add the project to data/extra-projects.json first")
+    files = sorted(f for f in folder.iterdir() if f.suffix.lower() in (".png", ".jpg", ".jpeg"))
+    if not files:
+        raise SystemExit(f"no images in {folder}")
+    out = MEDIA / "extra" / slug
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
+    images = []
+    for k, f in enumerate(files, start=1):
+        full, thumb = out / f"{k:02d}.jpg", out / f"{k:02d}-thumb.jpg"
+        with Image.open(f) as im:
+            im = im.convert("RGB")
+            for dest, size in ((full, IMAGE_FULL_MAX), (thumb, IMAGE_THUMB_MAX)):
+                c = im.copy()
+                c.thumbnail((size, size), Image.LANCZOS)
+                c.save(dest, "JPEG", quality=JPEG_QUALITY, optimize=True, progressive=True)
+        with Image.open(full) as im:
+            w, h = im.size
+        images.append({"src": str(full.relative_to(ROOT)), "thumb": str(thumb.relative_to(ROOT)), "w": w, "h": h})
+    proj["images"] = images
+    write_json(path, data)
+    log(f"extra-images: {slug} now has {len(images)} images in {out.relative_to(ROOT)}")
+    return 0
+
+
 def cmd_media(for_qa: bool) -> int:
     """Media (images, videos, stage frames) is stored in Git LFS. Scheduled runs clone with
     GIT_LFS_SKIP_SMUDGE=1 (pointers only) to save LFS bandwidth; `media --qa` then pulls just what
@@ -915,6 +965,9 @@ def main(argv: list[str] | None = None) -> int:
         sp.add_argument("--minor", action="store_true", help="bump MINOR (new design system, every morning)")
     sub.add_parser("validate")
     sub.add_parser("build")
+    ep = sub.add_parser("extra-images", help="publish rendered stills as a hand-added project's images")
+    ep.add_argument("slug")
+    ep.add_argument("folder", type=Path)
     mp = sub.add_parser("media", help="pull LFS media (all, or only what qa.py needs with --qa)")
     mp.add_argument("--qa", action="store_true")
     ap_ = sub.add_parser("archive", help="snapshot the active design into design/archive/")
@@ -929,6 +982,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_validate()
     if args.cmd == "media":
         return cmd_media(args.qa)
+    if args.cmd == "extra-images":
+        return cmd_extra_images(args.slug, args.folder)
     if args.cmd == "build":
         cmd_build()
         return cmd_validate()

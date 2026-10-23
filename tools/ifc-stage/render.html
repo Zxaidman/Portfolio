@@ -203,6 +203,29 @@ function pose(u) {
   camera.lookAt(0, ty, 0);
 }
 
+// Still images for the project gallery: any camera angle, the assembled (u=1) or exploded
+// (u=0.78) model, optionally hiding kinds (e.g. only the structure). The camera is fitted to
+// the visible model so every view is framed the same way.
+function renderStill({ u = 1, az = 35, el = 24, fov = 30, hide = [], margin = 1.12 } = {}) {
+  pose(u);
+  GHOST.opacity = 0; ghostRoot.visible = false;
+  for (const it of items) if (hide.includes(it.kind)) it.grp.visible = false;
+  const box = new THREE.Box3();
+  for (const it of items) if (it.grp.visible) box.expandByObject(it.grp);
+  const sphere = box.getBoundingSphere(new THREE.Sphere());
+  camera.fov = fov; camera.aspect = W / H; camera.updateProjectionMatrix();
+  const vfov = THREE.MathUtils.degToRad(fov / 2);
+  const hfov = Math.atan(Math.tan(vfov) * camera.aspect);
+  const R = sphere.radius / Math.sin(Math.min(vfov, hfov)) * margin;
+  const a = THREE.MathUtils.degToRad(az), e = THREE.MathUtils.degToRad(el);
+  camera.position.set(sphere.center.x + Math.sin(a) * Math.cos(e) * R,
+                      sphere.center.y + Math.sin(e) * R,
+                      sphere.center.z + Math.cos(a) * Math.cos(e) * R);
+  camera.lookAt(sphere.center);
+  renderer.render(scene, camera);
+  return renderer.domElement.toDataURL("image/png");
+}
+window.renderStill = renderStill;
 window.setup = setup;
 window.renderAt = u => { pose(u); renderer.render(scene, camera); return renderer.domElement.toDataURL("image/png"); };
 window.ready = true;
