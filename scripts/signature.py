@@ -40,25 +40,49 @@ def e(value) -> str:
     return escape(str(value if value is not None else ""), quote=True)
 
 
-def active_model(stage: dict, site: dict) -> dict | None:
-    """The IFC model on show: models rotate, one per design system (data/site.json "stage_model",
-    advanced by `portfolio.py refresh` on every minor and major)."""
-    models = stage.get("models") or []
+def stage_pool(stage: dict) -> list[dict]:
+    """Everything the hero can show, in rotation order: IFC models (stage.json "models") and the
+    project build-up videos (stage.json "videos"). A model that "replaces" a project id takes that
+    project's video slot. Models are spread evenly through the videos so they come round regularly."""
+    models = list(stage.get("models") or [])
+    replaced = {m.get("replaces") for m in models if m.get("replaces")}
+    videos = [v for v in (stage.get("videos") or []) if v["id"] not in replaced]
     if not models:
-        return None
-    return models[int(site.get("stage_model", 0)) % len(models)]
+        return videos
+    pool, step = list(videos), (len(videos) + len(models)) / len(models)
+    for k, m in enumerate(models):
+        pool.insert(min(len(pool), round(k * step)), m)
+    return pool
 
 
-def load() -> tuple[dict, dict]:
-    """skills.json, and the stage manifest the page plays: the active model (if any) followed by
-    any other segments (an optional clip of Zaid). Without models, the stored segments as-is."""
+def stage_index(site: dict) -> int:
+    """Rotation position (data/site.json "stage_pick"; older sites used "stage_model")."""
+    return int(site.get("stage_pick", site.get("stage_model", 0)))
+
+
+def active_item(stage: dict, site: dict) -> dict | None:
+    """The model or video on show. `portfolio.py refresh` advances the rotation on every update
+    (patch, minor and major)."""
+    pool = stage_pool(stage)
+    return pool[stage_index(site) % len(pool)] if pool else None
+
+
+def load(projects: list[dict] | None = None) -> tuple[dict, dict]:
+    """skills.json, and the stage manifest the page plays: the item on show (an IFC model or a
+    build-up video) followed by any other segments (an optional clip of Zaid)."""
     skills = json.loads((DATA / "skills.json").read_text(encoding="utf-8"))
     raw = json.loads((DATA / "stage.json").read_text(encoding="utf-8"))
     site_path = DATA / "site.json"
     site = json.loads(site_path.read_text(encoding="utf-8")) if site_path.exists() else {}
-    model = active_model(raw, site)
-    others = [s for s in raw.get("segments", []) if not (model and s["id"] == "buildup")]
-    stage = {"segments": ([model] if model else []) + others}
+    item = active_item(raw, site)
+    if item and item.get("kind") == "video":
+        # label the meter and the static poster with the project's public title
+        item = dict(item)
+        title = next((p["title"] for p in (projects or []) if p["slug"] == item.get("project")), "")
+        item.setdefault("phases", [{"at": 0, "label": title}] if title else [])
+        item.setdefault("alt", f"Revit build-up of the {title}" if title else "Revit build-up of a building model")
+    others = [s for s in raw.get("segments", []) if not (item and s["id"] == "buildup")]
+    stage = {"segments": ([item] if item else []) + others}
     return skills, stage
 
 
@@ -166,7 +190,7 @@ POSTER_ALT = {
 def stage_html(profile: dict, projects: list[dict], opener, anchor: str = "top") -> str:
     """The pinned scroll stage. `opener(slug, href, inner, cls, label=...)` is the design's
     viewer-link helper, so showcase cards open the same gallery as the rest of the page."""
-    skills, stage = load()
+    skills, stage = load(projects)
     st = skills["stage"]
     segs = stage["segments"]
     first = segs[0]

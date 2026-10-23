@@ -590,11 +590,14 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
     system = read_json(ROOT / "design" / "system.json", {}) or {}
     if part in ("major", "minor"):
         note = f"{system.get('name', 'New design')} design system. " + note
-        # The hero IFC model rotates with every new design system (patches keep it).
-        models = (read_json(DATA / "stage.json", {}) or {}).get("models") or []
-        if len(models) > 1:
-            site["stage_model"] = (int(site.get("stage_model", 0)) + 1) % len(models)
-            note += f", hero model {models[site['stage_model']]['id']}"
+    # The hero rotates on every update (patch, minor, major) through one pool of IFC models and
+    # project build-up videos (signature.stage_pool).
+    import signature
+    pool = signature.stage_pool(read_json(DATA / "stage.json", {}) or {})
+    if len(pool) > 1:
+        site["stage_pick"] = (signature.stage_index(site) + 1) % len(pool)
+        site.pop("stage_model", None)
+        note += f", hero {pool[site['stage_pick']]['id']}"
     history.insert(0, {"rev": new_version, "date": day.isoformat(), "note": note})
     site["revisions"] = history[:5]  # the title block shows the last five
     write_json(site_path, site)
@@ -770,12 +773,15 @@ def check_signature(errors: list[str]) -> None:
     except (OSError, KeyError, json.JSONDecodeError) as exc:
         errors.append(f"signature: data/skills.json unreadable ({exc})")
     stage = read_json(DATA / "stage.json", {}) or {}
-    if not stage.get("segments") and not stage.get("models"):
+    if not stage.get("segments") and not stage.get("models") and not stage.get("videos"):
         errors.append("signature: data/stage.json has no models or frame segments (run scripts/stage.py)")
     for m in stage.get("models", []):
         if not re.fullmatch(r"m\d{1,3}", str(m.get("id", ""))):
             errors.append(f"signature: stage model id {m.get('id')!r} must be neutral (m1, m2, ...)")
-    for seg in stage.get("models", []) + stage.get("segments", []):
+    for v in stage.get("videos", []):
+        if not re.fullmatch(r"s\d{1,3}", str(v.get("id", ""))):
+            errors.append(f"signature: stage video id {v.get('id')!r} must be a public project id (s12)")
+    for seg in stage.get("models", []) + stage.get("videos", []) + stage.get("segments", []):
         for setname in ("desktop", "mobile"):
             d = ROOT / seg[setname]["dir"]
             for i in (1, seg["count"]):

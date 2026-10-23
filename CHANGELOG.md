@@ -2,6 +2,11 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.1.0] - 2026-10-23 (signature)
+- All 14 project build-up videos now play in the scroll stage as scroll-driven sequences: background cut out (including the 4D simulation's legend, counter and timeline), original colours kept, the project's public title on the meter.
+- The hero rotates on every update (1:50 PM, 9:50 PM and 5:50 AM) through one pool of IFC models and build-up videos; the IFC models are spaced evenly through the rotation.
+- An IFC model of an existing project can take over that project's video slot when it arrives.
+
 ## [5.0.0] - 2026-10-23 (morning)
 - Revamp (new layout): Four-D programme design system. Synced new project media. Featured G+20 sea-facing residential tower model, baseline theme, hero model m1.
 

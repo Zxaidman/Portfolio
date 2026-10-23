@@ -185,5 +185,327 @@
         }
       ]
     }
+  ],
+  "videos": [
+    {
+      "id": "s04",
+      "kind": "video",
+      "project": "s04",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s04",
+        "w": 626,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s04-m",
+        "w": 418,
+        "h": 520
+      },
+      "poster": "media/stage/s04-poster.webp"
+    },
+    {
+      "id": "s05",
+      "kind": "video",
+      "project": "s05",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s05",
+        "w": 641,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s05-m",
+        "w": 428,
+        "h": 520
+      },
+      "poster": "media/stage/s05-poster.webp"
+    },
+    {
+      "id": "s06",
+      "kind": "video",
+      "project": "s06",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s06",
+        "w": 262,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s06-m",
+        "w": 175,
+        "h": 520
+      },
+      "poster": "media/stage/s06-poster.webp"
+    },
+    {
+      "id": "s07",
+      "kind": "video",
+      "project": "s07",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s07",
+        "w": 549,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s07-m",
+        "w": 366,
+        "h": 520
+      },
+      "poster": "media/stage/s07-poster.webp"
+    },
+    {
+      "id": "s08",
+      "kind": "video",
+      "project": "s08",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s08",
+        "w": 422,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s08-m",
+        "w": 281,
+        "h": 520
+      },
+      "poster": "media/stage/s08-poster.webp"
+    },
+    {
+      "id": "s09",
+      "kind": "video",
+      "project": "s09",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 27.2,
+      "desktop": {
+        "dir": "media/stage/s09",
+        "w": 1249,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s09-m",
+        "w": 832,
+        "h": 520
+      },
+      "poster": "media/stage/s09-poster.webp",
+      "mask": [
+        [
+          30,
+          40,
+          480,
+          175
+        ],
+        [
+          30,
+          205,
+          265,
+          535
+        ],
+        [
+          1580,
+          50,
+          1900,
+          170
+        ],
+        [
+          0,
+          960,
+          1919,
+          1079
+        ]
+      ]
+    },
+    {
+      "id": "s10",
+      "kind": "video",
+      "project": "s10",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s10",
+        "w": 531,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s10-m",
+        "w": 354,
+        "h": 520
+      },
+      "poster": "media/stage/s10-poster.webp"
+    },
+    {
+      "id": "s11",
+      "kind": "video",
+      "project": "s11",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s11",
+        "w": 693,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s11-m",
+        "w": 462,
+        "h": 520
+      },
+      "poster": "media/stage/s11-poster.webp"
+    },
+    {
+      "id": "s12",
+      "kind": "video",
+      "project": "s12",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s12",
+        "w": 510,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s12-m",
+        "w": 340,
+        "h": 520
+      },
+      "poster": "media/stage/s12-poster.webp"
+    },
+    {
+      "id": "s13",
+      "kind": "video",
+      "project": "s13",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s13",
+        "w": 479,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s13-m",
+        "w": 319,
+        "h": 520
+      },
+      "poster": "media/stage/s13-poster.webp"
+    },
+    {
+      "id": "s14",
+      "kind": "video",
+      "project": "s14",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 20.98,
+      "desktop": {
+        "dir": "media/stage/s14",
+        "w": 553,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s14-m",
+        "w": 369,
+        "h": 520
+      },
+      "poster": "media/stage/s14-poster.webp"
+    },
+    {
+      "id": "s15",
+      "kind": "video",
+      "project": "s15",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s15",
+        "w": 594,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s15-m",
+        "w": 396,
+        "h": 520
+      },
+      "poster": "media/stage/s15-poster.webp"
+    },
+    {
+      "id": "s21",
+      "kind": "video",
+      "project": "s21",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.81,
+      "desktop": {
+        "dir": "media/stage/s21",
+        "w": 900,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s21-m",
+        "w": 600,
+        "h": 520
+      },
+      "poster": "media/stage/s21-poster.webp"
+    },
+    {
+      "id": "s22",
+      "kind": "video",
+      "project": "s22",
+      "fit": "contain",
+      "tint": false,
+      "count": 120,
+      "complete": 1.0,
+      "until": 21.77,
+      "desktop": {
+        "dir": "media/stage/s22",
+        "w": 705,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/s22-m",
+        "w": 470,
+        "h": 520
+      },
+      "poster": "media/stage/s22-poster.webp"
+    }
   ]
 }
