@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.3.3] - 2026-10-23 (night)
+- Night theme and asset change: Synced new project media. Featured G+14 luxury residential tower model, float theme, hero s14.
+
 ## [5.3.2] - 2026-10-23 (fix)
 - The Vercel mirror of the site showed no images, videos or hero animation since media moved to Git LFS (Vercel was serving LFS pointer files). It now loads every media file from the GitHub Pages copy, which uses no LFS bandwidth.
 

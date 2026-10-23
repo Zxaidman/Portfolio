@@ -153,8 +153,8 @@
       "video": {
         "src": "media/video/s04.mp4",
         "poster": "media/video/s04-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -230,8 +230,8 @@
       "video": {
         "src": "media/video/s05.mp4",
         "poster": "media/video/s05-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -277,8 +277,8 @@
       "video": {
         "src": "media/video/s06.mp4",
         "poster": "media/video/s06-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -330,8 +330,8 @@
       "video": {
         "src": "media/video/s07.mp4",
         "poster": "media/video/s07-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -371,8 +371,8 @@
       "video": {
         "src": "media/video/s08.mp4",
         "poster": "media/video/s08-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -465,8 +465,8 @@
       "video": {
         "src": "media/video/s10.mp4",
         "poster": "media/video/s10-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -506,8 +506,8 @@
       "video": {
         "src": "media/video/s11.mp4",
         "poster": "media/video/s11-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -553,8 +553,8 @@
       "video": {
         "src": "media/video/s12.mp4",
         "poster": "media/video/s12-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -588,8 +588,8 @@
       "video": {
         "src": "media/video/s13.mp4",
         "poster": "media/video/s13-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -623,8 +623,8 @@
       "video": {
         "src": "media/video/s14.mp4",
         "poster": "media/video/s14-poster.jpg",
-        "duration": "0:21",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -658,8 +658,8 @@
       "video": {
         "src": "media/video/s15.mp4",
         "poster": "media/video/s15-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -699,8 +699,8 @@
       "video": {
         "src": "media/video/s21.mp4",
         "poster": "media/video/s21-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     },
     {
@@ -758,8 +758,8 @@
       "video": {
         "src": "media/video/s22.mp4",
         "poster": "media/video/s22-poster.jpg",
-        "duration": "0:22",
-        "kind": "Build-up"
+        "duration": "0:30",
+        "kind": "4D simulation"
       }
     }
   ],
