@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.3.2] - 2026-10-23 (fix)
+- The Vercel mirror of the site showed no images, videos or hero animation since media moved to Git LFS (Vercel was serving LFS pointer files). It now loads every media file from the GitHub Pages copy, which uses no LFS bandwidth.
+
 ## [5.3.1] - 2026-10-23 (afternoon)
 - Afternoon theme and asset change: Featured G+35 sale and rehab building model, critical theme, hero s13.
 
