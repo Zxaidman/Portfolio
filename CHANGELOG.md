@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.0.0] - 2026-10-23 (morning)
+- Revamp (new layout): Four-D programme design system. Synced new project media. Featured G+20 sea-facing residential tower model, baseline theme, hero model m1.
+
 ## [4.2.2] - 2026-10-22 (night)
 - Night theme and asset change: Synced new project media. Featured G+10 residential block model, quench theme.
 

@@ -34,7 +34,7 @@ Rules for every design:
 | Index / archive list | Dense text index with hover-revealed renders following the cursor; brutalist grid |
 | Exploded axonometric | Projects scattered on a canvas like an exploded model, revealed on hover or click |
 | Split-screen | Sticky media on one side, scrolling narrative on the other, swapping as you scroll |
-| Timeline / Gantt | Projects on a 4D construction schedule bar chart; scrubbing the timeline plays the build-ups |
+| Timeline / Gantt *(used 5.0.0)* | Projects on a 4D construction schedule bar chart; scrubbing the timeline plays the build-ups |
 | Magazine / editorial | Large serif headlines, columns, pull quotes from the work, numbered features |
 | Dashboard / control room | Dark UI with live-looking panels: element counts, LOD, BBS tonnage, model viewer |
 | Card deck / stories | Swipeable story cards like Instagram stories, one project per card |
@@ -45,11 +45,12 @@ Rules for every design:
 - Build-up video scrubbed by scroll position instead of autoplay
 - View Transitions API for opening a project (`document.startViewTransition`), with a plain fallback
 - Kinetic type: variable-font width or weight animating on scroll or hover *(used 3.1.0)*
-- Cursor-following media preview over a text index
+- Cursor-following media preview over a text index *(used 5.0.0, over the Gantt rows)*
 - Horizontal pinned scroll section
 - Section-box clipping reveal (a clip-path box sweeping open, like a Revit section box) *(used 3.0.0)*
 - Rebar line-draw: SVG stroke-dashoffset drawing bars as the BBS section enters
-- Counter roll-up for stats when they enter the viewport
+- Counter roll-up for stats when they enter the viewport *(used 5.0.0, secondary)*
+- Gantt bar fill: activity and project bars grow from start to finish on a CSS view() timeline *(used 5.0.0)*
 - Magnetic buttons / subtle tilt on project tiles
 - Marquee of skills or software, paused on hover
 - Grain / noise texture with a slow gradient drift (static under reduced motion)
@@ -60,6 +61,7 @@ Rules for every design:
 - Each run appends a dated line here with what it found.
 - 2026-10-21 (3.0.0): Awwwards Creative Pass keeps surfacing scroll-driven data storytelling ([Scroll-driven PK modelling](https://www.awwwards.com/inspiration/scroll-driven-pk-modeling-substraterx)) and architecture studios using scroll as spatial movement ([Verticité Architecture](https://www.awwwards.com/inspiration/horizontal-scroll-verticite-architecture)). Native CSS scroll timelines (`animation-timeline: scroll()/view()`) are now enough for progress indicators and reveals without JS libraries. Used: a lift car on a scroll timeline and view-timeline section-box reveals.
 - 2026-10-22 (3.1.0): Awwwards Creative Pass variable-font collections ([Safari Riot](https://www.awwwards.com/inspiration/variable-font-animation-safari-riot), [Manrope](https://www.awwwards.com/inspiration/variable-font-animation-manrope-font)) and FontLab's [Variable fonts in motion and UI](https://blog.fontlab.com/2026/03/10/variable-fonts-in-motion-and-ui/) (Mar 2026) show type itself as the motion: width/weight axes driven by scroll instead of moving boxes. Used: headings forged from wdth 50/wght 140 to wdth 118/wght 820 on a CSS view() timeline, plus hover-stretch on project titles.
+- 2026-10-23 (5.0.0): Awwwards Creative Pass shows schedule UIs used as navigation and storytelling ([Gantt chart with scroll, Wallnut](https://www.awwwards.com/inspiration/gantt-chart-with-scroll-wallnut), [Scroll blueprint](https://www.awwwards.com/inspiration/scroll-blueprint-1)): bars and a moving "now" line give scroll a sense of time. Native View Transitions now cover same-document state changes (filters) with a plain fallback. Used: a fixed week ruler with a data-date line as the nav, Gantt bars filling on view() timelines, View Transitions on the project filter.
 
 ## Non-negotiables
 

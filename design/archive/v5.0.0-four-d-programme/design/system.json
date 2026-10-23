@@ -1,0 +1,73 @@
+{
+  "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
+  "name": "Four-D programme",
+  "introduced": "5.0.0",
+  "concept": "The portfolio is a 4D construction programme, the way a planner reads a Navisworks TimeLiner or Primavera schedule. A week ruler runs across the top as the navigation, with each section as an activity bar and a red data-date line that slides along as you scroll. Every section opens on an activity row (WBS code, duration, start and finish) whose bar fills as it comes into view. The projects are a Gantt chart: each project is a bar as long as the building is tall. Faint week columns run down the whole page, the featured project sits on the critical path, and the contact section is the handover key date.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Atkinson+Hyperlegible+Next:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap",
+    "body": "\"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif",
+    "display": "\"Schibsted Grotesk\", \"Helvetica Neue\", Arial, sans-serif",
+    "mono": "\"JetBrains Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
+  },
+  "scale": {
+    "--step--1": "clamp(0.78rem, 0.76rem + 0.1vw, 0.86rem)",
+    "--step-0": "clamp(1rem, 0.97rem + 0.16vw, 1.08rem)",
+    "--step-1": "clamp(1.18rem, 1.08rem + 0.5vw, 1.45rem)",
+    "--step-2": "clamp(1.5rem, 1.2rem + 1.4vw, 2.35rem)",
+    "--step-3": "clamp(2.2rem, 1.3rem + 3.9vw, 4.8rem)",
+    "--step-hero": "clamp(3rem, 0.8rem + 8vw, 8.6rem)",
+    "--gutter": "clamp(16px, 3vw, 44px)",
+    "--hdr": "60px",
+    "--wbs": "clamp(0px, 22vw, 300px)",
+    "--weeks": "24",
+    "--max": "1320px",
+    "--radius": "4px",
+    "--bar": "14px"
+  },
+  "themes": {
+    "baseline": {
+      "scheme": "light",
+      "paper": "#f4f3ee",
+      "panel": "#e9e7df",
+      "ink": "#15141a",
+      "muted": "#55525e",
+      "line": "#bdb9ad",
+      "accent": "#5a2fc2",
+      "on-accent": "#ffffff",
+      "viewport": "#e6e4dc"
+    },
+    "critical": {
+      "scheme": "dark",
+      "paper": "#0f1420",
+      "panel": "#171e2e",
+      "ink": "#eef1f7",
+      "muted": "#a3acc0",
+      "line": "#3a4560",
+      "accent": "#ff6b5e",
+      "on-accent": "#0f1420",
+      "viewport": "#dfe3ea"
+    },
+    "float": {
+      "scheme": "light",
+      "paper": "#dff0f2",
+      "panel": "#cfe6e9",
+      "ink": "#0b1d22",
+      "muted": "#3f5a60",
+      "line": "#8fb3b9",
+      "accent": "#0b5f7a",
+      "on-accent": "#ffffff",
+      "viewport": "#e3eef0"
+    },
+    "lookahead": {
+      "scheme": "dark",
+      "paper": "#1e1220",
+      "panel": "#2a1a2d",
+      "ink": "#f6eef7",
+      "muted": "#c3adc6",
+      "line": "#55405a",
+      "accent": "#6ff2c1",
+      "on-accent": "#1e1220",
+      "viewport": "#e4dde5"
+    }
+  }
+}

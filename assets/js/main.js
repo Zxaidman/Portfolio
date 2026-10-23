@@ -1,17 +1,17 @@
 /* ==========================================================================
-   Zaid Shaikh portfolio — main.js (v3.0.0 "Storey stack")
+   Zaid Shaikh portfolio — main.js (v5.0.0 "Four-D programme")
    Progressive enhancement only: every opener is a real link to its image or
-   video, filters show all floors, and the page reads top to bottom without JS.
+   video, all Gantt rows show, and the page reads top to bottom without JS.
    Modules:
-     levels   — level rail: active level, readout, lift car (scroll-driven CSS
-                does the car where supported; this is the fallback)
-     reveal   — adds .is-in to section boxes as they enter (CSS fallback for
-                browsers without animation-timeline)
-     roof     — autoplay the featured build-up only when cheap and wanted
-     floors   — filter chips
-     buildups — muted hover preview on pointer devices
-     bbs      — show / hide the extra drawings
-     viewer   — gallery / video dialog with keyboard navigation
+     programme — top week ruler: active activity, data-date line and readout
+     fills     — Gantt bars fill as they enter (fallback for browsers without
+                 CSS animation-timeline; those do it in CSS)
+     counters  — numbers in the resource stats count up once when they enter
+     gantt     — filter chips (View Transitions where supported)
+     preview   — a render that follows the cursor over the Gantt rows
+     lookahead — back / forward buttons and muted hover previews
+     submittals— show / hide the extra BBS drawings
+     viewer    — gallery / video dialog with keyboard navigation
    ========================================================================== */
 (() => {
   "use strict";
@@ -20,8 +20,9 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData = Boolean(navigator.connection && navigator.connection.saveData);
-  const canHover = window.matchMedia("(hover: hover)").matches;
-  const scrollTimeline = typeof CSS !== "undefined" && CSS.supports && CSS.supports("animation-timeline: scroll()");
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const viewTimeline = typeof CSS !== "undefined" && CSS.supports && CSS.supports("animation-timeline: view()");
+  const DAY = 86400000;
 
   document.documentElement.classList.add("js");
 
@@ -36,90 +37,153 @@
     if (p && typeof p.catch === "function") p.catch(() => { /* autoplay blocked: poster stays */ });
   }
 
-  /* ---------- Level rail: which storey are we on? ---------- */
-  function levels() {
-    const links = $$(".rail-levels a[data-level]");
-    const readout = $("[data-readout]");
-    const car = $(".rail-car");
-    if (!links.length) return;
-    const byId = new Map(links.map((a) => [a.dataset.level, a]));
-    const storeys = links.map((a) => document.getElementById(a.dataset.level)).filter(Boolean);
+  /* ---------- Programme ruler: active activity + data date ---------- */
+  function programme() {
+    const bar = $(".prog");
+    const links = $$(".prog-track a[data-phase]");
+    if (!bar || !links.length) return;
+    const readout = $("[data-readout]", bar);
+    const start = new Date(`${bar.dataset.start}T00:00:00`);
+    const fmt = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short" });
+    const phases = links
+      .map((a) => ({ a, el: document.getElementById(a.dataset.phase), s: Number(a.dataset.s), d: Number(a.dataset.d) }))
+      .filter((p) => p.el);
+    let current = null;
+    let lastDay = -1;
 
-    function setActive(id) {
-      links.forEach((a) => {
-        const on = a.dataset.level === id;
-        a.classList.toggle("is-here", on);
-        if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
-      });
-      const link = byId.get(id);
-      if (readout && link) readout.textContent = $(".rl-tag", link).textContent;
+    function update() {
+      ticking = false;
+      const mark = window.innerHeight * 0.35;
+      let idx = 0;
+      phases.forEach((p, i) => { if (p.el.getBoundingClientRect().top <= mark) idx = i; });
+      const ph = phases[idx];
+      // Fraction of this activity scrolled past the mark -> position inside its bar.
+      const r = ph.el.getBoundingClientRect();
+      const frac = Math.min(1, Math.max(0, (mark - r.top) / Math.max(r.height, 1)));
+      const week = ph.s + ph.d * frac;
+      bar.style.setProperty("--dd", week.toFixed(3));
+      if (current !== ph) {
+        current = ph;
+        links.forEach((a) => {
+          const on = a === ph.a;
+          a.classList.toggle("is-on", on);
+          if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
+        });
+      }
+      const day = Math.floor(week * 7);
+      if (readout && day !== lastDay && !Number.isNaN(start.getTime())) {
+        lastDay = day;
+        readout.textContent = fmt.format(new Date(start.getTime() + day * DAY));
+      }
     }
-
-    // The storey whose top has most recently passed 40% of the viewport is "here".
-    const io = new IntersectionObserver(() => {
-      const mark = window.innerHeight * 0.4;
-      let current = storeys[0];
-      storeys.forEach((s) => { if (s.getBoundingClientRect().top <= mark) current = s; });
-      if (current) setActive(current.id);
-    }, { rootMargin: "-40% 0px -59% 0px", threshold: 0 });
-    storeys.forEach((s) => io.observe(s));
-    setActive(storeys[0] && storeys[0].id);
-
-    // Lift car fallback for browsers without scroll-driven animations.
-    if (car && !scrollTimeline && !reduceMotion) {
-      let ticking = false;
-      const move = () => {
-        ticking = false;
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        car.style.setProperty("--lift", String(max > 0 ? window.scrollY / max : 0));
-      };
-      window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(move); } }, { passive: true });
-      move();
-    }
+    let ticking = false;
+    const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener("scroll", request, { passive: true });
+    window.addEventListener("resize", request);
+    bar.classList.add("is-live");
+    update();
   }
 
-  /* ---------- Section-box reveal fallback ---------- */
-  function reveal() {
-    const boxes = $$(".sbox");
-    if (reduceMotion || scrollTimeline || !("IntersectionObserver" in window)) {
-      boxes.forEach((b) => b.classList.add("is-in"));
+  /* ---------- Gantt bar fills: IntersectionObserver fallback ---------- */
+  function fills() {
+    const targets = $$(".act, .g-row");
+    if (reduceMotion || viewTimeline || !("IntersectionObserver" in window)) {
+      targets.forEach((t) => t.classList.add("is-in"));
       return;
     }
-    document.documentElement.classList.add("reveal-io");
+    document.documentElement.classList.add("fill-io");
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
-    }, { rootMargin: "0px 0px -10% 0px" });
-    boxes.forEach((b) => io.observe(b));
+    }, { rootMargin: "0px 0px -12% 0px" });
+    targets.forEach((t) => io.observe(t));
   }
 
-  /* ---------- Roof: autoplay the build-up only when it is cheap and wanted ---------- */
-  function roof() {
-    const video = $(".roof-video");
-    if (!video || video.tagName !== "VIDEO" || reduceMotion || saveData) return; // poster only
+  /* ---------- Counters: the number inside each stat rolls up once ---------- */
+  function counters() {
+    const els = $$("[data-count]");
+    if (reduceMotion || !("IntersectionObserver" in window)) return;
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) { loadVideo(video); safePlay(video); }
-        else if (!video.paused) video.pause();
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        io.unobserve(en.target);
+        const el = en.target;
+        const text = el.textContent;
+        const m = text.match(/\d+/);
+        if (!m) return;
+        const target = Number(m[0]);
+        const t0 = performance.now();
+        const dur = 900;
+        const tick = (now) => {
+          const k = Math.min(1, (now - t0) / dur);
+          const val = Math.round(target * (1 - Math.pow(1 - k, 3)));
+          el.textContent = text.replace(m[0], String(val));
+          if (k < 1) requestAnimationFrame(tick); else el.textContent = text;
+        };
+        requestAnimationFrame(tick);
       });
-    }, { threshold: 0.25 });
-    io.observe(video);
+    }, { threshold: 0.6 });
+    els.forEach((el) => io.observe(el));
   }
 
-  /* ---------- Floors: filter chips ---------- */
-  function floors() {
+  /* ---------- Gantt: filter chips ---------- */
+  function gantt() {
     const chips = $$(".chip[data-filter]");
-    const rows = $$(".floor");
+    const rows = $$(".g-row");
+    const apply = (type) => rows.forEach((row) => { row.hidden = type !== "all" && row.dataset.type !== type; });
     chips.forEach((chip) => chip.addEventListener("click", () => {
       const type = chip.dataset.filter;
       chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
-      rows.forEach((row) => { row.hidden = type !== "all" && row.dataset.type !== type; });
+      if (document.startViewTransition && !reduceMotion) document.startViewTransition(() => apply(type));
+      else apply(type);
     }));
   }
 
-  /* ---------- Build-ups: muted preview on hover (pointer devices only) ---------- */
-  function buildups() {
+  /* ---------- Cursor-following preview over the Gantt ---------- */
+  function preview() {
+    const box = $(".g-preview");
+    const list = $(".g-rows");
+    if (!box || !list || !canHover || reduceMotion) return;
+    const img = document.createElement("img");
+    img.alt = ""; img.decoding = "async";
+    let x = 0, y = 0, cx = 0, cy = 0, raf = 0, on = false;
+    const loop = () => {
+      cx += (x - cx) * 0.2; cy += (y - cy) * 0.2;
+      box.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`;
+      raf = on || Math.abs(x - cx) + Math.abs(y - cy) > 0.5 ? requestAnimationFrame(loop) : 0;
+    };
+    document.documentElement.classList.add("has-preview");
+    list.addEventListener("pointermove", (ev) => {
+      x = ev.clientX + 24; y = ev.clientY - 90;
+      if (x + 260 > window.innerWidth) x = ev.clientX - 284;
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    list.addEventListener("pointerover", (ev) => {
+      const link = ev.target.closest(".g-link");
+      if (!link) return;
+      if (img.getAttribute("src") !== link.dataset.thumb) img.src = link.dataset.thumb;
+      if (!img.isConnected) box.append(img);
+      if (!on) { cx = x; cy = y; }
+      on = true;
+      box.classList.add("is-on");
+    });
+    list.addEventListener("pointerleave", () => { on = false; box.classList.remove("is-on"); });
+  }
+
+  /* ---------- Look-ahead strip ---------- */
+  function lookahead() {
+    const track = $(".la-track");
+    const controls = $(".la-controls");
+    if (!track) return;
+    if (controls) {
+      controls.hidden = false;
+      $$("[data-la]", controls).forEach((btn) => btn.addEventListener("click", () => {
+        const card = $(".la-card", track);
+        const stepPx = card ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
+        track.scrollBy({ left: Number(btn.dataset.la) * stepPx, behavior: reduceMotion ? "auto" : "smooth" });
+      }));
+    }
     if (!canHover || reduceMotion || saveData) return;
-    $$(".bu-card").forEach((card) => {
+    $$(".la-card", track).forEach((card) => {
       const video = $("video", card);
       if (!video) return;
       card.addEventListener("mouseenter", () => { loadVideo(video); card.classList.add("is-playing"); safePlay(video); });
@@ -127,17 +191,17 @@
     });
   }
 
-  /* ---------- BBS: show / hide the extra drawings ---------- */
-  function bbs() {
+  /* ---------- Submittals: show / hide the extra drawings ---------- */
+  function submittals() {
     const btn = $("[data-more]");
-    const grid = $(".bbs-grid");
-    if (!btn || !grid) return;
-    const total = $$("li", grid).length;
+    const list = $(".sub-list");
+    if (!btn || !list) return;
+    const total = $$("li", list).length;
     btn.addEventListener("click", () => {
-      const collapsed = grid.dataset.collapsed === "true";
-      grid.dataset.collapsed = String(!collapsed);
+      const collapsed = list.dataset.collapsed === "true";
+      list.dataset.collapsed = String(!collapsed);
       btn.setAttribute("aria-expanded", String(collapsed));
-      btn.textContent = collapsed ? "Show fewer drawings" : `Show all ${total} drawings`;
+      btn.textContent = collapsed ? "Show fewer submittals" : `Show all ${total} submittals`;
     });
   }
 
@@ -233,12 +297,13 @@
   }
 
   function init() {
-    levels();
-    reveal();
-    roof();
-    floors();
-    buildups();
-    bbs();
+    programme();
+    fills();
+    counters();
+    gantt();
+    preview();
+    lookahead();
+    submittals();
     viewer();
   }
 

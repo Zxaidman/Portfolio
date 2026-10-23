@@ -1,32 +1,73 @@
 {
   "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
-  "name": "Bar bending yard",
-  "introduced": "3.1.0",
-  "concept": "The tower is still read roof to foundation, but every surface now comes from the bar bending yard: slabs end on a ribbed TMT bar instead of a flat edge, buttons and chips are punched bar-mark tags, frames have the soft corners of a bent bar (bend radius, not a sharp corner), and headings are forged as they arrive, stretching from a thin, narrow cut length to a heavy, wide bar.",
+  "name": "Four-D programme",
+  "introduced": "5.0.0",
+  "concept": "The portfolio is a 4D construction programme, the way a planner reads a Navisworks TimeLiner or Primavera schedule. A week ruler runs across the top as the navigation, with each section as an activity bar and a red data-date line that slides along as you scroll. Every section opens on an activity row (WBS code, duration, start and finish) whose bar fills as it comes into view. The projects are a Gantt chart: each project is a bar as long as the building is tall. Faint week columns run down the whole page, the featured project sits on the critical path, and the contact section is the handover key date.",
   "fonts": {
-    "stylesheet": "https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=Instrument+Sans:wdth,wght@75..100,400..700&family=Martian+Mono:wdth,wght@75..112.5,300..700&display=swap",
-    "body": "\"Instrument Sans\", \"Segoe UI\", system-ui, sans-serif",
-    "display": "\"Anybody\", \"Arial Black\", system-ui, sans-serif",
-    "mono": "\"Martian Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Atkinson+Hyperlegible+Next:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap",
+    "body": "\"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif",
+    "display": "\"Schibsted Grotesk\", \"Helvetica Neue\", Arial, sans-serif",
+    "mono": "\"JetBrains Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
   },
   "scale": {
-    "--step--1": "clamp(0.76rem, 0.74rem + 0.1vw, 0.84rem)",
-    "--step-0": "clamp(1rem, 0.97rem + 0.18vw, 1.09rem)",
-    "--step-1": "clamp(1.2rem, 1.08rem + 0.55vw, 1.5rem)",
-    "--step-2": "clamp(1.55rem, 1.2rem + 1.5vw, 2.5rem)",
-    "--step-3": "clamp(2.1rem, 1.3rem + 3.6vw, 4.4rem)",
-    "--step-hero": "clamp(3.2rem, 0.6rem + 8.4vw, 9.2rem)",
-    "--gutter": "clamp(16px, 3.2vw, 48px)",
-    "--rail": "clamp(0px, 12vw, 172px)",
-    "--storey": "clamp(60px, 8.5vw, 128px)",
-    "--max": "1260px",
-    "--radius": "14px",
-    "--slab": "10px"
+    "--step--1": "clamp(0.78rem, 0.76rem + 0.1vw, 0.86rem)",
+    "--step-0": "clamp(1rem, 0.97rem + 0.16vw, 1.08rem)",
+    "--step-1": "clamp(1.18rem, 1.08rem + 0.5vw, 1.45rem)",
+    "--step-2": "clamp(1.5rem, 1.2rem + 1.4vw, 2.35rem)",
+    "--step-3": "clamp(2.2rem, 1.3rem + 3.9vw, 4.8rem)",
+    "--step-hero": "clamp(3rem, 0.8rem + 8vw, 8.6rem)",
+    "--gutter": "clamp(16px, 3vw, 44px)",
+    "--hdr": "60px",
+    "--wbs": "clamp(0px, 22vw, 300px)",
+    "--weeks": "24",
+    "--max": "1320px",
+    "--radius": "4px",
+    "--bar": "14px"
   },
   "themes": {
-    "bartag":     { "scheme": "light", "paper": "#f7efb4", "panel": "#efe59c", "ink": "#16150d", "muted": "#504b2c", "line": "#b3a75c", "accent": "#1438a6", "on-accent": "#ffffff", "viewport": "#ebe5c3" },
-    "millscale":  { "scheme": "dark",  "paper": "#1b1a23", "panel": "#25242f", "ink": "#eeedf3", "muted": "#a9a7b8", "line": "#4c4a5b", "accent": "#ffd23a", "on-accent": "#1b1a23", "viewport": "#d9d8df" },
-    "galvanised": { "scheme": "light", "paper": "#e7eaee", "panel": "#d8dde3", "ink": "#10161c", "muted": "#47525d", "line": "#9aa6b1", "accent": "#07734a", "on-accent": "#ffffff", "viewport": "#dde1e6" },
-    "quench":     { "scheme": "dark",  "paper": "#2a100c", "panel": "#361712", "ink": "#fbefe8", "muted": "#d6b2a6", "line": "#6e3d33", "accent": "#5fd8ff", "on-accent": "#2a100c", "viewport": "#e3d9d5" }
+    "baseline": {
+      "scheme": "light",
+      "paper": "#f4f3ee",
+      "panel": "#e9e7df",
+      "ink": "#15141a",
+      "muted": "#55525e",
+      "line": "#bdb9ad",
+      "accent": "#5a2fc2",
+      "on-accent": "#ffffff",
+      "viewport": "#e6e4dc"
+    },
+    "critical": {
+      "scheme": "dark",
+      "paper": "#0f1420",
+      "panel": "#171e2e",
+      "ink": "#eef1f7",
+      "muted": "#a3acc0",
+      "line": "#3a4560",
+      "accent": "#ff6b5e",
+      "on-accent": "#0f1420",
+      "viewport": "#dfe3ea"
+    },
+    "float": {
+      "scheme": "light",
+      "paper": "#dff0f2",
+      "panel": "#cfe6e9",
+      "ink": "#0b1d22",
+      "muted": "#3f5a60",
+      "line": "#8fb3b9",
+      "accent": "#0b5f7a",
+      "on-accent": "#ffffff",
+      "viewport": "#e3eef0"
+    },
+    "lookahead": {
+      "scheme": "dark",
+      "paper": "#1e1220",
+      "panel": "#2a1a2d",
+      "ink": "#f6eef7",
+      "muted": "#c3adc6",
+      "line": "#55405a",
+      "accent": "#6ff2c1",
+      "on-accent": "#1e1220",
+      "viewport": "#e4dde5"
+    }
   }
 }

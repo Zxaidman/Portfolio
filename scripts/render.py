@@ -1,15 +1,25 @@
 """
 render.py — builds index.html from data/profile.json, data/projects.json and data/site.json.
 
-Design: "Storey stack" (v3.0.0). The page is a tower in section, read from the roof
-down to the foundation. The roof is the permanent signature scroll stage (signature.py),
-and the skills storey holds the signature skill cards. Every section is a storey that opens on a Revit-style level
-datum (level tag + elevation); a fixed level rail on the left (a bottom bar on phones)
-is the navigation, and its lift car tracks scroll position.
+Design: "Four-D programme" (v5.0.0). The page is a 4D construction programme, read like a
+Navisworks TimeLiner or Primavera schedule:
 
-Pre-rendering (instead of fetching JSON in the browser) keeps the page fast, readable
-without JavaScript and indexable. Every "open" control is a real link to the image or
-video, so without JavaScript it still works; assets/js/main.js upgrades it to the viewer.
+  * A week ruler is fixed across the top and acts as the navigation. Every section is an activity
+    bar on it (WBS code + name), and a data-date line slides along the ruler as you scroll
+    (assets/js/main.js; hidden without JS).
+  * Every section opens on an activity row: WBS code, duration, start and finish dates, and a
+    Gantt bar that fills as the section comes into view.
+  * The projects are a Gantt chart. Each project is a bar as long as the building is tall
+    (G+41 = 42 floors), staggered like a real programme, with a preview that follows the cursor.
+  * The build-ups are a sideways look-ahead strip, the BBS drawings are a submittal register,
+    the featured project sits on the critical path and contact is the handover key date.
+
+The permanent signature (signature.py) stays: the scroll stage is the first section in <main>
+(full-bleed, "Mobilise"), and the skill cards are the "Trades" activity.
+
+Pre-rendering (instead of fetching JSON in the browser) keeps the page fast, readable without
+JavaScript and indexable. Every "open" control is a real link to the image or video, so without
+JavaScript it still works; assets/js/main.js upgrades it to the viewer.
 
 Data contract (unchanged): data/*.json shapes and build(), which writes index.html and
 assets/css/tokens.css. Edit content in data/*.json, then run:  python3 scripts/portfolio.py build
@@ -18,6 +28,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import re
 from html import escape
 from pathlib import Path
 
@@ -27,19 +38,19 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 SITE_URL = "https://zxaidman.github.io/Portfolio/"
 CHANGELOG_URL = "https://github.com/Zxaidman/Portfolio/blob/main/CHANGELOG.md"
-STOREY_HEIGHT = 3.0  # metres between level datums, for the elevation labels
+WEEKS = 24  # length of the programme on the ruler (matches --weeks in design/system.json)
 
-# The tower, top to bottom: (anchor id, level tag, name shown on the datum).
-LEVELS = [
-    ("roof", "RF", "Roof"),
-    ("featured", "L7", "Today's slab"),
-    ("projects", "L6", "Floors"),
-    ("buildups", "L5", "Build-ups"),
-    ("rebar", "L4", "Rebar & BBS"),
-    ("skills", "L3", "Skills"),
-    ("about", "L2", "About"),
-    ("revisions", "L1", "Revisions"),
-    ("contact", "GL", "Ground"),
+# The programme: (anchor id, WBS code, activity name, start week, duration in weeks).
+PHASES = [
+    ("roof", "A1000", "Mobilise", 0, 2),
+    ("featured", "A1010", "Critical path", 2, 2),
+    ("projects", "A1020", "Structure", 4, 6),
+    ("buildups", "A1030", "Sequencing", 9, 4),
+    ("rebar", "A1040", "Reinforcement", 12, 3),
+    ("skills", "A1050", "Trades", 14, 3),
+    ("about", "A1060", "Resources", 16, 3),
+    ("revisions", "A1070", "Baseline", 19, 3),
+    ("contact", "M1080", "Handover", 22, 2),
 ]
 
 
@@ -55,11 +66,23 @@ def fmt_date(iso: str) -> str:
         return iso or ""
 
 
-def elevation(anchor: str) -> str:
-    """'+21.000' style elevation for a level, ground level = ±0.000."""
-    idx = [a for a, _, _ in LEVELS].index(anchor)
-    metres = (len(LEVELS) - 1 - idx) * STOREY_HEIGHT
-    return "±0.000" if metres == 0 else f"+{metres:.3f}"
+def programme_start(site: dict) -> dt.date:
+    """Week 0 of the programme: the Monday of the week this version shipped."""
+    try:
+        day = dt.date.fromisoformat(site.get("date", ""))
+    except ValueError:
+        day = dt.date.today()
+    return day - dt.timedelta(days=day.weekday())
+
+
+def phase(anchor: str) -> tuple[str, str, str, int, int]:
+    return next(p for p in PHASES if p[0] == anchor)
+
+
+def storeys(title: str) -> int:
+    """Floors above ground from a public title like 'G+41 luxury residential tower model'."""
+    m = re.search(r"G\s*\+\s*(\d+)", title)
+    return int(m.group(1)) + 1 if m else 5
 
 
 def img_tag(im: dict, alt: str, cls: str = "", eager: bool = False, use_thumb: bool = False, sizes: str = "") -> str:
@@ -80,66 +103,84 @@ def opener(slug: str, href: str, inner: str, cls: str = "", index: int = 0, vide
     return (f'<a href="{e(href)}"{attrs} data-open="{e(slug)}" data-index="{index}"{extra}>{inner}</a>')
 
 
-def datum(anchor: str, title_id: str, title: str, note: str = "") -> str:
-    """The level datum that opens each storey: tag bubble, elevation, name, a drawn line."""
-    _, tag, name = next(l for l in LEVELS if l[0] == anchor)
-    note_html = f'<p class="storey-note">{e(note)}</p>' if note else ""
-    return f"""<header class="datum">
-    <p class="datum-line" aria-hidden="true"><span class="datum-tag">{e(tag)}</span><span class="datum-el">{e(elevation(anchor))}</span><span class="datum-name">{e(name)}</span><span class="datum-rule"></span></p>
-    <h2 id="{e(title_id)}" class="storey-title">{e(title)}</h2>
+def activity(anchor: str, title_id: str, title: str, note: str, start: dt.date, cls: str = "") -> str:
+    """The activity row that opens each section: WBS cell, Gantt bar on the week grid, title."""
+    _, code, name, s, d = phase(anchor)
+    begin = start + dt.timedelta(weeks=s)
+    finish = begin + dt.timedelta(weeks=d, days=-3)  # Friday of the last week
+    keydate = code.startswith("M")
+    note_html = f'<p class="act-note">{e(note)}</p>' if note else ""
+    span = (f'<span class="act-diamond"></span>' if keydate
+            else '<span class="act-bar"><span class="act-fill"></span></span>')
+    return f"""<header class="act{(' ' + cls) if cls else ''}" style="--s:{s};--d:{d}">
+    <p class="act-wbs mono"><span class="act-code">{e(code)}</span><span class="act-name">{e(name)}</span><span class="act-dur">{d} wk{"s" if d != 1 else ""}</span><span class="act-dates">{begin.strftime("%d %b")} &rarr; {finish.strftime("%d %b")}</span></p>
+    <div class="act-chart" aria-hidden="true">{span}</div>
+    <h2 id="{e(title_id)}" class="act-title">{e(title)}</h2>
     {note_html}
   </header>"""
 
 
 # --------------------------------------------------------------------------- #
-# Storeys
+# Programme bar (navigation)
 # --------------------------------------------------------------------------- #
-def rail(profile: dict) -> str:
+def programme_bar(profile: dict, start: dt.date) -> str:
     items = "".join(
-        f'<li><a href="#{e(a)}" data-level="{e(a)}"><span class="rl-tag">{e(t)}</span>'
-        f'<span class="rl-el">{e(elevation(a))}</span><span class="rl-name">{e(n)}</span></a></li>'
-        for a, t, n in LEVELS
+        f'<li style="--s:{s};--d:{d}"><a href="#{e(a)}" data-phase="{e(a)}" data-s="{s}" data-d="{d}">'
+        f'<span class="pb-code">{e(code)}</span><span class="pb-name">{e(name)}</span></a></li>'
+        for a, code, name, s, d in PHASES
     )
-    return f"""<nav class="rail" aria-label="Levels">
-  <a class="rail-mark" href="#roof" aria-label="{e(profile["name"])}, back to the roof">ZS<span>BIM</span></a>
-  <ol class="rail-levels">{items}</ol>
-  <div class="rail-shaft" aria-hidden="true"><span class="rail-car"></span></div>
-  <p class="rail-readout" aria-hidden="true"><span>Level</span><b data-readout>RF</b></p>
-</nav>"""
+    weeks = "".join(f"<span>{w:02d}</span>" for w in range(1, WEEKS + 1, 2))
+    return f"""<header class="prog" data-start="{start.isoformat()}">
+  <a class="prog-mark" href="#roof" aria-label="{e(profile["name"])}, back to the start"><b>ZS</b><span>4D</span></a>
+  <nav class="prog-nav" aria-label="Programme">
+    <p class="prog-weeks mono" aria-hidden="true">{weeks}</p>
+    <ol class="prog-track">{items}</ol>
+    <span class="prog-dd" aria-hidden="true"></span>
+  </nav>
+  <p class="prog-readout mono" aria-hidden="true"><span>Data date</span><b data-readout>{start.strftime("%d %b")}</b></p>
+</header>"""
 
 
-def featured_storey(p: dict) -> str:
+# --------------------------------------------------------------------------- #
+# Sections
+# --------------------------------------------------------------------------- #
+def critical_path(p: dict, start: dt.date) -> str:
     imgs = p["images"]
     thumbs = "".join(
-        f'<li>{opener(p["slug"], im["src"], img_tag(im, "", use_thumb=True), "thumb", index=i, label="Open view %d of %s" % (i + 1, p["title"]))}</li>'
+        f'<li>{opener(p["slug"], im["src"], img_tag(im, "", use_thumb=True), "cp-thumb", index=i, label="Open view %d of %s" % (i + 1, p["title"]))}</li>'
         for i, im in enumerate(imgs[1:6], start=1)
     )
-    video_btn = (opener(p["slug"], p["video"]["src"], f'Watch the build-up <span class="mono">{e(p["video"]["duration"])}</span>',
+    video_btn = (opener(p["slug"], p["video"]["src"], f'Play the build-up <span class="mono">{e(p["video"]["duration"])}</span>',
                         "btn btn-line", video=True)) if p.get("video") else ""
     main_img = opener(p["slug"], imgs[0]["src"],
-                      f'<span class="sbox-frame">{img_tag(imgs[0], p["title"] + " Revit model", sizes="(min-width: 900px) 58vw, 100vw")}</span>',
-                      "sbox feat-main", label=f'Open {p["title"]} gallery')
+                      img_tag(imgs[0], p["title"] + " Revit model", sizes="(min-width: 900px) 60vw, 100vw"),
+                      "cp-main", label=f'Open {p["title"]} gallery')
+    floors = storeys(p["title"])
     return f"""
-<section class="storey storey-featured" id="featured" aria-labelledby="featured-title">
-  {datum("featured", "featured-title", "On the slab today", "A different project is poured on this level every morning.")}
-  <div class="feat-grid">
-    {main_img}
-    <div class="feat-copy">
-      <p class="mono tag">Sheet {e(p["sheet"])}</p>
+<section class="phase phase-critical" id="featured" aria-labelledby="featured-title">
+  {activity("featured", "featured-title", "On the critical path today", "One project leads the programme. It changes twice a day.", start)}
+  <div class="cp-grid">
+    <figure class="cp-figure">{main_img}<figcaption class="mono"><span class="cp-flag">Critical</span> Sheet {e(p["sheet"])} &middot; {floors} floors</figcaption></figure>
+    <div class="cp-copy">
+      <p class="mono kicker">Activity {e(p["slug"].upper())}</p>
       <h3>{e(p["title"])}</h3>
-      <p class="meta">{e(p["kind"])}{(", " + e(p["location"])) if p["location"] else ""}</p>
+      <dl class="cp-facts">
+        <div><dt>Type</dt><dd>{e(p["kind"])}</dd></div>
+        <div><dt>City</dt><dd>{e(p["location"] or "Not published")}</dd></div>
+        <div><dt>Views</dt><dd>{len(imgs)}{" + build-up" if p.get("video") else ""}</dd></div>
+      </dl>
       <p>{e(p["summary"])}</p>
       <div class="actions">
-        {opener(p["slug"], imgs[0]["src"], f"All {len(imgs)} views", "btn btn-solid")}
+        {opener(p["slug"], imgs[0]["src"], f"Open all {len(imgs)} views", "btn btn-solid")}
         {video_btn}
       </div>
-      <ul class="thumbs">{thumbs}</ul>
+      <ul class="cp-thumbs">{thumbs}</ul>
     </div>
   </div>
 </section>"""
 
 
-def floors(projects: list[dict]) -> str:
+def gantt(projects: list[dict], start: dt.date) -> str:
     counts: dict[str, int] = {}
     for p in projects:
         counts[p["type"]] = counts.get(p["type"], 0) + 1
@@ -150,79 +191,96 @@ def floors(projects: list[dict]) -> str:
         for t in order
     )
     total = len(projects)
-    rows = "".join(
-        f"""<li class="floor" data-type="{e(p["type"])}">
-      {opener(p["slug"], p["images"][0]["src"], f'''<span class="fl-no mono">FL {total - i:02d}</span>
-        <span class="fl-title">{e(p["title"])}</span>
-        <span class="fl-kind">{e(p["kind"])}</span>
-        <span class="fl-loc mono">{e(p["location"] or "—")}</span>
-        <span class="fl-media mono">{len(p["images"])} views{" + build-up" if p.get("video") else ""}</span>
-        <span class="fl-thumb">{img_tag(p["images"][0], "", use_thumb=True)}</span>''', "fl-link")}
-    </li>"""
-        for i, p in enumerate(projects)
-    )
+    tallest = max(storeys(p["title"]) for p in projects)
+    rows = []
+    for i, p in enumerate(projects):
+        fl = storeys(p["title"])
+        w = fl / tallest
+        x = (i / max(total - 1, 1)) * (1 - w)  # staggered starts, like a real programme
+        inner = (f'<span class="g-id mono">{e(p["slug"].upper())}</span>'
+                 f'<span class="g-title">{e(p["title"])}</span>'
+                 f'<span class="g-kind">{e(p["kind"])}</span>'
+                 f'<span class="g-city mono">{e(p["location"] or "—")}</span>'
+                 f'<span class="g-chart" aria-hidden="true"><span class="g-bar" style="--x:{x:.4f};--w:{w:.4f}">'
+                 f'<span class="g-label mono">{fl} fl</span></span></span>'
+                 f'<span class="g-thumb">{img_tag(p["images"][0], "", use_thumb=True)}</span>'
+                 f'<span class="g-media mono">{len(p["images"])} views{" + build-up" if p.get("video") else ""}</span>')
+        rows.append(f'<li class="g-row" data-type="{e(p["type"])}" style="view-transition-name:row-{e(p["slug"])}">'
+                    f'{opener(p["slug"], p["images"][0]["src"], inner, "g-link", label=f"{p["title"]}: {fl} floors, {len(p["images"])} views", extra=f' data-thumb="{e(p["images"][0]["thumb"])}"')}</li>')
+    scale = "".join(f'<span style="--at:{n / tallest:.4f}">{n}</span>' for n in range(0, tallest + 1, 10))
     return f"""
-<section class="storey storey-floors" id="projects" aria-labelledby="floors-title">
-  {datum("projects", "floors-title", f"{total} floors, {total} projects", "Every project I modelled with the Computer Help BIM team, stacked one per floor. Open a floor to walk its views.")}
+<section class="phase phase-gantt" id="projects" aria-labelledby="gantt-title">
+  {activity("projects", "gantt-title", f"{total} projects on one programme", "Every project I modelled with the Computer Help BIM team. Each bar is as long as the building is tall. Open a row to walk its views.", start)}
   <div class="filters" role="group" aria-label="Filter projects by type">{filters}</div>
-  <ol class="floor-stack" aria-live="polite">{rows}</ol>
+  <div class="gantt" style="--ten:{10 / tallest:.4f}">
+    <p class="g-head mono" aria-hidden="true"><span class="gh-id">ID</span><span class="gh-title">Activity</span><span class="gh-city">City</span><span class="gh-media">Views</span><span class="g-scale">{scale}<span class="g-scale-unit">floors</span></span></p>
+    <ol class="g-rows" aria-live="polite">{"".join(rows)}</ol>
+  </div>
+  <div class="g-preview" aria-hidden="true"></div>
 </section>"""
 
 
-def buildups(projects_by_slug: dict, order: list[str]) -> str:
+def lookahead(projects_by_slug: dict, order: list[str], start: dt.date) -> str:
     cards = []
+    n = 0
     for slug in order:
         p = projects_by_slug.get(slug)
         if not p or not p.get("video"):
             continue
+        n += 1
         v = p["video"]
         poster = v.get("poster") or p["images"][0]["thumb"]
-        inner = (f'<span class="sbox bu-box"><span class="sbox-frame bu-media"><img src="{e(poster)}" alt="" loading="lazy" decoding="async">'
-                 f'<video muted loop playsinline preload="none" data-src="{e(v["src"])}" tabindex="-1"></video></span></span>'
-                 f'<span class="bu-cap"><b>{e(p["title"])}</b><span class="mono">{e(v["duration"])}</span></span>')
-        cards.append(f'<li class="bu-card">{opener(slug, v["src"], inner, "bu-link", video=True, label="Play the %s build-up" % p["title"])}</li>')
+        wk = start + dt.timedelta(weeks=9 + (n - 1) % 4)
+        inner = (f'<span class="la-media"><img src="{e(poster)}" alt="" loading="lazy" decoding="async">'
+                 f'<video muted loop playsinline preload="none" data-src="{e(v["src"])}" tabindex="-1"></video>'
+                 f'<span class="la-play" aria-hidden="true">&#9654;</span></span>'
+                 f'<span class="la-cap"><span class="mono">Run {n:02d} &middot; w/c {wk.strftime("%d %b")}</span>'
+                 f'<b>{e(p["title"])}</b><span class="mono la-dur">{e(v["duration"])}</span></span>')
+        cards.append(f'<li class="la-card">{opener(slug, v["src"], inner, "la-link", video=True, label="Play the %s build-up" % p["title"])}</li>')
     return f"""
-<section class="storey storey-buildups" id="buildups" aria-labelledby="bu-title">
-  {datum("buildups", "bu-title", "Poured floor by floor", "Construction-sequence animations rendered from the Revit models. Hover to preview, open to watch with sound.")}
-  <ul class="bu-grid">{"".join(cards)}</ul>
+<section class="phase phase-lookahead" id="buildups" aria-labelledby="la-title">
+  {activity("buildups", "la-title", "Four-week look-ahead", "Construction-sequence animations rendered from the Revit models, run by run. Hover to preview, open to watch with sound.", start)}
+  <div class="la-controls" hidden>
+    <button type="button" class="btn btn-line" data-la="-1" aria-label="Scroll the look-ahead back">&larr; Back</button>
+    <button type="button" class="btn btn-line" data-la="1" aria-label="Scroll the look-ahead forward">Forward &rarr;</button>
+  </div>
+  <ul class="la-track" tabindex="0" aria-label="Build-up animations">{"".join(cards)}</ul>
 </section>"""
 
 
-def rebar(bbs: list[dict]) -> str:
+def submittals(bbs: list[dict], start: dt.date) -> str:
     if not bbs:
         return ""
     items = "".join(
         f'<li{" class=extra" if i >= 6 else ""}>'
-        f'{opener("__bbs", b["src"], img_tag(b, b["alt"], use_thumb=True), "bbs-link", index=i, label="Open drawing: " + b["alt"])}</li>'
+        f'{opener("__bbs", b["src"], f"<span class=sub-no>SUB-{i + 1:03d}</span>" + img_tag(b, b["alt"], use_thumb=True) + f"<span class=sub-cap>{e(b['alt'])}</span>", "sub-link", index=i, label="Open drawing: " + b["alt"])}</li>'
         for i, b in enumerate(bbs)
     )
     more = (f'<button type="button" class="btn btn-line" data-more aria-expanded="false">'
-            f'Show all {len(bbs)} drawings</button>') if len(bbs) > 6 else ""
+            f'Show all {len(bbs)} submittals</button>') if len(bbs) > 6 else ""
     return f"""
-<section class="storey storey-rebar" id="rebar" aria-labelledby="rebar-title">
-  {datum("rebar", "rebar-title", "Rebar and bar bending schedules", "Beam, column, footing and slab reinforcement, detailed in Revit and RC-CADS and scheduled straight from the model.")}
-  <svg class="bars" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <path d="M0 8 H600 M0 32 H600"/><path class="stirrups" d="M20 4 V36 M70 4 V36 M120 4 V36 M170 4 V36 M220 4 V36 M270 4 V36 M320 4 V36 M370 4 V36 M420 4 V36 M470 4 V36 M520 4 V36 M570 4 V36"/>
-  </svg>
-  <ul class="bbs-grid" data-collapsed="true">{items}</ul>
+<section class="phase phase-rebar" id="rebar" aria-labelledby="rebar-title">
+  {activity("rebar", "rebar-title", "Rebar submittals", "Beam, column, footing and slab reinforcement, detailed in Revit and RC-CADS and scheduled straight from the model.", start)}
+  <ol class="sub-list" data-collapsed="true">{items}</ol>
   {more}
 </section>"""
 
 
-def skills_storey() -> str:
-    """The signature skill cards, opened by this design's level datum."""
+def trades(start: dt.date) -> str:
+    """The signature skill cards, opened by this design's activity row."""
     skills, _ = signature.load()
     sk = skills["skills"]
-    head = datum("skills", "sig-skills-title", sk["title"], sk["intro"])
+    head = activity("skills", "sig-skills-title", sk["title"], sk["intro"], start)
     return signature.skills_html(header_html=head, anchor="skills").replace(
-        'class="sig-skills"', 'class="storey storey-skills sig-skills"', 1)
+        'class="sig-skills"', 'class="phase phase-trades sig-skills"', 1)
 
 
-def about(profile: dict) -> str:
+def resources(profile: dict, start: dt.date) -> str:
     exp = "".join(
-        f"""<article class="job">
+        f"""<article class="res">
+      <p class="res-when mono"><time>{e(j["from"])}</time> &rarr; <time>{e(j["to"])}</time></p>
       <h3>{e(j["role"])}</h3>
-      <p class="meta">{e(j["org"])}, <time>{e(j["from"])}</time> to <time>{e(j["to"])}</time></p>
+      <p class="meta">{e(j["org"])}</p>
       <ul>{"".join(f"<li>{e(pt)}</li>" for pt in j["points"])}</ul>
     </article>"""
         for j in profile["experience"]
@@ -232,27 +290,29 @@ def about(profile: dict) -> str:
         for s in profile["skills"]
     )
     edu = "".join(f'<p><b>{e(x["title"])}</b>, {e(x["years"])}<br>{e(x["detail"])}</p>' for x in profile["education"])
+    stats = "".join(f'<li><b data-count>{e(s["value"])}</b><span>{e(s["label"])}</span></li>' for s in profile["stats"])
     return f"""
-<section class="storey storey-about" id="about" aria-labelledby="about-title">
-  {datum("about", "about-title", "About", profile["intro"])}
-  <div class="about-grid">
-    <div>{exp}</div>
-    <div>
-      <dl class="skills">{skills}</dl>
-      <div class="edu"><h3>Education</h3>{edu}<h3>Languages</h3><p>{e(", ".join(profile["languages"]))}</p></div>
-    </div>
+<section class="phase phase-resources" id="about" aria-labelledby="about-title">
+  {activity("about", "about-title", "Resources", profile["intro"], start)}
+  <ul class="res-stats">{stats}</ul>
+  <div class="res-grid">
+    <div class="res-list">{exp}</div>
+    <aside class="res-side">
+      <dl class="res-skills">{skills}</dl>
+      <div class="res-edu"><h3>Education</h3>{edu}<h3>Languages</h3><p>{e(", ".join(profile["languages"]))}</p></div>
+    </aside>
   </div>
 </section>"""
 
 
-def revisions(site: dict) -> str:
+def baseline(site: dict, start: dt.date) -> str:
     rows = "".join(
         f'<tr><th scope="row" class="mono">{e(r["rev"])}</th><td class="mono">{e(fmt_date(r["date"]))}</td><td>{e(r["note"])}</td></tr>'
         for r in site.get("revisions", [])[:5]
     )
     return f"""
-<section class="storey storey-revisions" id="revisions" aria-labelledby="rev-title">
-  {datum("revisions", "rev-title", f"Rev {site['version']}", "This tower is rebuilt on a schedule: a whole revamp every Monday, Wednesday and Friday, a new design system on the other mornings, and a fresh featured project twice a day in between.")}
+<section class="phase phase-baseline" id="revisions" aria-labelledby="rev-title">
+  {activity("revisions", "rev-title", f"Baseline {site['version']}", "This programme is re-baselined on a schedule: a whole revamp every Monday, Wednesday and Friday, a new design system on the other mornings, and the featured project changes twice a day.", start)}
   <div class="rev-wrap">
     <table class="rev-table">
       <caption class="mono">Latest revisions</caption>
@@ -264,17 +324,14 @@ def revisions(site: dict) -> str:
 </section>"""
 
 
-def contact(profile: dict) -> str:
+def handover(profile: dict, start: dt.date) -> str:
     return f"""
-<section class="storey storey-contact" id="contact" aria-labelledby="contact-title">
-  <header class="datum">
-    <p class="datum-line" aria-hidden="true"><span class="datum-tag">GL</span><span class="datum-el">{e(elevation("contact"))}</span><span class="datum-name">Ground</span><span class="datum-rule"></span></p>
-    <h2 id="contact-title" class="storey-title contact-title">Got a model that needs building?</h2>
-  </header>
-  <a class="contact-mail" href="mailto:{e(profile["email"])}">{e(profile["email"])}</a>
-  <p class="contact-links">
-    <a href="{e(profile["linkedin"])}" rel="noopener">LinkedIn</a>
-    <span>{e(profile["location"])}</span>
+<section class="phase phase-handover" id="contact" aria-labelledby="contact-title">
+  {activity("contact", "contact-title", "Got a model that needs building?", "", start, cls="act-keydate")}
+  <a class="ho-mail" href="mailto:{e(profile["email"])}"><span class="ho-diamond" aria-hidden="true"></span>{e(profile["email"])}</a>
+  <p class="ho-links">
+    <a class="btn btn-line" href="{e(profile["linkedin"])}" rel="noopener">LinkedIn</a>
+    <span class="mono">{e(profile["location"])}</span>
   </p>
 </section>"""
 
@@ -313,6 +370,7 @@ def build() -> Path:
     projects = data["projects"]
     by_slug = {p["slug"]: p for p in projects}
     featured = by_slug.get(site["featured"], projects[0])
+    start = programme_start(site)
 
     # Compact payload for the viewer (dialog) — only what the JS needs.
     viewer = {
@@ -326,7 +384,7 @@ def build() -> Path:
         for p in projects
     }
     viewer["__bbs"] = {
-        "title": "Rebar and BBS drawings", "sheet": "S-100", "meta": "Reinforcement documentation", "summary": "",
+        "title": "Rebar and BBS submittals", "sheet": "S-100", "meta": "Reinforcement documentation", "summary": "",
         "images": [{"src": b["src"], "w": b["w"], "h": b["h"], "alt": b["alt"]} for b in data.get("bbs", [])],
         "video": None,
     }
@@ -370,37 +428,37 @@ def build() -> Path:
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-{rail(profile)}
+{programme_bar(profile, start)}
 <main id="main">
 {signature.stage_html(profile, projects, opener, anchor="roof")}
-<div class="tower">
-{featured_storey(featured)}
-{floors(projects)}
-{buildups(by_slug, site.get("reel", list(by_slug)))}
-{rebar(data.get("bbs", []))}
-{skills_storey()}
-{about(profile)}
-{revisions(site)}
-{contact(profile)}
+<div class="programme">
+{critical_path(featured, start)}
+{gantt(projects, start)}
+{lookahead(by_slug, site.get("reel", list(by_slug)), start)}
+{submittals(data.get("bbs", []), start)}
+{trades(start)}
+{resources(profile, start)}
+{baseline(site, start)}
+{handover(profile, start)}
 </div>
 </main>
-<footer class="foundation">
-  <p class="mono">Foundation &minus;1.500 &middot; Rev {v} &middot; updated {e(fmt_date(site["date"]))}</p>
+<footer class="closeout">
+  <p class="mono">Programme rev {v} &middot; data date {e(fmt_date(site["date"]))} &middot; {WEEKS} weeks</p>
   <p>Projects modelled at {e(profile["employer"])}. Build-up soundtracks from Mixkit. <a href="{CHANGELOG_URL}" rel="noopener">Revision history</a></p>
 </footer>
 
 <dialog class="viewer" id="viewer" aria-labelledby="viewer-title">
   <div class="viewer-head">
-    <p class="mono tag" id="viewer-sheet"></p>
+    <p class="mono kicker" id="viewer-sheet"></p>
     <h2 id="viewer-title"></h2>
     <p class="meta" id="viewer-meta"></p>
-    <button type="button" class="viewer-close" data-close aria-label="Close viewer">Close</button>
+    <button type="button" class="viewer-close" data-close aria-label="Close viewer">Close &times;</button>
   </div>
   <div class="viewer-stage" id="viewer-stage"></div>
   <div class="viewer-foot">
-    <button type="button" class="btn btn-line" data-step="-1" aria-label="Previous view">Up a view</button>
+    <button type="button" class="btn btn-line" data-step="-1" aria-label="Previous view">&larr; Previous</button>
     <p id="viewer-count" class="mono" aria-live="polite"></p>
-    <button type="button" class="btn btn-line" data-step="1" aria-label="Next view">Down a view</button>
+    <button type="button" class="btn btn-line" data-step="1" aria-label="Next view">Next &rarr;</button>
   </div>
 </dialog>
 <script id="viewer-data" type="application/json">{viewer_json}</script>
