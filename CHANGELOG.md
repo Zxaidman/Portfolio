@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.3.1] - 2026-10-23 (afternoon)
+- Afternoon theme and asset change: Featured G+35 sale and rehab building model, critical theme, hero s13.
+
 ## [5.3.0] - 2026-10-23
 - Two new projects in the list, built from the IFC models Zaid shared: a G+4 residential building model and a G+18 mixed-use tower model on a three-level basement podium (both Mumbai). Each has seven views rendered from the model: two corners, side, street level, aerial, an exploded view of the storeys and the structural frame on its own.
 - Hand-added projects now live in their own data file and media folder, so the twice-daily sync from the source keeps them.
