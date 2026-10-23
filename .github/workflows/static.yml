@@ -29,8 +29,21 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout (media stays as LFS pointers for now)
         uses: actions/checkout@v4
+      # Media lives in Git LFS. GitHub Pages only serves real files, so pull them here, but from
+      # a cache: only objects that changed since the last deploy count against the free LFS
+      # bandwidth (10 GiB/month), instead of the whole ~300 MB on every deploy.
+      - name: List LFS objects (cache key)
+        run: git lfs ls-files --long | cut -d ' ' -f1 | sort > .lfs-assets-id
+      - name: Restore LFS cache
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-assets-id') }}
+          restore-keys: lfs-
+      - name: Pull LFS media
+        run: git lfs pull && rm -f .lfs-assets-id
       - name: Validate site (blocks deploy if data or assets are broken)
         run: python3 scripts/portfolio.py validate
       - name: Setup Pages

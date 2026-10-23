@@ -2,6 +2,11 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.2.0] - 2026-10-23 (signature)
+- New hero model: a G+18 tower on a three-level basement podium, built from its structural and architectural IFCs merged into one model. The frame (columns, beams, slabs, stairs, ramps) and the architecture (walls, facade panels, railings) assemble storey by storey, structure first. It is on show now.
+- The twin-tower model and its build-up video stay in the rotation as separate items, placed as far apart as possible; IFC models are spread evenly through the videos.
+- Media (images, videos and stage frames) now lives in Git LFS, and the whole repository history was rewritten to match, so the repository is a fraction of its former size. Deploys pull media from a cache.
+
 ## [5.1.0] - 2026-10-23 (signature)
 - All 14 project build-up videos now play in the scroll stage as scroll-driven sequences: background cut out (including the 4D simulation's legend, counter and timeline), original colours kept, the project's public title on the meter.
 - The hero rotates on every update (1:50 PM, 9:50 PM and 5:50 AM) through one pool of IFC models and build-up videos; the IFC models are spaced evenly through the rotation.

@@ -251,6 +251,7 @@ class MediaSync:
         self.manifest: dict[str, str] = read_json(self.manifest_path, {}) or {}
         self.changed: list[str] = []
         self.touched: set[Path] = set()  # every file this run produced; anything else is pruned
+        self.recopied: set[Path] = set()  # videos re-encoded in this run (their posters follow)
 
     def _fresh(self, key: str, src: Path, outputs: list[Path]) -> bool:
         digest = sha256(src)
@@ -275,8 +276,14 @@ class MediaSync:
                     copy.thumbnail((size, size), Image.LANCZOS)
                     copy.save(out, "JPEG", quality=JPEG_QUALITY, optimize=True, progressive=True)
         self.touched.update((full, thumb))
-        with Image.open(full) as im:
-            w, h = im.size
+        # Media is in Git LFS and scheduled runs check out pointers only, so the output's size is
+        # remembered in the manifest instead of being read back from the file each run.
+        skey = f"size:{full.relative_to(MEDIA)}"
+        if key in self.changed or skey not in self.manifest:
+            with Image.open(full) as im:
+                w, h = im.size
+            self.manifest[skey] = f"{w}x{h}"
+        w, h = (int(v) for v in self.manifest[skey].split("x"))
         return {
             "src": str(full.relative_to(ROOT)).replace("\\", "/"),
             "thumb": str(thumb.relative_to(ROOT)).replace("\\", "/"),
@@ -296,6 +303,7 @@ class MediaSync:
         """Copy a video with container metadata stripped; optionally cover a region (burned-in text)."""
         key = f"video:{dest.relative_to(MEDIA)}:{mask or ''}"
         if self._fresh(key, src, [dest]):
+            self.recopied.add(dest)
             dest.parent.mkdir(parents=True, exist_ok=True)
             if shutil.which("ffmpeg"):
                 cmd = ["ffmpeg", "-v", "error", "-y", "-i", str(src), "-map_metadata", "-1"]
@@ -316,7 +324,9 @@ class MediaSync:
 
     def poster_from(self, video: Path, dest: Path) -> str:
         """Last-second frame of a (masked) video as its poster."""
-        if not dest.exists() or dest.stat().st_mtime < video.stat().st_mtime:
+        # Regenerate only when the video was re-copied in this run (file times mean nothing in a
+        # fresh clone, and with Git LFS the video may be a pointer file).
+        if not dest.exists() or video in self.recopied:
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-sseof", "-1", "-i", str(video),
                             "-frames:v", "1", "-q:v", "3", str(dest)], check=True)
             self.changed.append(f"poster:{dest.name}")
@@ -871,6 +881,26 @@ def cmd_validate() -> int:
 # --------------------------------------------------------------------------- #
 # CLI
 # --------------------------------------------------------------------------- #
+def cmd_media(for_qa: bool) -> int:
+    """Media (images, videos, stage frames) is stored in Git LFS. Scheduled runs clone with
+    GIT_LFS_SKIP_SMUDGE=1 (pointers only) to save LFS bandwidth; `media --qa` then pulls just what
+    the QA screenshots look at: project images, BBS sheets, video posters, stage posters and the
+    frames of the hero item on show. `media` without --qa pulls everything."""
+    if not shutil.which("git-lfs") and subprocess.run(["git", "lfs", "version"], capture_output=True).returncode:
+        raise SystemExit("git-lfs is not installed (apt-get install git-lfs)")
+    cmd = ["git", "lfs", "pull"]
+    if for_qa:
+        import signature  # local module
+        stage = read_json(DATA / "stage.json", {}) or {}
+        item = signature.active_item(stage, read_json(DATA / "site.json", {}) or {})
+        include = ["media/projects/**", "media/bbs/**", "media/video/*.jpg", "media/stage/*-poster.webp"]
+        if item:
+            include += [f"{item['desktop']['dir']}/**", f"{item['mobile']['dir']}/**"]
+        cmd += ["--include", ",".join(include)]
+        log(f"media: pulling {', '.join(include)}")
+    return subprocess.run(cmd, cwd=ROOT).returncode
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -885,6 +915,8 @@ def main(argv: list[str] | None = None) -> int:
         sp.add_argument("--minor", action="store_true", help="bump MINOR (new design system, every morning)")
     sub.add_parser("validate")
     sub.add_parser("build")
+    mp = sub.add_parser("media", help="pull LFS media (all, or only what qa.py needs with --qa)")
+    mp.add_argument("--qa", action="store_true")
     ap_ = sub.add_parser("archive", help="snapshot the active design into design/archive/")
     ap_.add_argument("--shots", type=Path, help="QA screenshot folder to include")
     cp = sub.add_parser("cadence", help="print patch/minor/major for this run (default: now, IST)")
@@ -895,6 +927,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "validate":
         return cmd_validate()
+    if args.cmd == "media":
+        return cmd_media(args.qa)
     if args.cmd == "build":
         cmd_build()
         return cmd_validate()

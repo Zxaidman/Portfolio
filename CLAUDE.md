@@ -13,7 +13,7 @@ This file is the permanent memory for whoever maintains the site, human or AI. T
 
 Two sections live in their own files and survive every minor and major:
 
-- **Scroll stage** (`scripts/signature.py` `stage_html`, `assets/js/signature.js`, `assets/css/signature.css`): the pinned hero. Scrolling plays a 3D BIM model rendered from an IFC frame by frame: a faint wireframe of the finished building, then elements fly into place storey by storey (columns grow, beams slide in, slabs drop, walls rise, facade flies in), an exploded view while the camera orbits, and the model closing up again. Frames are neutral clay on a transparent background; the canvas tints them to `--sig-model-tint` (default: the theme accent, mix `--sig-model-tint-mix`), so every theme recolours the model. The name fades out, two glass HUD cards float in, a "Built %" meter counts up with the level being placed, the camera pushes in, and a Revit `{3D}` viewport opens and expands into the project showcase. Frames come from `tools/ifc-stage/` + `scripts/stage.py model` and `data/stage.json`. **The hero rotates on every update:** `stage.json` holds IFC models (`models`: `m1`, `m2`, ...; tinted clay, fly-in choreography) and the project build-up videos (`videos`: `s04`, `s12`, ...; background and any on-screen overlays cut out, original colours, the project's public title on the meter). `signature.stage_pool` spreads the models evenly through the videos; the page shows one item (`data/site.json` `stage_pick`) and every refresh (patch, minor and major) moves to the next. A model built from a project's IFC can take that project's video slot (`"replaces": "s12"` on the model). New IFCs arrive from Zaid and are added by hand, never by a scheduled run; videos are rebuilt by hand with `python3 scripts/stage.py video <id|all>` (overlay boxes are stored per video, e.g. s09's 4D legend and timeline). An optional clip of Zaid can be added as a segment after the model.
+- **Scroll stage** (`scripts/signature.py` `stage_html`, `assets/js/signature.js`, `assets/css/signature.css`): the pinned hero. Scrolling plays a 3D BIM model rendered from an IFC frame by frame: a faint wireframe of the finished building, then elements fly into place storey by storey (columns grow, beams slide in, slabs drop, walls rise, facade flies in), an exploded view while the camera orbits, and the model closing up again. Frames are neutral clay on a transparent background; the canvas tints them to `--sig-model-tint` (default: the theme accent, mix `--sig-model-tint-mix`), so every theme recolours the model. The name fades out, two glass HUD cards float in, a "Built %" meter counts up with the level being placed, the camera pushes in, and a Revit `{3D}` viewport opens and expands into the project showcase. Frames come from `tools/ifc-stage/` + `scripts/stage.py model` and `data/stage.json`. **The hero rotates on every update:** `stage.json` holds IFC models (`models`: `m1`, `m2`, ...; tinted clay, fly-in choreography) and the project build-up videos (`videos`: `s04`, `s12`, ...; background and any on-screen overlays cut out, original colours, the project's public title on the meter). `signature.stage_pool` spreads the models evenly through the videos; the page shows one item (`data/site.json` `stage_pick`) and every refresh (patch, minor and major) moves to the next. A model built from a project's IFC can take that project's video slot (`"replaces": "s12"` on the model), or stay alongside it (`"same_as": "s12"`, as m2 does), in which case the pool places the two as far apart as possible. New IFCs arrive from Zaid and are added by hand, never by a scheduled run; videos are rebuilt by hand with `python3 scripts/stage.py video <id|all>` (overlay boxes are stored per video, e.g. s09's 4D legend and timeline). An optional clip of Zaid can be added as a segment after the model.
 - **Skill cards** (`skills_html`): category chips and a grid of cards with a glyph tile, badge, name, one-line description and a link to evidence on the page; hover lift, category-tinted glow that follows the cursor, staggered entrance. Content: `data/skills.json` (hand-edited only).
 
 Rules for every design:
@@ -53,6 +53,22 @@ media/stage/            stage frames (desktop + mobile WebP, transparent)
 VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 ```
 
+### Media lives in Git LFS
+
+Everything under `media/` that is an image, video or frame (`*.jpg`, `*.webp`, `*.mp4`; see
+`.gitattributes`) is stored in Git LFS. The free plan allows 10 GiB storage and 10 GiB download
+a month, and every download counts, so:
+
+- **Clone without media:** `GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 ...` (files are small
+  pointers). `sync`, `refresh`, `build`, `validate` and the leak check all work on pointers.
+- **Before `qa.py`** (minor and major runs): `python3 scripts/portfolio.py media --qa` pulls only
+  what the screenshots look at (project images, BBS sheets, posters, the hero item on show).
+  `media` without `--qa` pulls everything (manual work only).
+- **Deploys** pull media in GitHub Actions from a cache (`.github/workflows/static.yml`), so only
+  changed files are downloaded.
+- New or changed media is converted to LFS on commit automatically when git-lfs is installed
+  (`git lfs install` once per clone). Never commit media without git-lfs installed.
+
 ### Requirements
 
 - Python 3.9+
@@ -62,6 +78,7 @@ VERSION, CHANGELOG.md   SemVer on a fixed cadence (below)
 
 ```bash
 # A run (what the scheduled task does; slot comes from the current IST time)
+git lfs install --skip-smudge     # media stays as LFS pointers (see "Media lives in Git LFS")
 git clone --depth 1 https://github.com/aasif-shaikh7/BIM-Portfolio ../BIM-Portfolio
 python3 scripts/portfolio.py daily --source ../BIM-Portfolio
 
@@ -81,6 +98,7 @@ python3 scripts/portfolio.py cadence --calendar
 
 # New design system (minor) or revamp (major), after changing the design files:
 python3 scripts/portfolio.py daily --source ../BIM-Portfolio --minor   # or --major
+python3 scripts/portfolio.py media --qa      # pull just the media the screenshots need
 python3 scripts/qa.py --out /tmp/qa && python3 scripts/portfolio.py archive --shots /tmp/qa
 ```
 

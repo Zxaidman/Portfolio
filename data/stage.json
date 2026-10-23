@@ -183,6 +183,145 @@
           "at": 0.95,
           "label": "Model complete"
         }
+      ],
+      "same_as": "s12"
+    },
+    {
+      "id": "m3",
+      "kind": "model",
+      "alt": "3D BIM model of a G+18 tower on a three-level basement podium, structure and architecture",
+      "fit": "contain",
+      "tint": true,
+      "count": 168,
+      "complete": 0.6,
+      "desktop": {
+        "dir": "media/stage/m3",
+        "w": 771,
+        "h": 780
+      },
+      "mobile": {
+        "dir": "media/stage/m3-m",
+        "w": 514,
+        "h": 520
+      },
+      "poster": "media/stage/m3-poster.webp",
+      "phases": [
+        {
+          "at": 0.0,
+          "label": "Foundation"
+        },
+        {
+          "at": 0.0496,
+          "label": "Basement 3"
+        },
+        {
+          "at": 0.0693,
+          "label": "Basement 2"
+        },
+        {
+          "at": 0.0889,
+          "label": "Basement 1"
+        },
+        {
+          "at": 0.1085,
+          "label": "Lower ground"
+        },
+        {
+          "at": 0.1282,
+          "label": "Ground"
+        },
+        {
+          "at": 0.1478,
+          "label": "Level 1"
+        },
+        {
+          "at": 0.1675,
+          "label": "Level 2"
+        },
+        {
+          "at": 0.1871,
+          "label": "Level 3"
+        },
+        {
+          "at": 0.2067,
+          "label": "Level 4"
+        },
+        {
+          "at": 0.2264,
+          "label": "Level 5"
+        },
+        {
+          "at": 0.246,
+          "label": "Level 6"
+        },
+        {
+          "at": 0.2656,
+          "label": "Level 7"
+        },
+        {
+          "at": 0.2853,
+          "label": "Level 8"
+        },
+        {
+          "at": 0.3049,
+          "label": "Level 9"
+        },
+        {
+          "at": 0.3245,
+          "label": "Level 10"
+        },
+        {
+          "at": 0.3442,
+          "label": "Level 11"
+        },
+        {
+          "at": 0.3638,
+          "label": "Level 12"
+        },
+        {
+          "at": 0.3835,
+          "label": "Level 13"
+        },
+        {
+          "at": 0.4031,
+          "label": "Level 14"
+        },
+        {
+          "at": 0.4227,
+          "label": "Level 15"
+        },
+        {
+          "at": 0.4424,
+          "label": "Level 16"
+        },
+        {
+          "at": 0.462,
+          "label": "Level 17"
+        },
+        {
+          "at": 0.4816,
+          "label": "Level 18"
+        },
+        {
+          "at": 0.5066,
+          "label": "Roof"
+        },
+        {
+          "at": 0.5262,
+          "label": "Terrace"
+        },
+        {
+          "at": 0.62,
+          "label": "Exploded view"
+        },
+        {
+          "at": 0.82,
+          "label": "Reassembling"
+        },
+        {
+          "at": 0.95,
+          "label": "Model complete"
+        }
       ]
     }
   ],

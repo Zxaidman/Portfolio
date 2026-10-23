@@ -53,7 +53,8 @@ const EDGE = new THREE.LineBasicMaterial({ color: 0x3a3a3a, transparent: true, o
 const GHOST = new THREE.LineBasicMaterial({ color: 0x6b6b6b, transparent: true, opacity: .2, depthWrite: false });
 const ghostRoot = new THREE.Group();
 const KIND = {
-  IfcColumn: "column", IfcBeam: "beam", IfcSlab: "slab", IfcWall: "wall",
+  IfcColumn: "column", IfcBeam: "beam", IfcSlab: "slab", IfcWall: "wall", IfcWallStandardCase: "wall",
+  IfcRamp: "stair", IfcRampFlight: "stair", IfcFooting: "slab",
   IfcStair: "stair", IfcStairFlight: "stair", IfcRailing: "stair",
   IfcMember: "opening", IfcPlate: "opening", IfcWindow: "opening", IfcDoor: "opening",
 };

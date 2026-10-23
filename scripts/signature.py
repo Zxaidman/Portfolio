@@ -42,17 +42,37 @@ def e(value) -> str:
 
 def stage_pool(stage: dict) -> list[dict]:
     """Everything the hero can show, in rotation order: IFC models (stage.json "models") and the
-    project build-up videos (stage.json "videos"). A model that "replaces" a project id takes that
-    project's video slot. Models are spread evenly through the videos so they come round regularly."""
+    project build-up videos (stage.json "videos").
+
+    * A model that "replaces" a project id takes that project's video out of the rotation.
+    * Models are spread evenly through the videos so one comes round regularly.
+    * A model of the same project as a video ("same_as": "s12") is given the evenly spaced slot
+      furthest from that video, so the two never play close together."""
+    from itertools import permutations
     models = list(stage.get("models") or [])
     replaced = {m.get("replaces") for m in models if m.get("replaces")}
     videos = [v for v in (stage.get("videos") or []) if v["id"] not in replaced]
     if not models:
         return videos
-    pool, step = list(videos), (len(videos) + len(models)) / len(models)
-    for k, m in enumerate(models):
-        pool.insert(min(len(pool), round(k * step)), m)
-    return pool
+    n = len(videos) + len(models)
+    slots = [round(k * n / len(models)) for k in range(len(models))]
+
+    def build(order):
+        pool, it = [], iter(videos)
+        slot_of = dict(zip(slots, order))
+        for k in range(n):
+            pool.append(slot_of[k] if k in slot_of else next(it))
+        return pool
+
+    def spacing(pool):  # smallest circular gap between a model and its same-project video
+        ids = [x["id"] for x in pool]
+        gaps = [min(abs(ids.index(m["id"]) - ids.index(m["same_as"])),
+                    n - abs(ids.index(m["id"]) - ids.index(m["same_as"])))
+                for m in models if m.get("same_as") in ids]
+        return min(gaps) if gaps else n
+
+    orders = permutations(models) if len(models) <= 6 else [models]
+    return max((build(list(o)) for o in orders), key=spacing)
 
 
 def stage_index(site: dict) -> int:
