@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.4.2] - 2026-10-24 (night)
+- Night theme and asset change: Featured G+19 architectural and structural model, binding-wire theme, hero s22.
+
 ## [5.4.1] - 2026-10-24 (afternoon)
 - Afternoon theme and asset change: Featured G+7 residential block model, hessian theme, hero s21.
 

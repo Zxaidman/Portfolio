@@ -1,8 +1,7 @@
 {
-  "featured": "s21",
-  "theme": "hessian",
+  "featured": "s22",
+  "theme": "binding-wire",
   "reel": [
-    "s21",
     "s22",
     "s04",
     "s05",
@@ -15,11 +14,17 @@
     "s12",
     "s13",
     "s14",
-    "s15"
+    "s15",
+    "s21"
   ],
-  "version": "5.4.1",
+  "version": "5.4.2",
   "date": "2026-10-24",
   "revisions": [
+    {
+      "rev": "5.4.2",
+      "date": "2026-10-24",
+      "note": "Featured G+19 architectural and structural model, binding-wire theme, hero s22"
+    },
     {
       "rev": "5.4.1",
       "date": "2026-10-24",
@@ -39,13 +44,8 @@
       "rev": "5.3.2",
       "date": "2026-10-23",
       "note": "Fix: the Vercel mirror now loads all images, videos and hero frames"
-    },
-    {
-      "rev": "5.3.1",
-      "date": "2026-10-23",
-      "note": "Featured G+35 sale and rehab building model, critical theme, hero s13"
     }
   ],
-  "slot": "2026-10-24 afternoon",
-  "stage_pick": 15
+  "slot": "2026-10-24 night",
+  "stage_pick": 16
 }
