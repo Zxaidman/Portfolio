@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.4.1] - 2026-10-24 (afternoon)
+- Afternoon theme and asset change: Featured G+7 residential block model, hessian theme, hero s21.
+
 ## [5.4.0] - 2026-10-24 (morning)
 - New design system: Cover block design system. Featured G+33 commercial tower model, oxblood theme, hero s15.
 
