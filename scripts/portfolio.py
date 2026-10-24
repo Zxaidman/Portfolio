@@ -943,7 +943,7 @@ def cmd_media(for_qa: bool) -> int:
         import signature  # local module
         stage = read_json(DATA / "stage.json", {}) or {}
         item = signature.active_item(stage, read_json(DATA / "site.json", {}) or {})
-        include = ["media/projects/**", "media/bbs/**", "media/video/*.jpg", "media/stage/*-poster.webp"]
+        include = ["media/projects/**", "media/extra/**", "media/bbs/**", "media/video/*.jpg", "media/stage/*-poster.webp"]
         if item:
             include += [f"{item['desktop']['dir']}/**", f"{item['mobile']['dir']}/**"]
         cmd += ["--include", ",".join(include)]

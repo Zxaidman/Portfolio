@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.4.0] - 2026-10-24 (morning)
+- New design system: Cover block design system. Featured G+33 commercial tower model, oxblood theme, hero s15.
+
 ## [5.3.3] - 2026-10-23 (night)
 - Night theme and asset change: Synced new project media. Featured G+14 luxury residential tower model, float theme, hero s14.
 

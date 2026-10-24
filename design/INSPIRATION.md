@@ -49,6 +49,7 @@ Rules for every design:
 - Horizontal pinned scroll section
 - Section-box clipping reveal (a clip-path box sweeping open, like a Revit section box) *(used 3.0.0)*
 - Rebar line-draw: SVG stroke-dashoffset drawing bars as the BBS section enters
+- Stirrup trace: panel outlines drawn around their bends by a conic mask on an @property angle (view() timeline), then a hook leg *(used 5.4.0)*
 - Counter roll-up for stats when they enter the viewport *(used 5.0.0, secondary)*
 - Gantt bar fill: activity and project bars grow from start to finish on a CSS view() timeline *(used 5.0.0)*
 - Magnetic buttons / subtle tilt on project tiles
@@ -62,6 +63,7 @@ Rules for every design:
 - 2026-10-21 (3.0.0): Awwwards Creative Pass keeps surfacing scroll-driven data storytelling ([Scroll-driven PK modelling](https://www.awwwards.com/inspiration/scroll-driven-pk-modeling-substraterx)) and architecture studios using scroll as spatial movement ([Verticité Architecture](https://www.awwwards.com/inspiration/horizontal-scroll-verticite-architecture)). Native CSS scroll timelines (`animation-timeline: scroll()/view()`) are now enough for progress indicators and reveals without JS libraries. Used: a lift car on a scroll timeline and view-timeline section-box reveals.
 - 2026-10-22 (3.1.0): Awwwards Creative Pass variable-font collections ([Safari Riot](https://www.awwwards.com/inspiration/variable-font-animation-safari-riot), [Manrope](https://www.awwwards.com/inspiration/variable-font-animation-manrope-font)) and FontLab's [Variable fonts in motion and UI](https://blog.fontlab.com/2026/03/10/variable-fonts-in-motion-and-ui/) (Mar 2026) show type itself as the motion: width/weight axes driven by scroll instead of moving boxes. Used: headings forged from wdth 50/wght 140 to wdth 118/wght 820 on a CSS view() timeline, plus hover-stretch on project titles.
 - 2026-10-23 (5.0.0): Awwwards Creative Pass shows schedule UIs used as navigation and storytelling ([Gantt chart with scroll, Wallnut](https://www.awwwards.com/inspiration/gantt-chart-with-scroll-wallnut), [Scroll blueprint](https://www.awwwards.com/inspiration/scroll-blueprint-1)): bars and a moving "now" line give scroll a sense of time. Native View Transitions now cover same-document state changes (filters) with a plain fallback. Used: a fixed week ruler with a data-date line as the nav, Gantt bars filling on view() timelines, View Transitions on the project filter.
+- 2026-10-24 (5.4.0): Awwwards Creative Pass keeps featuring lines that draw themselves as you scroll ([Page line scroll, Behave](https://www.awwwards.com/inspiration/page-line-scroll-behave), [Draw SVG interaction, NextWeb](https://www.awwwards.com/inspiration/interactive-element-draw-svg-wheel-of-fortune-by-nextweb), [Scroll animation, Alongside](https://www.awwwards.com/inspiration/scroll-animation-alongside-1)). Registered custom properties (`@property`) now animate on view() timelines, so an outline can be traced with a conic mask and no SVG. Used: stirrup trace around every panel, Fraunces italic display, cover-block pills.
 
 ## Non-negotiables
 

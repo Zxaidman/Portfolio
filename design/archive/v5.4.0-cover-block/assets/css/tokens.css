@@ -1,0 +1,67 @@
+/* Generated from design/system.json by scripts/render.py. Do not edit. */
+/* Design system: Cover block (since 5.4.0) */
+:root,
+[data-theme="hessian"] {
+  --paper: #f2e8d8;
+  --panel: #e7dac3;
+  --ink: #22180e;
+  --muted: #5c4b38;
+  --line: #c4ae8c;
+  --accent: #8a1c4a;
+  --on-accent: #ffffff;
+  --viewport: #ece1cd;
+  color-scheme: light;
+}
+[data-theme="binding-wire"] {
+  --paper: #121513;
+  --panel: #1b201d;
+  --ink: #edf0ea;
+  --muted: #a8b1aa;
+  --line: #3b443e;
+  --accent: #e39a6a;
+  --on-accent: #121513;
+  --viewport: #e3e6e1;
+  color-scheme: dark;
+}
+[data-theme="laitance"] {
+  --paper: #e8ebf3;
+  --panel: #dbe0ec;
+  --ink: #10142a;
+  --muted: #464c68;
+  --line: #a6aec8;
+  --accent: #5c5200;
+  --on-accent: #ffffff;
+  --viewport: #e2e6ef;
+  color-scheme: light;
+}
+[data-theme="oxblood"] {
+  --paper: #1f0f0e;
+  --panel: #2c1816;
+  --ink: #f8ecea;
+  --muted: #d0b4af;
+  --line: #5a3835;
+  --accent: #9fd8ff;
+  --on-accent: #1f0f0e;
+  --viewport: #ece2e0;
+  color-scheme: dark;
+}
+:root {
+  --font: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem);
+  --step-0: clamp(1.02rem, 0.98rem + 0.2vw, 1.12rem);
+  --step-1: clamp(1.2rem, 1.08rem + 0.6vw, 1.55rem);
+  --step-2: clamp(1.6rem, 1.25rem + 1.6vw, 2.6rem);
+  --step-3: clamp(2.4rem, 1.35rem + 4.6vw, 5.6rem);
+  --step-hero: clamp(3.2rem, 0.9rem + 8.6vw, 9.2rem);
+  --gutter: clamp(18px, 3.4vw, 52px);
+  --hdr: 64px;
+  --wbs: clamp(0px, 24vw, 320px);
+  --weeks: 24;
+  --max: 1280px;
+  --radius: 22px;
+  --hook: 4px;
+  --bar: 10px;
+  --wire: 2px;
+}

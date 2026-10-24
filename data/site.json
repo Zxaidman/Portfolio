@@ -1,8 +1,7 @@
 {
-  "featured": "s14",
-  "theme": "float",
+  "featured": "s15",
+  "theme": "oxblood",
   "reel": [
-    "s14",
     "s15",
     "s21",
     "s22",
@@ -15,11 +14,17 @@
     "s10",
     "s11",
     "s12",
-    "s13"
+    "s13",
+    "s14"
   ],
-  "version": "5.3.3",
-  "date": "2026-10-23",
+  "version": "5.4.0",
+  "date": "2026-10-24",
   "revisions": [
+    {
+      "rev": "5.4.0",
+      "date": "2026-10-24",
+      "note": "Cover block design system. Featured G+33 commercial tower model, oxblood theme, hero s15"
+    },
     {
       "rev": "5.3.3",
       "date": "2026-10-23",
@@ -39,13 +44,8 @@
       "rev": "5.3.0",
       "date": "2026-10-23",
       "note": "Two new projects from IFC models: G+4 residential building and G+18 mixed-use tower, seven views each"
-    },
-    {
-      "rev": "5.2.0",
-      "date": "2026-10-23",
-      "note": "Signature: third IFC model (G+18 tower, structure + architecture); media moved to Git LFS"
     }
   ],
-  "slot": "2026-10-23 night",
-  "stage_pick": 13
+  "slot": "2026-10-24 morning",
+  "stage_pick": 14
 }

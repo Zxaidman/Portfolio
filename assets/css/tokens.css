@@ -1,65 +1,67 @@
 /* Generated from design/system.json by scripts/render.py. Do not edit. */
-/* Design system: Four-D programme (since 5.0.0) */
+/* Design system: Cover block (since 5.4.0) */
 :root,
-[data-theme="baseline"] {
-  --paper: #f4f3ee;
-  --panel: #e9e7df;
-  --ink: #15141a;
-  --muted: #55525e;
-  --line: #bdb9ad;
-  --accent: #5a2fc2;
+[data-theme="hessian"] {
+  --paper: #f2e8d8;
+  --panel: #e7dac3;
+  --ink: #22180e;
+  --muted: #5c4b38;
+  --line: #c4ae8c;
+  --accent: #8a1c4a;
   --on-accent: #ffffff;
-  --viewport: #e6e4dc;
+  --viewport: #ece1cd;
   color-scheme: light;
 }
-[data-theme="critical"] {
-  --paper: #0f1420;
-  --panel: #171e2e;
-  --ink: #eef1f7;
-  --muted: #a3acc0;
-  --line: #3a4560;
-  --accent: #ff6b5e;
-  --on-accent: #0f1420;
-  --viewport: #dfe3ea;
+[data-theme="binding-wire"] {
+  --paper: #121513;
+  --panel: #1b201d;
+  --ink: #edf0ea;
+  --muted: #a8b1aa;
+  --line: #3b443e;
+  --accent: #e39a6a;
+  --on-accent: #121513;
+  --viewport: #e3e6e1;
   color-scheme: dark;
 }
-[data-theme="float"] {
-  --paper: #dff0f2;
-  --panel: #cfe6e9;
-  --ink: #0b1d22;
-  --muted: #3f5a60;
-  --line: #8fb3b9;
-  --accent: #0b5f7a;
+[data-theme="laitance"] {
+  --paper: #e8ebf3;
+  --panel: #dbe0ec;
+  --ink: #10142a;
+  --muted: #464c68;
+  --line: #a6aec8;
+  --accent: #5c5200;
   --on-accent: #ffffff;
-  --viewport: #e3eef0;
+  --viewport: #e2e6ef;
   color-scheme: light;
 }
-[data-theme="lookahead"] {
-  --paper: #1e1220;
-  --panel: #2a1a2d;
-  --ink: #f6eef7;
-  --muted: #c3adc6;
-  --line: #55405a;
-  --accent: #6ff2c1;
-  --on-accent: #1e1220;
-  --viewport: #e4dde5;
+[data-theme="oxblood"] {
+  --paper: #1f0f0e;
+  --panel: #2c1816;
+  --ink: #f8ecea;
+  --muted: #d0b4af;
+  --line: #5a3835;
+  --accent: #9fd8ff;
+  --on-accent: #1f0f0e;
+  --viewport: #ece2e0;
   color-scheme: dark;
 }
 :root {
-  --font: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.86rem);
-  --step-0: clamp(1rem, 0.97rem + 0.16vw, 1.08rem);
-  --step-1: clamp(1.18rem, 1.08rem + 0.5vw, 1.45rem);
-  --step-2: clamp(1.5rem, 1.2rem + 1.4vw, 2.35rem);
-  --step-3: clamp(2.2rem, 1.3rem + 3.9vw, 4.8rem);
-  --step-hero: clamp(3rem, 0.8rem + 8vw, 8.6rem);
-  --gutter: clamp(16px, 3vw, 44px);
-  --hdr: 60px;
-  --wbs: clamp(0px, 22vw, 300px);
+  --font: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem);
+  --step-0: clamp(1.02rem, 0.98rem + 0.2vw, 1.12rem);
+  --step-1: clamp(1.2rem, 1.08rem + 0.6vw, 1.55rem);
+  --step-2: clamp(1.6rem, 1.25rem + 1.6vw, 2.6rem);
+  --step-3: clamp(2.4rem, 1.35rem + 4.6vw, 5.6rem);
+  --step-hero: clamp(3.2rem, 0.9rem + 8.6vw, 9.2rem);
+  --gutter: clamp(18px, 3.4vw, 52px);
+  --hdr: 64px;
+  --wbs: clamp(0px, 24vw, 320px);
   --weeks: 24;
-  --max: 1320px;
-  --radius: 4px;
-  --bar: 14px;
+  --max: 1280px;
+  --radius: 22px;
+  --hook: 4px;
+  --bar: 10px;
+  --wire: 2px;
 }

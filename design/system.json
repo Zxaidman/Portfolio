@@ -1,73 +1,75 @@
 {
   "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
-  "name": "Four-D programme",
-  "introduced": "5.0.0",
-  "concept": "The portfolio is a 4D construction programme, the way a planner reads a Navisworks TimeLiner or Primavera schedule. A week ruler runs across the top as the navigation, with each section as an activity bar and a red data-date line that slides along as you scroll. Every section opens on an activity row (WBS code, duration, start and finish) whose bar fills as it comes into view. The projects are a Gantt chart: each project is a bar as long as the building is tall. Faint week columns run down the whole page, the featured project sits on the critical path, and the contact section is the handover key date.",
+  "name": "Cover block",
+  "introduced": "5.4.0",
+  "concept": "The page is detailed like a reinforcement cage before the pour. Every panel is a stirrup: soft bend-radius corners on three sides and a tight hooked corner where the 135-degree hook closes, with a short hook leg drawn past it. Buttons and chips sit on round cover blocks (the concrete spacers that hold bars off the shutter), lists are threaded with tie-wire dots, and headings are set in a soft optical serif like the lettering on a hand-drawn bending schedule. Signature motion: stirrup trace. As each activity and panel scrolls into view, its outline is drawn bar by bar (top leg, side, bottom, side, then the hook) on a CSS view() timeline, the way a detailer draws a stirrup.",
   "fonts": {
-    "stylesheet": "https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Atkinson+Hyperlegible+Next:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap",
-    "body": "\"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif",
-    "display": "\"Schibsted Grotesk\", \"Helvetica Neue\", Arial, sans-serif",
-    "mono": "\"JetBrains Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Hanken+Grotesk:wght@300..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
+    "body": "\"Hanken Grotesk\", \"Segoe UI\", system-ui, sans-serif",
+    "display": "\"Fraunces\", Georgia, \"Times New Roman\", serif",
+    "mono": "\"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
   },
   "scale": {
-    "--step--1": "clamp(0.78rem, 0.76rem + 0.1vw, 0.86rem)",
-    "--step-0": "clamp(1rem, 0.97rem + 0.16vw, 1.08rem)",
-    "--step-1": "clamp(1.18rem, 1.08rem + 0.5vw, 1.45rem)",
-    "--step-2": "clamp(1.5rem, 1.2rem + 1.4vw, 2.35rem)",
-    "--step-3": "clamp(2.2rem, 1.3rem + 3.9vw, 4.8rem)",
-    "--step-hero": "clamp(3rem, 0.8rem + 8vw, 8.6rem)",
-    "--gutter": "clamp(16px, 3vw, 44px)",
-    "--hdr": "60px",
-    "--wbs": "clamp(0px, 22vw, 300px)",
+    "--step--1": "clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem)",
+    "--step-0": "clamp(1.02rem, 0.98rem + 0.2vw, 1.12rem)",
+    "--step-1": "clamp(1.2rem, 1.08rem + 0.6vw, 1.55rem)",
+    "--step-2": "clamp(1.6rem, 1.25rem + 1.6vw, 2.6rem)",
+    "--step-3": "clamp(2.4rem, 1.35rem + 4.6vw, 5.6rem)",
+    "--step-hero": "clamp(3.2rem, 0.9rem + 8.6vw, 9.2rem)",
+    "--gutter": "clamp(18px, 3.4vw, 52px)",
+    "--hdr": "64px",
+    "--wbs": "clamp(0px, 24vw, 320px)",
     "--weeks": "24",
-    "--max": "1320px",
-    "--radius": "4px",
-    "--bar": "14px"
+    "--max": "1280px",
+    "--radius": "22px",
+    "--hook": "4px",
+    "--bar": "10px",
+    "--wire": "2px"
   },
   "themes": {
-    "baseline": {
+    "hessian": {
       "scheme": "light",
-      "paper": "#f4f3ee",
-      "panel": "#e9e7df",
-      "ink": "#15141a",
-      "muted": "#55525e",
-      "line": "#bdb9ad",
-      "accent": "#5a2fc2",
+      "paper": "#f2e8d8",
+      "panel": "#e7dac3",
+      "ink": "#22180e",
+      "muted": "#5c4b38",
+      "line": "#c4ae8c",
+      "accent": "#8a1c4a",
       "on-accent": "#ffffff",
-      "viewport": "#e6e4dc"
+      "viewport": "#ece1cd"
     },
-    "critical": {
+    "binding-wire": {
       "scheme": "dark",
-      "paper": "#0f1420",
-      "panel": "#171e2e",
-      "ink": "#eef1f7",
-      "muted": "#a3acc0",
-      "line": "#3a4560",
-      "accent": "#ff6b5e",
-      "on-accent": "#0f1420",
-      "viewport": "#dfe3ea"
+      "paper": "#121513",
+      "panel": "#1b201d",
+      "ink": "#edf0ea",
+      "muted": "#a8b1aa",
+      "line": "#3b443e",
+      "accent": "#e39a6a",
+      "on-accent": "#121513",
+      "viewport": "#e3e6e1"
     },
-    "float": {
+    "laitance": {
       "scheme": "light",
-      "paper": "#dff0f2",
-      "panel": "#cfe6e9",
-      "ink": "#0b1d22",
-      "muted": "#3f5a60",
-      "line": "#8fb3b9",
-      "accent": "#0b5f7a",
+      "paper": "#e8ebf3",
+      "panel": "#dbe0ec",
+      "ink": "#10142a",
+      "muted": "#464c68",
+      "line": "#a6aec8",
+      "accent": "#5c5200",
       "on-accent": "#ffffff",
-      "viewport": "#e3eef0"
+      "viewport": "#e2e6ef"
     },
-    "lookahead": {
+    "oxblood": {
       "scheme": "dark",
-      "paper": "#1e1220",
-      "panel": "#2a1a2d",
-      "ink": "#f6eef7",
-      "muted": "#c3adc6",
-      "line": "#55405a",
-      "accent": "#6ff2c1",
-      "on-accent": "#1e1220",
-      "viewport": "#e4dde5"
+      "paper": "#1f0f0e",
+      "panel": "#2c1816",
+      "ink": "#f8ecea",
+      "muted": "#d0b4af",
+      "line": "#5a3835",
+      "accent": "#9fd8ff",
+      "on-accent": "#1f0f0e",
+      "viewport": "#ece2e0"
     }
   }
 }
