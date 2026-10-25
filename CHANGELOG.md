@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.5.1] - 2026-10-25 (afternoon)
+- Afternoon theme and asset change: Featured G+23 residential tower complex model, admixture theme, hero s04.
+
 ## [5.5.0] - 2026-10-25 (morning)
 - New design system: Fair-faced pour design system. Featured G+8 podium tower model, cube-test theme, hero m2.
 

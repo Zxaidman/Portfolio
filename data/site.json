@@ -1,8 +1,7 @@
 {
-  "featured": "s04",
-  "theme": "cube-test",
+  "featured": "s05",
+  "theme": "admixture",
   "reel": [
-    "s04",
     "s05",
     "s06",
     "s07",
@@ -15,11 +14,17 @@
     "s14",
     "s15",
     "s21",
-    "s22"
+    "s22",
+    "s04"
   ],
-  "version": "5.5.0",
+  "version": "5.5.1",
   "date": "2026-10-25",
   "revisions": [
+    {
+      "rev": "5.5.1",
+      "date": "2026-10-25",
+      "note": "Featured G+23 residential tower complex model, admixture theme, hero s04"
+    },
     {
       "rev": "5.5.0",
       "date": "2026-10-25",
@@ -39,13 +44,8 @@
       "rev": "5.4.0",
       "date": "2026-10-24",
       "note": "Cover block design system. Featured G+33 commercial tower model, oxblood theme, hero s15"
-    },
-    {
-      "rev": "5.3.3",
-      "date": "2026-10-23",
-      "note": "Synced new project media. Featured G+14 luxury residential tower model, float theme, hero s14"
     }
   ],
-  "slot": "2026-10-25 morning",
-  "stage_pick": 0
+  "slot": "2026-10-25 afternoon",
+  "stage_pick": 1
 }
