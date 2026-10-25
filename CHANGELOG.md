@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.5.2] - 2026-10-25 (night)
+- Night theme and asset change: Featured G+41 luxury residential tower model, fresh-pour theme, hero s05.
+
 ## [5.5.1] - 2026-10-25 (afternoon)
 - Afternoon theme and asset change: Featured G+23 residential tower complex model, admixture theme, hero s04.
 

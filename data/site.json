@@ -1,8 +1,7 @@
 {
-  "featured": "s05",
-  "theme": "admixture",
+  "featured": "s06",
+  "theme": "fresh-pour",
   "reel": [
-    "s05",
     "s06",
     "s07",
     "s08",
@@ -15,11 +14,17 @@
     "s15",
     "s21",
     "s22",
-    "s04"
+    "s04",
+    "s05"
   ],
-  "version": "5.5.1",
+  "version": "5.5.2",
   "date": "2026-10-25",
   "revisions": [
+    {
+      "rev": "5.5.2",
+      "date": "2026-10-25",
+      "note": "Featured G+41 luxury residential tower model, fresh-pour theme, hero s05"
+    },
     {
       "rev": "5.5.1",
       "date": "2026-10-25",
@@ -39,13 +44,8 @@
       "rev": "5.4.1",
       "date": "2026-10-24",
       "note": "Featured G+7 residential block model, hessian theme, hero s21"
-    },
-    {
-      "rev": "5.4.0",
-      "date": "2026-10-24",
-      "note": "Cover block design system. Featured G+33 commercial tower model, oxblood theme, hero s15"
     }
   ],
-  "slot": "2026-10-25 afternoon",
-  "stage_pick": 1
+  "slot": "2026-10-25 night",
+  "stage_pick": 2
 }
