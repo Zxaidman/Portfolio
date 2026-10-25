@@ -1,0 +1,68 @@
+/* Generated from design/system.json by scripts/render.py. Do not edit. */
+/* Design system: Fair-faced pour (since 5.5.0) */
+:root,
+[data-theme="fresh-pour"] {
+  --paper: #e5e3dd;
+  --panel: #d6d3cb;
+  --ink: #191816;
+  --muted: #4f4c45;
+  --line: #a8a397;
+  --accent: #1d47c9;
+  --on-accent: #ffffff;
+  --viewport: #eceae5;
+  color-scheme: light;
+}
+[data-theme="night-pour"] {
+  --paper: #121416;
+  --panel: #1c1f22;
+  --ink: #eceae4;
+  --muted: #aaa69c;
+  --line: #3a3e42;
+  --accent: #ffb43a;
+  --on-accent: #121416;
+  --viewport: #e6e4de;
+  color-scheme: dark;
+}
+[data-theme="cube-test"] {
+  --paper: #f2f0ea;
+  --panel: #e3dfd5;
+  --ink: #1f1b16;
+  --muted: #575046;
+  --line: #bab2a3;
+  --accent: #b0244f;
+  --on-accent: #ffffff;
+  --viewport: #f6f4ef;
+  color-scheme: light;
+}
+[data-theme="admixture"] {
+  --paper: #0f1720;
+  --panel: #17212c;
+  --ink: #e8eef3;
+  --muted: #a3b1be;
+  --line: #33414f;
+  --accent: #ff8ab3;
+  --on-accent: #0f1720;
+  --viewport: #e4e8ec;
+  color-scheme: dark;
+}
+:root {
+  --font: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Big Shoulders", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.06rem + 0.6vw, 1.5rem);
+  --step-2: clamp(1.8rem, 1.3rem + 2vw, 3rem);
+  --step-3: clamp(2.8rem, 1.4rem + 5.6vw, 6.6rem);
+  --step-hero: clamp(3.6rem, 1rem + 10vw, 10.5rem);
+  --gutter: clamp(16px, 3vw, 48px);
+  --hdr: 60px;
+  --wbs: clamp(0px, 24vw, 320px);
+  --weeks: 24;
+  --max: 1320px;
+  --chamfer: 14px;
+  --chamfer-s: 7px;
+  --bar: 12px;
+  --ply-w: 240px;
+  --ply-h: 120px;
+}

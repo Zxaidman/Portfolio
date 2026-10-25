@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [5.5.0] - 2026-10-25 (morning)
+- New design system: Fair-faced pour design system. Featured G+8 podium tower model, cube-test theme, hero m2.
+
 ## [5.4.2] - 2026-10-24 (night)
 - Night theme and asset change: Featured G+19 architectural and structural model, binding-wire theme, hero s22.
 
