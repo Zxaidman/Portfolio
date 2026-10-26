@@ -1,8 +1,7 @@
 {
-  "featured": "s08",
-  "theme": "markup",
+  "featured": "s09",
+  "theme": "clash",
   "reel": [
-    "s08",
     "s09",
     "s10",
     "s11",
@@ -15,11 +14,17 @@
     "s04",
     "s05",
     "s06",
-    "s07"
+    "s07",
+    "s08"
   ],
-  "version": "6.0.1",
+  "version": "6.0.2",
   "date": "2026-10-26",
   "revisions": [
+    {
+      "rev": "6.0.2",
+      "date": "2026-10-26",
+      "note": "Synced new project media. Featured G+6 residential building model, clash theme, hero s08"
+    },
     {
       "rev": "6.0.1",
       "date": "2026-10-26",
@@ -39,13 +44,8 @@
       "rev": "5.5.1",
       "date": "2026-10-25",
       "note": "Featured G+23 residential tower complex model, admixture theme, hero s04"
-    },
-    {
-      "rev": "5.5.0",
-      "date": "2026-10-25",
-      "note": "Fair-faced pour design system. Featured G+8 podium tower model, cube-test theme, hero m2"
     }
   ],
-  "slot": "2026-10-26 afternoon",
-  "stage_pick": 4
+  "slot": "2026-10-26 night",
+  "stage_pick": 5
 }
