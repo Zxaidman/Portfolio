@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [6.0.1] - 2026-10-26 (afternoon)
+- Afternoon theme and asset change: Featured G+14 residential tower model, markup theme, hero s07.
+
 ## [6.0.0] - 2026-10-26 (morning)
 - Revamp (new layout): Coordination room design system. Featured G+17 IT park building model, coordination theme, hero s06.
 

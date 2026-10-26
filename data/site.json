@@ -1,8 +1,7 @@
 {
-  "featured": "s07",
-  "theme": "coordination",
+  "featured": "s08",
+  "theme": "markup",
   "reel": [
-    "s07",
     "s08",
     "s09",
     "s10",
@@ -15,11 +14,17 @@
     "s22",
     "s04",
     "s05",
-    "s06"
+    "s06",
+    "s07"
   ],
-  "version": "6.0.0",
+  "version": "6.0.1",
   "date": "2026-10-26",
   "revisions": [
+    {
+      "rev": "6.0.1",
+      "date": "2026-10-26",
+      "note": "Featured G+14 residential tower model, markup theme, hero s07"
+    },
     {
       "rev": "6.0.0",
       "date": "2026-10-26",
@@ -39,13 +44,8 @@
       "rev": "5.5.0",
       "date": "2026-10-25",
       "note": "Fair-faced pour design system. Featured G+8 podium tower model, cube-test theme, hero m2"
-    },
-    {
-      "rev": "5.4.2",
-      "date": "2026-10-24",
-      "note": "Featured G+19 architectural and structural model, binding-wire theme, hero s22"
     }
   ],
-  "slot": "2026-10-26 morning",
-  "stage_pick": 3
+  "slot": "2026-10-26 afternoon",
+  "stage_pick": 4
 }
