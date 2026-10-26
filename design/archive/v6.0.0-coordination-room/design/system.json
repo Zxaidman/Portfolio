@@ -1,0 +1,74 @@
+{
+  "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
+  "name": "Coordination room",
+  "introduced": "6.0.0",
+  "concept": "The page is a BIM coordination control room, the screen wall a site team watches during a federated model review. After the scroll stage the site docks a Revit-style Project Browser on the left (a tree of Views, Sheets, Families and Project information that tracks where you are) and lays everything else out as dockable dashboard panels on a 12-column wall: a live KPI strip counted from the model data, the active view with a properties palette, a model browser of every project with a storey gauge and a sort switch, a bank of site-camera monitors playing the build-ups, a sheet register of the BBS drawings, the families (skill cards), the team, an event log of every revision, and a request panel. A telemetry ticker runs across the top, the clock is live, and the display can be switched between themes. Signature motion: monitor power-on. As each panel scrolls into view it switches on like a control-room screen: a bright phosphor line opens across the middle, the picture opens vertically from it with a brief over-bright flash, then the panel's status LED lights.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Onest:wght@300..800&family=Fragment+Mono&display=swap",
+    "body": "\"Onest\", \"Segoe UI\", system-ui, sans-serif",
+    "display": "\"Chakra Petch\", \"Bahnschrift\", \"Segoe UI\", sans-serif",
+    "mono": "\"Fragment Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
+  },
+  "scale": {
+    "--step--1": "clamp(0.78rem, 0.76rem + 0.1vw, 0.86rem)",
+    "--step-0": "clamp(0.98rem, 0.95rem + 0.15vw, 1.06rem)",
+    "--step-1": "clamp(1.15rem, 1.05rem + 0.45vw, 1.4rem)",
+    "--step-2": "clamp(1.5rem, 1.2rem + 1.3vw, 2.3rem)",
+    "--step-3": "clamp(2.2rem, 1.3rem + 3.6vw, 4.6rem)",
+    "--step-kpi": "clamp(2rem, 1.5rem + 1.8vw, 3.1rem)",
+    "--gutter": "clamp(16px, 2vw, 28px)",
+    "--gap": "clamp(10px, 1.1vw, 16px)",
+    "--hdr": "0px",
+    "--rail": "272px",
+    "--max": "1680px",
+    "--r": "6px",
+    "--r-s": "3px",
+    "--bar-h": "40px"
+  },
+  "themes": {
+    "phosphor": {
+      "scheme": "dark",
+      "paper": "#0a0f0c",
+      "panel": "#111a15",
+      "ink": "#e3f1e8",
+      "muted": "#93ab9c",
+      "line": "#2b3c32",
+      "accent": "#4ee08a",
+      "on-accent": "#04130a",
+      "viewport": "#e7efe9"
+    },
+    "coordination": {
+      "scheme": "dark",
+      "paper": "#070d18",
+      "panel": "#0e1728",
+      "ink": "#e6eefa",
+      "muted": "#9aabc4",
+      "line": "#2c3b57",
+      "accent": "#4cc9f0",
+      "on-accent": "#04101c",
+      "viewport": "#e5ebf3"
+    },
+    "markup": {
+      "scheme": "light",
+      "paper": "#eceff2",
+      "panel": "#dde2e7",
+      "ink": "#0f1419",
+      "muted": "#48535e",
+      "line": "#a7b0b9",
+      "accent": "#a8460a",
+      "on-accent": "#ffffff",
+      "viewport": "#f7f8f9"
+    },
+    "clash": {
+      "scheme": "dark",
+      "paper": "#130c17",
+      "panel": "#1c1322",
+      "ink": "#f3eaf6",
+      "muted": "#b5a4bf",
+      "line": "#45364f",
+      "accent": "#ff79d8",
+      "on-accent": "#1a0716",
+      "viewport": "#efe8f2"
+    }
+  }
+}

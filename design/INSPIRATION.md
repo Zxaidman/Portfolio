@@ -36,7 +36,7 @@ Rules for every design:
 | Split-screen | Sticky media on one side, scrolling narrative on the other, swapping as you scroll |
 | Timeline / Gantt *(used 5.0.0)* | Projects on a 4D construction schedule bar chart; scrubbing the timeline plays the build-ups |
 | Magazine / editorial | Large serif headlines, columns, pull quotes from the work, numbered features |
-| Dashboard / control room | Dark UI with live-looking panels: element counts, LOD, BBS tonnage, model viewer |
+| Dashboard / control room *(used 6.0.0)* | Dark UI with live-looking panels: element counts, LOD, BBS tonnage, model viewer |
 | Card deck / stories | Swipeable story cards like Instagram stories, one project per card |
 
 ## Signature motions (each design adds one not yet used)
@@ -56,6 +56,8 @@ Rules for every design:
 - Magnetic buttons / subtle tilt on project tiles
 - Marquee of skills or software, paused on hover
 - Grain / noise texture with a slow gradient drift (static under reduced motion)
+- Monitor power-on: a panel switches on like a control-room screen, a bright line opening across the middle and the picture opening vertically from it, then a status LED lights (view() timeline) *(used 6.0.0)*
+- Marquee of skills or software, paused on hover *(used 6.0.0 as a telemetry ticker, secondary)*
 
 ## Current trend notes (researched 21 Oct 2026)
 
@@ -66,6 +68,7 @@ Rules for every design:
 - 2026-10-23 (5.0.0): Awwwards Creative Pass shows schedule UIs used as navigation and storytelling ([Gantt chart with scroll, Wallnut](https://www.awwwards.com/inspiration/gantt-chart-with-scroll-wallnut), [Scroll blueprint](https://www.awwwards.com/inspiration/scroll-blueprint-1)): bars and a moving "now" line give scroll a sense of time. Native View Transitions now cover same-document state changes (filters) with a plain fallback. Used: a fixed week ruler with a data-date line as the nav, Gantt bars filling on view() timelines, View Transitions on the project filter.
 - 2026-10-24 (5.4.0): Awwwards Creative Pass keeps featuring lines that draw themselves as you scroll ([Page line scroll, Behave](https://www.awwwards.com/inspiration/page-line-scroll-behave), [Draw SVG interaction, NextWeb](https://www.awwwards.com/inspiration/interactive-element-draw-svg-wheel-of-fortune-by-nextweb), [Scroll animation, Alongside](https://www.awwwards.com/inspiration/scroll-animation-alongside-1)). Registered custom properties (`@property`) now animate on view() timelines, so an outline can be traced with a conic mask and no SVG. Used: stirrup trace around every panel, Fraunces italic display, cover-block pills.
 - 2026-10-25 (5.5.0): Awwwards Creative Pass fill and level motions ([Silky smooth marquee scroll, Oaksun Studio](https://www.awwwards.com/inspiration/silky-smooth-marquee-scroll-oaksun-studio), [Loading animation, Tilt](https://www.awwwards.com/inspiration/loading-animation-tilt)) treat a surface filling up as the transition itself. CSS `corner-shape` (bevel, notch, squircle) is now in Chromium, so chamfered UI no longer needs clip-path hacks and keeps real borders. Used: a concrete pour level rising through each panel on view() timelines, bevelled corners everywhere, Big Shoulders condensed caps.
+- 2026-10-26 (6.0.0): Awwwards Creative Pass dashboard collections ([Dashboard, Pomelo](https://www.awwwards.com/inspiration/dashboard-pomelo), [Dashboard overview, Aqtos](https://www.awwwards.com/inspiration/dashboard-overview-aqtos-the-boss), [Reporting dashboards, ModernLoop](https://www.awwwards.com/inspiration/reporting-dashboards-modernloop)) treat product UI itself as the hero: dense panels, live readouts and status lights animate in rather than whole pages. Bento/feature grids keep trending ([Bento grid, Jamie](https://www.awwwards.com/inspiration/bento-grid-jamie)). Used: a coordination-room panel wall with a docked Project Browser, KPI tiles counted from the data, a monitor power-on motion on view() timelines and a paused-on-hover telemetry ticker.
 
 ## Non-negotiables
 

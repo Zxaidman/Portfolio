@@ -1,17 +1,17 @@
 /* ==========================================================================
-   Zaid Shaikh portfolio — main.js (v5.0.0 "Four-D programme")
+   Zaid Shaikh portfolio — main.js (v6.0.0 "Coordination room")
    Progressive enhancement only: every opener is a real link to its image or
-   video, all Gantt rows show, and the page reads top to bottom without JS.
+   video, all panels and tiles show, and the page reads top to bottom without JS.
    Modules:
-     programme — top week ruler: active activity, data-date line and readout
-     fills     — Gantt bars fill as they enter (fallback for browsers without
-                 CSS animation-timeline; those do it in CSS)
-     counters  — numbers in the resource stats count up once when they enter
-     gantt     — filter chips (View Transitions where supported)
-     preview   — a render that follows the cursor over the Gantt rows
-     lookahead — back / forward buttons and muted hover previews
-     submittals— show / hide the extra BBS drawings
-     viewer    — gallery / video dialog with keyboard navigation
+     spy      — Project Browser: highlights the panel you are looking at
+     clock    — live IST clock in the browser head
+     display  — switch the wall between the design system's themes (this visit only)
+     boot     — monitor power-on fallback for browsers without CSS view() timelines
+     counters — KPI numbers count up once when they enter
+     models   — filter chips + sort switch (View Transitions where supported)
+     cameras  — monitors preview their build-up muted on hover
+     sheets   — show / hide the extra BBS sheets
+     viewer   — gallery / video dialog with keyboard navigation
    ========================================================================== */
 (() => {
   "use strict";
@@ -22,7 +22,6 @@
   const saveData = Boolean(navigator.connection && navigator.connection.saveData);
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const viewTimeline = typeof CSS !== "undefined" && CSS.supports && CSS.supports("animation-timeline: view()");
-  const DAY = 86400000;
 
   document.documentElement.classList.add("js");
 
@@ -37,68 +36,83 @@
     if (p && typeof p.catch === "function") p.catch(() => { /* autoplay blocked: poster stays */ });
   }
 
-  /* ---------- Programme ruler: active activity + data date ---------- */
-  function programme() {
-    const bar = $(".prog");
-    const links = $$(".prog-track a[data-phase]");
-    if (!bar || !links.length) return;
-    const readout = $("[data-readout]", bar);
-    const start = new Date(`${bar.dataset.start}T00:00:00`);
-    const fmt = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short" });
-    const phases = links
-      .map((a) => ({ a, el: document.getElementById(a.dataset.phase), s: Number(a.dataset.s), d: Number(a.dataset.d) }))
-      .filter((p) => p.el);
+  /** Run a DOM change inside a View Transition when the browser has one and motion is allowed. */
+  function transition(fn) {
+    if (document.startViewTransition && !reduceMotion) document.startViewTransition(fn);
+    else fn();
+  }
+
+  /* ---------- Project Browser: scroll-spy ---------- */
+  function spy() {
+    const links = $$(".pb-tree a[data-spy]");
+    const targets = links.map((a) => ({ a, el: document.getElementById(a.dataset.spy) })).filter((t) => t.el);
+    if (!targets.length) return;
     let current = null;
-    let lastDay = -1;
+    let ticking = false;
 
     function update() {
       ticking = false;
-      const mark = window.innerHeight * 0.35;
-      let idx = 0;
-      phases.forEach((p, i) => { if (p.el.getBoundingClientRect().top <= mark) idx = i; });
-      const ph = phases[idx];
-      // Fraction of this activity scrolled past the mark -> position inside its bar.
-      const r = ph.el.getBoundingClientRect();
-      const frac = Math.min(1, Math.max(0, (mark - r.top) / Math.max(r.height, 1)));
-      const week = ph.s + ph.d * frac;
-      bar.style.setProperty("--dd", week.toFixed(3));
-      if (current !== ph) {
-        current = ph;
-        links.forEach((a) => {
-          const on = a === ph.a;
-          a.classList.toggle("is-on", on);
-          if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
-        });
-      }
-      const day = Math.floor(week * 7);
-      if (readout && day !== lastDay && !Number.isNaN(start.getTime())) {
-        lastDay = day;
-        readout.textContent = fmt.format(new Date(start.getTime() + day * DAY));
+      const mark = window.innerHeight * 0.3;
+      let hit = null;
+      targets.forEach((t) => { if (t.el.getBoundingClientRect().top <= mark) hit = t; });
+      if (hit === current) return;
+      current = hit;
+      targets.forEach((t) => {
+        const on = t === hit;
+        t.a.classList.toggle("is-on", on);
+        if (on) t.a.setAttribute("aria-current", "location"); else t.a.removeAttribute("aria-current");
+      });
+      // keep the active tab visible in the phone strip
+      if (hit && hit.a.closest(".pb-nav").scrollWidth > hit.a.closest(".pb-nav").clientWidth) {
+        const nav = hit.a.closest(".pb-nav");
+        nav.scrollTo({ left: hit.a.offsetLeft - 16, behavior: reduceMotion ? "auto" : "smooth" });
       }
     }
-    let ticking = false;
     const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
     window.addEventListener("scroll", request, { passive: true });
     window.addEventListener("resize", request);
-    bar.classList.add("is-live");
     update();
   }
 
-  /* ---------- Gantt bar fills: IntersectionObserver fallback ---------- */
-  function fills() {
-    const targets = $$(".act, .g-row");
-    if (reduceMotion || viewTimeline || !("IntersectionObserver" in window)) {
-      targets.forEach((t) => t.classList.add("is-in"));
-      return;
-    }
-    document.documentElement.classList.add("fill-io");
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
-    }, { rootMargin: "0px 0px -12% 0px" });
-    targets.forEach((t) => io.observe(t));
+  /* ---------- Live clock (IST) ---------- */
+  function clock() {
+    const el = $("[data-clock]");
+    if (!el) return;
+    let fmt;
+    try {
+      fmt = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+    } catch { return; }
+    const tick = () => { el.textContent = fmt.format(new Date()); };
+    tick();
+    window.setInterval(tick, 1000);
   }
 
-  /* ---------- Counters: the number inside each stat rolls up once ---------- */
+  /* ---------- Display switch: the wall's themes (in memory, this visit only) ---------- */
+  function display() {
+    const box = $(".pb-display");
+    if (!box) return;
+    const buttons = $$("[data-theme-set]", box);
+    box.hidden = false;
+    buttons.forEach((btn) => btn.addEventListener("click", () => {
+      transition(() => {
+        document.documentElement.dataset.theme = btn.dataset.themeSet;
+        buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      });
+    }));
+  }
+
+  /* ---------- Monitor power-on: IntersectionObserver fallback ---------- */
+  function boot() {
+    const panels = $$(".pnl");
+    if (reduceMotion || viewTimeline || !("IntersectionObserver" in window)) return; // CSS handles it, or no motion
+    document.documentElement.classList.add("boot-io");
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("is-on"); io.unobserve(en.target); } });
+    }, { rootMargin: "0px 0px -10% 0px" });
+    panels.forEach((p) => io.observe(p));
+  }
+
+  /* ---------- Counters: KPI numbers roll up once ---------- */
   function counters() {
     const els = $$("[data-count]");
     if (reduceMotion || !("IntersectionObserver" in window)) return;
@@ -112,7 +126,7 @@
         if (!m) return;
         const target = Number(m[0]);
         const t0 = performance.now();
-        const dur = 900;
+        const dur = 1100;
         const tick = (now) => {
           const k = Math.min(1, (now - t0) / dur);
           const val = Math.round(target * (1 - Math.pow(1 - k, 3)));
@@ -125,83 +139,53 @@
     els.forEach((el) => io.observe(el));
   }
 
-  /* ---------- Gantt: filter chips ---------- */
-  function gantt() {
+  /* ---------- Model browser: filter + sort ---------- */
+  function models() {
+    const grid = $(".mb-grid");
+    if (!grid) return;
     const chips = $$(".chip[data-filter]");
-    const rows = $$(".g-row");
-    const apply = (type) => rows.forEach((row) => { row.hidden = type !== "all" && row.dataset.type !== type; });
+    const tiles = $$(".mb-tile", grid);
+    const sortBox = $(".mb-sort");
     chips.forEach((chip) => chip.addEventListener("click", () => {
       const type = chip.dataset.filter;
       chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
-      if (document.startViewTransition && !reduceMotion) document.startViewTransition(() => apply(type));
-      else apply(type);
+      transition(() => tiles.forEach((t) => { t.hidden = type !== "all" && t.dataset.type !== type; }));
+    }));
+    if (!sortBox) return;
+    sortBox.hidden = false;
+    const segs = $$("[data-sort]", sortBox);
+    segs.forEach((seg) => seg.addEventListener("click", () => {
+      const by = seg.dataset.sort;
+      segs.forEach((s) => s.setAttribute("aria-pressed", String(s === seg)));
+      const sorted = tiles.slice().sort((a, b) => (by === "height"
+        ? Number(b.dataset.h) - Number(a.dataset.h) || Number(a.dataset.i) - Number(b.dataset.i)
+        : Number(a.dataset.i) - Number(b.dataset.i)));
+      transition(() => grid.append(...sorted));
     }));
   }
 
-  /* ---------- Cursor-following preview over the Gantt ---------- */
-  function preview() {
-    const box = $(".g-preview");
-    const list = $(".g-rows");
-    if (!box || !list || !canHover || reduceMotion) return;
-    const img = document.createElement("img");
-    img.alt = ""; img.decoding = "async";
-    let x = 0, y = 0, cx = 0, cy = 0, raf = 0, on = false;
-    const loop = () => {
-      cx += (x - cx) * 0.2; cy += (y - cy) * 0.2;
-      box.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`;
-      raf = on || Math.abs(x - cx) + Math.abs(y - cy) > 0.5 ? requestAnimationFrame(loop) : 0;
-    };
-    document.documentElement.classList.add("has-preview");
-    list.addEventListener("pointermove", (ev) => {
-      x = ev.clientX + 24; y = ev.clientY - 90;
-      if (x + 260 > window.innerWidth) x = ev.clientX - 284;
-      if (!raf) raf = requestAnimationFrame(loop);
-    });
-    list.addEventListener("pointerover", (ev) => {
-      const link = ev.target.closest(".g-link");
-      if (!link) return;
-      if (img.getAttribute("src") !== link.dataset.thumb) img.src = link.dataset.thumb;
-      if (!img.isConnected) box.append(img);
-      if (!on) { cx = x; cy = y; }
-      on = true;
-      box.classList.add("is-on");
-    });
-    list.addEventListener("pointerleave", () => { on = false; box.classList.remove("is-on"); });
-  }
-
-  /* ---------- Look-ahead strip ---------- */
-  function lookahead() {
-    const track = $(".la-track");
-    const controls = $(".la-controls");
-    if (!track) return;
-    if (controls) {
-      controls.hidden = false;
-      $$("[data-la]", controls).forEach((btn) => btn.addEventListener("click", () => {
-        const card = $(".la-card", track);
-        const stepPx = card ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
-        track.scrollBy({ left: Number(btn.dataset.la) * stepPx, behavior: reduceMotion ? "auto" : "smooth" });
-      }));
-    }
+  /* ---------- Site cameras: muted hover previews ---------- */
+  function cameras() {
     if (!canHover || reduceMotion || saveData) return;
-    $$(".la-card", track).forEach((card) => {
-      const video = $("video", card);
+    $$(".cam").forEach((cam) => {
+      const video = $("video", cam);
       if (!video) return;
-      card.addEventListener("mouseenter", () => { loadVideo(video); card.classList.add("is-playing"); safePlay(video); });
-      card.addEventListener("mouseleave", () => { card.classList.remove("is-playing"); video.pause(); });
+      cam.addEventListener("mouseenter", () => { loadVideo(video); cam.classList.add("is-playing"); safePlay(video); });
+      cam.addEventListener("mouseleave", () => { cam.classList.remove("is-playing"); video.pause(); });
     });
   }
 
-  /* ---------- Submittals: show / hide the extra drawings ---------- */
-  function submittals() {
+  /* ---------- Sheet register: show / hide the extra sheets ---------- */
+  function sheets() {
     const btn = $("[data-more]");
-    const list = $(".sub-list");
+    const list = $(".sr-list");
     if (!btn || !list) return;
     const total = $$("li", list).length;
     btn.addEventListener("click", () => {
       const collapsed = list.dataset.collapsed === "true";
       list.dataset.collapsed = String(!collapsed);
       btn.setAttribute("aria-expanded", String(collapsed));
-      btn.textContent = collapsed ? "Show fewer submittals" : `Show all ${total} submittals`;
+      btn.textContent = collapsed ? "Show fewer sheets" : `Show all ${total} sheets`;
     });
   }
 
@@ -230,9 +214,17 @@
         v.poster = item.video.poster || "";
         v.src = item.video.src;
         v.setAttribute("aria-label", `${item.title} build-up animation`);
-        stage.append(v);
+        // A plate over the top-left corner, where the source renders carry a burned-in caption.
+        const wrap = document.createElement("div");
+        wrap.className = "vw-video";
+        const plate = document.createElement("span");
+        plate.className = "vw-plate";
+        plate.setAttribute("aria-hidden", "true");
+        plate.textContent = `FEED · ${item.sheet}`;
+        wrap.append(v, plate);
+        stage.append(wrap);
         if (!reduceMotion) safePlay(v);
-        count.textContent = `Build-up ${item.video.duration || ""}`.trim();
+        count.textContent = `Feed ${item.video.duration || ""}`.trim();
         prev.disabled = true;
         next.disabled = item.images.length === 0;
         return;
@@ -297,13 +289,14 @@
   }
 
   function init() {
-    programme();
-    fills();
+    spy();
+    clock();
+    display();
+    boot();
     counters();
-    gantt();
-    preview();
-    lookahead();
-    submittals();
+    models();
+    cameras();
+    sheets();
     viewer();
   }
 

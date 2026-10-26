@@ -1,8 +1,7 @@
 {
-  "featured": "s06",
-  "theme": "fresh-pour",
+  "featured": "s07",
+  "theme": "coordination",
   "reel": [
-    "s06",
     "s07",
     "s08",
     "s09",
@@ -15,11 +14,17 @@
     "s21",
     "s22",
     "s04",
-    "s05"
+    "s05",
+    "s06"
   ],
-  "version": "5.5.2",
-  "date": "2026-10-25",
+  "version": "6.0.0",
+  "date": "2026-10-26",
   "revisions": [
+    {
+      "rev": "6.0.0",
+      "date": "2026-10-26",
+      "note": "Coordination room design system. Featured G+17 IT park building model, coordination theme, hero s06"
+    },
     {
       "rev": "5.5.2",
       "date": "2026-10-25",
@@ -39,13 +44,8 @@
       "rev": "5.4.2",
       "date": "2026-10-24",
       "note": "Featured G+19 architectural and structural model, binding-wire theme, hero s22"
-    },
-    {
-      "rev": "5.4.1",
-      "date": "2026-10-24",
-      "note": "Featured G+7 residential block model, hessian theme, hero s21"
     }
   ],
-  "slot": "2026-10-25 night",
-  "stage_pick": 2
+  "slot": "2026-10-26 morning",
+  "stage_pick": 3
 }
