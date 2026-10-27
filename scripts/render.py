@@ -109,7 +109,7 @@ def panel(anchor: str, title_id: str, title: str, body: str, cls: str, note: str
 # --------------------------------------------------------------------------- #
 # Project Browser (navigation)
 # --------------------------------------------------------------------------- #
-def browser(profile: dict, site: dict, themes: dict) -> str:
+def browser(profile: dict, site: dict, themes: dict, design: str = "") -> str:
     groups = "".join(
         f'<li class="pb-group"><p class="pb-node mono" aria-hidden="true">{e(g)}</p><ul>'
         + "".join(f'<li><a href="#{e(a)}" data-spy="{e(a)}"><span class="pb-code mono">{e(c)}</span>'
@@ -125,7 +125,7 @@ def browser(profile: dict, site: dict, themes: dict) -> str:
     )
     return f"""<aside class="browser" aria-label="Project browser">
   <div class="pb-head">
-    <a class="pb-mark" href="#top" aria-label="{e(profile["name"])}, back to the start"><b>ZS</b><span>Coordination room</span></a>
+    <a class="pb-mark" href="#top" aria-label="{e(profile["name"])}, back to the start"><b>ZS</b><span>{e(design)}</span></a>
     <p class="pb-clock mono" aria-hidden="true"><span class="pb-live">Live</span><b data-clock>{e(fmt_date(site.get("date", "")))}</b><span>IST</span></p>
   </div>
   <nav class="pb-nav" aria-label="Sections">
@@ -461,7 +461,7 @@ def build() -> Path:
 <main id="main">
 {signature.stage_html(profile, projects, opener, anchor="top")}
 <div class="room">
-{browser(profile, site, themes)}
+{browser(profile, site, themes, system.get("name", ""))}
 <div class="wall">
 {ticker(projects, bbs, site, featured)}
 {kpis(projects, bbs, profile)}
@@ -477,7 +477,7 @@ def build() -> Path:
 </div>
 </main>
 <footer class="foot">
-  <p class="mono">Coordination room &middot; rev {v} &middot; data date {e(fmt_date(site["date"]))}</p>
+  <p class="mono">{e(system.get("name", ""))} &middot; rev {v} &middot; data date {e(fmt_date(site["date"]))}</p>
   <p>Projects modelled at {e(profile["employer"])}. Build-up soundtracks from Mixkit. <a href="{CHANGELOG_URL}" rel="noopener">Revision history</a></p>
 </footer>
 

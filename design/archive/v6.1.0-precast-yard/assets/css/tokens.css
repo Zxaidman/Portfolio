@@ -1,0 +1,66 @@
+/* Generated from design/system.json by scripts/render.py. Do not edit. */
+/* Design system: Precast yard (since 6.1.0) */
+:root,
+[data-theme="yard"] {
+  --paper: #cfcbc2;
+  --panel: #efece6;
+  --ink: #17181a;
+  --muted: #4b4d51;
+  --line: #9d988e;
+  --accent: #9c2614;
+  --on-accent: #ffffff;
+  --viewport: #f7f5f1;
+  color-scheme: light;
+}
+[data-theme="hollowcore"] {
+  --paper: #121418;
+  --panel: #1d2127;
+  --ink: #eeeae3;
+  --muted: #a9a59c;
+  --line: #3b4048;
+  --accent: #a3b5ff;
+  --on-accent: #0a1030;
+  --viewport: #e9e6e0;
+  color-scheme: dark;
+}
+[data-theme="grout"] {
+  --paper: #e3dccd;
+  --panel: #faf7f1;
+  --ink: #221c15;
+  --muted: #5b5247;
+  --line: #b9ae99;
+  --accent: #6b3394;
+  --on-accent: #ffffff;
+  --viewport: #fbf9f5;
+  color-scheme: light;
+}
+[data-theme="tendon"] {
+  --paper: #191310;
+  --panel: #271e18;
+  --ink: #f4ebe2;
+  --muted: #bcab9c;
+  --line: #4e3e32;
+  --accent: #4fd1b5;
+  --on-accent: #06201a;
+  --viewport: #efe9e3;
+  color-scheme: dark;
+}
+:root {
+  --font: "Albert Sans", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Stick No Bills", "Arial Narrow", "Segoe UI", sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem);
+  --step-0: clamp(1rem, 0.96rem + 0.18vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.08rem + 0.55vw, 1.55rem);
+  --step-2: clamp(1.7rem, 1.3rem + 1.6vw, 2.7rem);
+  --step-3: clamp(2.6rem, 1.5rem + 4.4vw, 5.6rem);
+  --step-kpi: clamp(2.4rem, 1.7rem + 2.4vw, 3.8rem);
+  --gutter: clamp(16px, 2.4vw, 36px);
+  --gap: clamp(14px, 1.6vw, 24px);
+  --hdr: 0px;
+  --rail: 260px;
+  --max: 1640px;
+  --r: 2px;
+  --r-s: 1px;
+  --bar-h: 48px;
+}

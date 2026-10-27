@@ -1,0 +1,74 @@
+{
+  "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
+  "name": "Precast yard",
+  "introduced": "6.1.0",
+  "concept": "The coordination room is rebuilt as a precast yard: every panel is a factory-cast concrete element lifted into the wall. Panels are pale cast slabs on a darker yard ground, with a recessed lifting-anchor pocket in each top corner, a stencilled erection mark (piece code, cast date, weight) spray-painted on the title bar, and a chunky pallet-strap edge. Type is Stick No Bills, a stencil face with bridged counters like the marks sprayed on precast units, over Albert Sans and Spline Sans Mono. Buttons and chips are stencil plates: a dashed bridge line and square shoulders, filled with spray paint on press. Signature motion: crane set. As each panel scrolls into view it is lowered into place on two hoist lines from its lifting anchors, swings slightly, lands with a small settle, the lines go slack and lift away, and a grout bead fills under it.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Stick+No+Bills:wght@400..800&family=Albert+Sans:ital,wght@0,300..800;1,400&family=Spline+Sans+Mono:wght@400..600&display=swap",
+    "body": "\"Albert Sans\", \"Segoe UI\", system-ui, sans-serif",
+    "display": "\"Stick No Bills\", \"Arial Narrow\", \"Segoe UI\", sans-serif",
+    "mono": "\"Spline Sans Mono\", ui-monospace, \"SFMono-Regular\", Menlo, Consolas, monospace"
+  },
+  "scale": {
+    "--step--1": "clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem)",
+    "--step-0": "clamp(1rem, 0.96rem + 0.18vw, 1.1rem)",
+    "--step-1": "clamp(1.2rem, 1.08rem + 0.55vw, 1.55rem)",
+    "--step-2": "clamp(1.7rem, 1.3rem + 1.6vw, 2.7rem)",
+    "--step-3": "clamp(2.6rem, 1.5rem + 4.4vw, 5.6rem)",
+    "--step-kpi": "clamp(2.4rem, 1.7rem + 2.4vw, 3.8rem)",
+    "--gutter": "clamp(16px, 2.4vw, 36px)",
+    "--gap": "clamp(14px, 1.6vw, 24px)",
+    "--hdr": "0px",
+    "--rail": "260px",
+    "--max": "1640px",
+    "--r": "2px",
+    "--r-s": "1px",
+    "--bar-h": "48px"
+  },
+  "themes": {
+    "yard": {
+      "scheme": "light",
+      "paper": "#cfcbc2",
+      "panel": "#efece6",
+      "ink": "#17181a",
+      "muted": "#4b4d51",
+      "line": "#9d988e",
+      "accent": "#9c2614",
+      "on-accent": "#ffffff",
+      "viewport": "#f7f5f1"
+    },
+    "hollowcore": {
+      "scheme": "dark",
+      "paper": "#121418",
+      "panel": "#1d2127",
+      "ink": "#eeeae3",
+      "muted": "#a9a59c",
+      "line": "#3b4048",
+      "accent": "#a3b5ff",
+      "on-accent": "#0a1030",
+      "viewport": "#e9e6e0"
+    },
+    "grout": {
+      "scheme": "light",
+      "paper": "#e3dccd",
+      "panel": "#faf7f1",
+      "ink": "#221c15",
+      "muted": "#5b5247",
+      "line": "#b9ae99",
+      "accent": "#6b3394",
+      "on-accent": "#ffffff",
+      "viewport": "#fbf9f5"
+    },
+    "tendon": {
+      "scheme": "dark",
+      "paper": "#191310",
+      "panel": "#271e18",
+      "ink": "#f4ebe2",
+      "muted": "#bcab9c",
+      "line": "#4e3e32",
+      "accent": "#4fd1b5",
+      "on-accent": "#06201a",
+      "viewport": "#efe9e3"
+    }
+  }
+}

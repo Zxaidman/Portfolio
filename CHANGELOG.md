@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [6.1.0] - 2026-10-27 (morning)
+- New design system: Precast yard design system. Featured G+8 residential building model, yard theme, hero m1.
+
 ## [6.0.2] - 2026-10-26 (night)
 - Night theme and asset change: Synced new project media. Featured G+6 residential building model, clash theme, hero s08.
 

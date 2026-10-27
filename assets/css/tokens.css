@@ -1,66 +1,66 @@
 /* Generated from design/system.json by scripts/render.py. Do not edit. */
-/* Design system: Coordination room (since 6.0.0) */
+/* Design system: Precast yard (since 6.1.0) */
 :root,
-[data-theme="phosphor"] {
-  --paper: #0a0f0c;
-  --panel: #111a15;
-  --ink: #e3f1e8;
-  --muted: #93ab9c;
-  --line: #2b3c32;
-  --accent: #4ee08a;
-  --on-accent: #04130a;
-  --viewport: #e7efe9;
-  color-scheme: dark;
-}
-[data-theme="coordination"] {
-  --paper: #070d18;
-  --panel: #0e1728;
-  --ink: #e6eefa;
-  --muted: #9aabc4;
-  --line: #2c3b57;
-  --accent: #4cc9f0;
-  --on-accent: #04101c;
-  --viewport: #e5ebf3;
-  color-scheme: dark;
-}
-[data-theme="markup"] {
-  --paper: #eceff2;
-  --panel: #dde2e7;
-  --ink: #0f1419;
-  --muted: #48535e;
-  --line: #a7b0b9;
-  --accent: #a8460a;
+[data-theme="yard"] {
+  --paper: #cfcbc2;
+  --panel: #efece6;
+  --ink: #17181a;
+  --muted: #4b4d51;
+  --line: #9d988e;
+  --accent: #9c2614;
   --on-accent: #ffffff;
-  --viewport: #f7f8f9;
+  --viewport: #f7f5f1;
   color-scheme: light;
 }
-[data-theme="clash"] {
-  --paper: #130c17;
-  --panel: #1c1322;
-  --ink: #f3eaf6;
-  --muted: #b5a4bf;
-  --line: #45364f;
-  --accent: #ff79d8;
-  --on-accent: #1a0716;
-  --viewport: #efe8f2;
+[data-theme="hollowcore"] {
+  --paper: #121418;
+  --panel: #1d2127;
+  --ink: #eeeae3;
+  --muted: #a9a59c;
+  --line: #3b4048;
+  --accent: #a3b5ff;
+  --on-accent: #0a1030;
+  --viewport: #e9e6e0;
+  color-scheme: dark;
+}
+[data-theme="grout"] {
+  --paper: #e3dccd;
+  --panel: #faf7f1;
+  --ink: #221c15;
+  --muted: #5b5247;
+  --line: #b9ae99;
+  --accent: #6b3394;
+  --on-accent: #ffffff;
+  --viewport: #fbf9f5;
+  color-scheme: light;
+}
+[data-theme="tendon"] {
+  --paper: #191310;
+  --panel: #271e18;
+  --ink: #f4ebe2;
+  --muted: #bcab9c;
+  --line: #4e3e32;
+  --accent: #4fd1b5;
+  --on-accent: #06201a;
+  --viewport: #efe9e3;
   color-scheme: dark;
 }
 :root {
-  --font: "Onest", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Chakra Petch", "Bahnschrift", "Segoe UI", sans-serif;
-  --font-mono: "Fragment Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.86rem);
-  --step-0: clamp(0.98rem, 0.95rem + 0.15vw, 1.06rem);
-  --step-1: clamp(1.15rem, 1.05rem + 0.45vw, 1.4rem);
-  --step-2: clamp(1.5rem, 1.2rem + 1.3vw, 2.3rem);
-  --step-3: clamp(2.2rem, 1.3rem + 3.6vw, 4.6rem);
-  --step-kpi: clamp(2rem, 1.5rem + 1.8vw, 3.1rem);
-  --gutter: clamp(16px, 2vw, 28px);
-  --gap: clamp(10px, 1.1vw, 16px);
+  --font: "Albert Sans", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Stick No Bills", "Arial Narrow", "Segoe UI", sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem);
+  --step-0: clamp(1rem, 0.96rem + 0.18vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.08rem + 0.55vw, 1.55rem);
+  --step-2: clamp(1.7rem, 1.3rem + 1.6vw, 2.7rem);
+  --step-3: clamp(2.6rem, 1.5rem + 4.4vw, 5.6rem);
+  --step-kpi: clamp(2.4rem, 1.7rem + 2.4vw, 3.8rem);
+  --gutter: clamp(16px, 2.4vw, 36px);
+  --gap: clamp(14px, 1.6vw, 24px);
   --hdr: 0px;
-  --rail: 272px;
-  --max: 1680px;
-  --r: 6px;
-  --r-s: 3px;
-  --bar-h: 40px;
+  --rail: 260px;
+  --max: 1640px;
+  --r: 2px;
+  --r-s: 1px;
+  --bar-h: 48px;
 }

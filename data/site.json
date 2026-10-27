@@ -1,8 +1,7 @@
 {
-  "featured": "s09",
-  "theme": "clash",
+  "featured": "s10",
+  "theme": "yard",
   "reel": [
-    "s09",
     "s10",
     "s11",
     "s12",
@@ -15,11 +14,17 @@
     "s05",
     "s06",
     "s07",
-    "s08"
+    "s08",
+    "s09"
   ],
-  "version": "6.0.2",
-  "date": "2026-10-26",
+  "version": "6.1.0",
+  "date": "2026-10-27",
   "revisions": [
+    {
+      "rev": "6.1.0",
+      "date": "2026-10-27",
+      "note": "Precast yard design system. Featured G+8 residential building model, yard theme, hero m1"
+    },
     {
       "rev": "6.0.2",
       "date": "2026-10-26",
@@ -39,13 +44,8 @@
       "rev": "5.5.2",
       "date": "2026-10-25",
       "note": "Featured G+41 luxury residential tower model, fresh-pour theme, hero s05"
-    },
-    {
-      "rev": "5.5.1",
-      "date": "2026-10-25",
-      "note": "Featured G+23 residential tower complex model, admixture theme, hero s04"
     }
   ],
-  "slot": "2026-10-26 night",
-  "stage_pick": 5
+  "slot": "2026-10-27 morning",
+  "stage_pick": 6
 }
