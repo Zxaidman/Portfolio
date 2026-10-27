@@ -1,8 +1,7 @@
 {
-  "featured": "s11",
-  "theme": "hollowcore",
+  "featured": "s12",
+  "theme": "grout",
   "reel": [
-    "s11",
     "s12",
     "s13",
     "s14",
@@ -15,11 +14,17 @@
     "s07",
     "s08",
     "s09",
-    "s10"
+    "s10",
+    "s11"
   ],
-  "version": "6.1.1",
+  "version": "6.1.2",
   "date": "2026-10-27",
   "revisions": [
+    {
+      "rev": "6.1.2",
+      "date": "2026-10-27",
+      "note": "Featured G+20 sea-facing residential tower model, grout theme, hero s10"
+    },
     {
       "rev": "6.1.1",
       "date": "2026-10-27",
@@ -39,13 +44,8 @@
       "rev": "6.0.1",
       "date": "2026-10-26",
       "note": "Featured G+14 residential tower model, markup theme, hero s07"
-    },
-    {
-      "rev": "6.0.0",
-      "date": "2026-10-26",
-      "note": "Coordination room design system. Featured G+17 IT park building model, coordination theme, hero s06"
     }
   ],
-  "slot": "2026-10-27 afternoon",
-  "stage_pick": 7
+  "slot": "2026-10-27 night",
+  "stage_pick": 8
 }

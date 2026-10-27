@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [6.1.2] - 2026-10-27 (night)
+- Night theme and asset change: Featured G+20 sea-facing residential tower model, grout theme, hero s10.
+
 ## [6.1.1] - 2026-10-27 (afternoon)
 - Afternoon theme and asset change: Featured G+10 residential block model, hollowcore theme, hero s09.
 
