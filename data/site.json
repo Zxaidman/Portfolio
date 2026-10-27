@@ -1,8 +1,7 @@
 {
-  "featured": "s10",
-  "theme": "yard",
+  "featured": "s11",
+  "theme": "hollowcore",
   "reel": [
-    "s10",
     "s11",
     "s12",
     "s13",
@@ -15,11 +14,17 @@
     "s06",
     "s07",
     "s08",
-    "s09"
+    "s09",
+    "s10"
   ],
-  "version": "6.1.0",
+  "version": "6.1.1",
   "date": "2026-10-27",
   "revisions": [
+    {
+      "rev": "6.1.1",
+      "date": "2026-10-27",
+      "note": "Featured G+10 residential block model, hollowcore theme, hero s09"
+    },
     {
       "rev": "6.1.0",
       "date": "2026-10-27",
@@ -39,13 +44,8 @@
       "rev": "6.0.0",
       "date": "2026-10-26",
       "note": "Coordination room design system. Featured G+17 IT park building model, coordination theme, hero s06"
-    },
-    {
-      "rev": "5.5.2",
-      "date": "2026-10-25",
-      "note": "Featured G+41 luxury residential tower model, fresh-pour theme, hero s05"
     }
   ],
-  "slot": "2026-10-27 morning",
-  "stage_pick": 6
+  "slot": "2026-10-27 afternoon",
+  "stage_pick": 7
 }
