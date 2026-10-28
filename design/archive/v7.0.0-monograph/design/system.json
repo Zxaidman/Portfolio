@@ -1,0 +1,75 @@
+{
+  "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
+  "name": "Monograph",
+  "introduced": "7.0.0",
+  "concept": "The coordination room is torn down and the portfolio is re-set as a printed monograph: a bound review of built work, typeset like an architectural journal. A masthead carries the publication name, the issue line (volume and number from the version) and a dateline; a Contents index with folio numbers is the navigation, echoed by a slim running-head bar that tracks the section you are reading. The body is an editorial measure: a leader essay opens with a drop cap, Selected Works runs as numbered features with plate figures and figure captions, the build-up films are motion plates, and the reinforcement drawings are a technical appendix. Pull quotes drawn from the work sit in the margin; hairline rules, folios and a colophon frame every page. Type is Bodoni Moda, a high-contrast Didone, for display, Newsreader for the reading measure and its italic pull quotes, and Courier Prime, a typewriter face, for folios, plate numbers and metadata. Signature motion: ink set. As a page enters the measure the display heading prints in left to right through a clipped ink gradient on a view() timeline, figure plates develop up from a halftone dot screen as a register rule is struck beneath them, and the drop cap inks in. Everything is static under reduced motion and without JavaScript.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..800&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap",
+    "body": "\"Newsreader\", \"Iowan Old Style\", Georgia, \"Times New Roman\", serif",
+    "display": "\"Bodoni Moda\", \"Didot\", \"Bodoni MT\", Georgia, serif",
+    "mono": "\"Courier Prime\", \"Courier New\", ui-monospace, monospace"
+  },
+  "scale": {
+    "--step--1": "clamp(0.82rem, 0.8rem + 0.1vw, 0.9rem)",
+    "--step-0": "clamp(1.02rem, 0.98rem + 0.2vw, 1.14rem)",
+    "--step-1": "clamp(1.22rem, 1.1rem + 0.55vw, 1.6rem)",
+    "--step-2": "clamp(1.7rem, 1.3rem + 1.7vw, 2.9rem)",
+    "--step-3": "clamp(2.5rem, 1.3rem + 5vw, 6rem)",
+    "--step-display": "clamp(3.4rem, 1.4rem + 8.5vw, 9.5rem)",
+    "--step-kpi": "clamp(2.2rem, 1.6rem + 2.2vw, 3.4rem)",
+    "--gutter": "clamp(18px, 3.2vw, 56px)",
+    "--gap": "clamp(16px, 1.8vw, 28px)",
+    "--hdr": "0px",
+    "--measure": "66ch",
+    "--max": "1280px",
+    "--rule": "1px",
+    "--r": "2px",
+    "--bar-h": "46px"
+  },
+  "themes": {
+    "letterpress": {
+      "scheme": "light",
+      "paper": "#ece3cf",
+      "panel": "#f7efdd",
+      "ink": "#1c1812",
+      "muted": "#5a5142",
+      "line": "#b3a176",
+      "accent": "#c22a1b",
+      "on-accent": "#fdf4ea",
+      "viewport": "#f6efdf"
+    },
+    "nocturne": {
+      "scheme": "dark",
+      "paper": "#131009",
+      "panel": "#201b12",
+      "ink": "#f0e7d4",
+      "muted": "#b2a384",
+      "line": "#4a3f2b",
+      "accent": "#d8a63f",
+      "on-accent": "#241802",
+      "viewport": "#efe6d2"
+    },
+    "proof": {
+      "scheme": "light",
+      "paper": "#e2e5e4",
+      "panel": "#f4f6f5",
+      "ink": "#15181a",
+      "muted": "#505558",
+      "line": "#a6acab",
+      "accent": "#1c4f9c",
+      "on-accent": "#f2f7fa",
+      "viewport": "#f2f5f4"
+    },
+    "risograph": {
+      "scheme": "light",
+      "paper": "#eae3df",
+      "panel": "#f6f0ec",
+      "ink": "#1a151b",
+      "muted": "#5c5260",
+      "line": "#b8a8a4",
+      "accent": "#b01f6e",
+      "on-accent": "#fdeef6",
+      "viewport": "#f5efeb"
+    }
+  }
+}

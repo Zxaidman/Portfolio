@@ -1,8 +1,7 @@
 {
-  "featured": "s12",
-  "theme": "grout",
+  "featured": "s13",
+  "theme": "risograph",
   "reel": [
-    "s12",
     "s13",
     "s14",
     "s15",
@@ -15,11 +14,17 @@
     "s08",
     "s09",
     "s10",
-    "s11"
+    "s11",
+    "s12"
   ],
-  "version": "6.1.2",
-  "date": "2026-10-27",
+  "version": "7.0.0",
+  "date": "2026-10-28",
   "revisions": [
+    {
+      "rev": "7.0.0",
+      "date": "2026-10-28",
+      "note": "Monograph design system. Featured G+35 sale and rehab building model, risograph theme, hero s11"
+    },
     {
       "rev": "6.1.2",
       "date": "2026-10-27",
@@ -39,13 +44,8 @@
       "rev": "6.0.2",
       "date": "2026-10-26",
       "note": "Synced new project media. Featured G+6 residential building model, clash theme, hero s08"
-    },
-    {
-      "rev": "6.0.1",
-      "date": "2026-10-26",
-      "note": "Featured G+14 residential tower model, markup theme, hero s07"
     }
   ],
-  "slot": "2026-10-27 night",
-  "stage_pick": 8
+  "slot": "2026-10-28 morning",
+  "stage_pick": 9
 }

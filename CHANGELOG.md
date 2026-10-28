@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [7.0.0] - 2026-10-28 (morning)
+- Revamp (new layout): Monograph design system. Featured G+35 sale and rehab building model, risograph theme, hero s11.
+
 ## [6.1.2] - 2026-10-27 (night)
 - Night theme and asset change: Featured G+20 sea-facing residential tower model, grout theme, hero s10.
 

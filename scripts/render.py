@@ -1,22 +1,22 @@
 """
 render.py — builds index.html from data/profile.json, data/projects.json and data/site.json.
 
-Design: "Coordination room" (v6.0.0). The page is a BIM coordination control room, the screen
-wall a site team watches during a federated model review:
+Design: "Monograph" (v7.0.0). The coordination room is torn down and the portfolio is re-set as
+a printed monograph — a bound review of built work, typeset like an architectural journal:
 
   * The permanent scroll stage opens the page (signature.py), full-bleed.
-  * After it, the "room": a Revit-style Project Browser docked on the left (a tree of Views,
-    Sheets, Families and Project information that highlights where you are, with a live clock
-    and a display switch), and a wall of dockable dashboard panels on a 12-column grid.
-  * Panels: a telemetry ticker, a KPI strip counted from the model data, the active view with
-    a properties palette, the model browser (every project, a storey gauge, filter and sort),
-    a bank of site-camera monitors playing the build-ups, the BBS sheet register, the families
-    (the signature skill cards), the team, the event log (revisions) and a request panel.
-  * On phones the browser becomes a sticky strip of tabs across the top.
+  * After it, "the issue": a slim running-head bar (publication wordmark, the section you are
+    reading, folio, paper switch) stuck to the top, then a masthead/cover with the issue line,
+    a standfirst, key figures and a Contents index that doubles as the navigation.
+  * Body set to an editorial measure: a leader essay opens with a drop cap (the practice and
+    experience); Selected Works runs as a lead feature plus numbered feature plates for every
+    project (rubric filter chips keep every type reachable); Build-up films are motion plates;
+    the reinforcement drawings are a technical appendix; the signature skill cards are the
+    Instruments; and a colophon carries the editions (revision history) and correspondence.
 
 Pre-rendering (instead of fetching JSON in the browser) keeps the page fast, readable without
 JavaScript and indexable. Every "open" control is a real link to the image or video, so without
-JavaScript it still works; assets/js/main.js upgrades it to the viewer.
+JavaScript it still works; assets/js/main.js upgrades it to the viewer, filters and paper switch.
 
 Data contract (unchanged): data/*.json shapes and build(), which writes index.html and
 assets/css/tokens.css. Edit content in data/*.json, then run:  python3 scripts/portfolio.py build
@@ -35,18 +35,24 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 SITE_URL = "https://zxaidman.github.io/Portfolio/"
 CHANGELOG_URL = "https://github.com/Zxaidman/Portfolio/blob/main/CHANGELOG.md"
-RHYTHM = ("The room is rebuilt on a schedule: a whole revamp every Monday, Wednesday and Friday, "
-          "a new design system on the other mornings, and the featured project changes twice a day.")
 
-# The Project Browser tree: (group, [(anchor, panel code, label)]).
-BROWSER = [
-    ("Views (3D)", [("featured", "VW-01", "Active view"), ("projects", "VW-02", "Model browser"),
-                    ("buildups", "VW-03", "Site cameras")]),
-    ("Sheets", [("rebar", "SH-01", "BBS register")]),
-    ("Families", [("skills", "FM-01", "Loaded families")]),
-    ("Project information", [("about", "PI-01", "Team"), ("revisions", "PI-02", "Event log"),
-                             ("contact", "PI-03", "Requests")]),
+# The cadence line must always name the publishing rhythm in full (see the brief).
+RHYTHM = ("This monograph is reset on a schedule: a whole revamp — a new layout — every Monday, "
+          "Wednesday and Friday, a new design system on the other mornings, and the featured "
+          "project changes twice a day.")
+
+# Contents index = the navigation. (anchor, folio numeral, title). Order is reading order.
+CONTENTS = [
+    ("about", "I", "The practice"),
+    ("projects", "II", "Selected works"),
+    ("buildups", "III", "Build-up films"),
+    ("rebar", "IV", "Reinforcement"),
+    ("skills", "V", "Instruments"),
+    ("revisions", "VI", "Editions"),
+    ("contact", "VII", "Correspondence"),
 ]
+FOLIO = {a: n for a, n, _ in CONTENTS}
+TITLE_OF = {a: t for a, _, t in CONTENTS}
 
 
 def e(value) -> str:
@@ -61,8 +67,11 @@ def fmt_date(iso: str) -> str:
         return iso or ""
 
 
-def code_of(anchor: str) -> str:
-    return next(c for _, items in BROWSER for a, c, _ in items if a == anchor)
+def long_date(iso: str) -> str:
+    try:
+        return dt.date.fromisoformat(iso).strftime("%d %B %Y")
+    except (TypeError, ValueError):
+        return iso or ""
 
 
 def storeys(title: str) -> int:
@@ -89,280 +98,300 @@ def opener(slug: str, href: str, inner: str, cls: str = "", index: int = 0, vide
     return (f'<a href="{e(href)}"{attrs} data-open="{e(slug)}" data-index="{index}"{extra}>{inner}</a>')
 
 
-def bar(anchor: str, title_id: str, title: str, tools: str = "") -> str:
-    """A panel's title bar: status LED, panel code, title, and a small readout on the right."""
-    tools_html = f'<span class="pnl-tools mono">{tools}</span>' if tools else ""
-    return (f'<header class="pnl-bar"><span class="pnl-led" aria-hidden="true"></span>'
-            f'<span class="pnl-code mono">{e(code_of(anchor))}</span>'
-            f'<h2 id="{e(title_id)}" class="pnl-title">{e(title)}</h2>{tools_html}</header>')
-
-
-def panel(anchor: str, title_id: str, title: str, body: str, cls: str, note: str = "", tools: str = "") -> str:
-    note_html = f'<p class="pnl-note">{e(note)}</p>' if note else ""
-    return f"""
-<section class="pnl {cls}" id="{e(anchor)}" aria-labelledby="{e(title_id)}">
-  {bar(anchor, title_id, title, tools)}
-  <div class="pnl-body">{note_html}{body}</div>
-</section>"""
+def plate_num(i: int) -> str:
+    """A plate/figure number, e.g. 'Pl. 03'."""
+    return f"Pl. {i:02d}"
 
 
 # --------------------------------------------------------------------------- #
-# Project Browser (navigation)
+# Running head (sticky) + masthead (cover) — the navigation lives here
 # --------------------------------------------------------------------------- #
-def browser(profile: dict, site: dict, themes: dict, design: str = "") -> str:
-    groups = "".join(
-        f'<li class="pb-group"><p class="pb-node mono" aria-hidden="true">{e(g)}</p><ul>'
-        + "".join(f'<li><a href="#{e(a)}" data-spy="{e(a)}"><span class="pb-code mono">{e(c)}</span>'
-                  f'<span class="pb-label">{e(lbl)}</span></a></li>' for a, c, lbl in items)
-        + "</ul></li>"
-        for g, items in BROWSER
-    )
+def running_head(profile: dict, site: dict, system: dict, themes: dict) -> str:
+    """A slim bar stuck to the top of the issue: wordmark, the section being read, folio, and a
+    paper (theme) switch. Scroll-spy fills [data-runhead]; the switch is revealed by main.js."""
     current = site.get("theme", next(iter(themes), ""))
     swatches = "".join(
-        f'<button type="button" class="pb-theme" data-theme-set="{e(t)}" aria-pressed="{"true" if t == current else "false"}">'
-        f'<span class="pb-swatch" aria-hidden="true" style="--sw-p:{e(th["paper"])};--sw-a:{e(th["accent"])}"></span>{e(t)}</button>'
+        f'<button type="button" class="paper-dot" data-theme-set="{e(t)}" aria-pressed="{"true" if t == current else "false"}" '
+        f'title="{e(t)} edition"><span aria-hidden="true" style="--sw-p:{e(th["paper"])};--sw-a:{e(th["accent"])}"></span>'
+        f'<span class="sr">{e(t)} edition</span></button>'
         for t, th in themes.items()
     )
-    return f"""<aside class="browser" aria-label="Project browser">
-  <div class="pb-head">
-    <a class="pb-mark" href="#top" aria-label="{e(profile["name"])}, back to the start"><b>ZS</b><span>{e(design)}</span></a>
-    <p class="pb-clock mono" aria-hidden="true"><span class="pb-live">Live</span><b data-clock>{e(fmt_date(site.get("date", "")))}</b><span>IST</span></p>
+    return f"""<nav class="runhead" aria-label="Running head">
+  <a class="runhead-mark" href="#top"><b>Monograph</b><span class="runhead-sub mono">Zaid Shaikh · built work</span></a>
+  <p class="runhead-now mono" aria-hidden="true"><span data-runhead>Contents</span></p>
+  <div class="runhead-right">
+    <div class="paper" role="group" aria-label="Paper edition" hidden><span class="mono">Paper</span>{swatches}</div>
+    <a class="runhead-contents mono" href="#contents">Contents ↓</a>
   </div>
-  <nav class="pb-nav" aria-label="Sections">
-    <p class="pb-root mono" aria-hidden="true">Project Browser</p>
-    <ul class="pb-tree">{groups}</ul>
-  </nav>
-  <div class="pb-display" role="group" aria-label="Display theme" hidden>
-    <p class="mono">Display</p>
-    <div class="pb-themes">{swatches}</div>
+</nav>"""
+
+
+def masthead(profile: dict, site: dict, system: dict) -> str:
+    v = site["version"]
+    major, minor, _ = (v.split(".") + ["0", "0"])[:3]
+    issue_line = f"Vol. {major} · No. {minor} · {long_date(site.get('date', ''))} · Mumbai edition"
+    figures = "".join(
+        f'<li><b data-count>{e(s["value"])}</b><span>{e(s["label"])}</span></li>'
+        for s in profile["stats"]
+    )
+    contents = "".join(
+        f'<li><a href="#{e(a)}" data-spy="{e(a)}"><span class="toc-no mono">{e(n)}</span>'
+        f'<span class="toc-title">{e(t)}</span><span class="toc-leader" aria-hidden="true"></span>'
+        f'<span class="toc-fol mono">{e(n)}</span></a></li>'
+        for a, n, t in CONTENTS
+    )
+    status = ('<span class="mh-status mono"><span class="mh-dot" aria-hidden="true"></span>Open to BIM roles</span>'
+              if profile.get("available") else "")
+    return f"""<header class="masthead" aria-label="Masthead">
+  <p class="mh-issue mono">{e(issue_line)}</p>
+  <div class="mh-title">
+    <h1 class="mh-name">{e(profile["name"])}</h1>
+    <p class="mh-role">{e(profile["role"])}</p>
   </div>
-  <p class="pb-foot mono">Rev {e(site["version"])} &middot; {e(fmt_date(site.get("date", "")))}</p>
-</aside>"""
-
-
-# --------------------------------------------------------------------------- #
-# Panels
-# --------------------------------------------------------------------------- #
-def ticker(projects: list[dict], bbs: list[dict], site: dict, featured: dict) -> str:
-    vids = sum(1 for p in projects if p.get("video"))
-    items = [
-        f"{len(projects)} models online",
-        f"{vids} camera feeds",
-        f"{len(bbs)} BBS sheets issued",
-        f"Active view {featured['slug'].upper()}: {featured['title']}",
-        f"Rev {site['version']}",
-        f"Display {site.get('theme', '')}",
-        "Clash status: resolved before site",
-        "Rebar scheduled straight from the model",
-    ]
-    row = "".join(f"<li>{e(t)}</li>" for t in items)
-    return f"""<div class="ticker" aria-label="Status">
-  <p class="ticker-tag mono" aria-hidden="true">Telemetry</p>
-  <div class="ticker-win"><ul class="ticker-row">{row}</ul><ul class="ticker-row" aria-hidden="true">{row}</ul></div>
-</div>"""
-
-
-def kpis(projects: list[dict], bbs: list[dict], profile: dict) -> str:
-    total_fl = sum(storeys(p["title"]) for p in projects)
-    tallest = max(projects, key=lambda p: storeys(p["title"]))
-    cities = sorted({p["location"] for p in projects if p.get("location")})
-    vids = sum(1 for p in projects if p.get("video"))
-    top = max(storeys(p["title"]) for p in projects)
-    spark = "".join(f'<i style="--v:{storeys(p["title"]) / top:.3f}"></i>' for p in projects)
-    tiles = [
-        ("Models", str(len(projects)), "Revit and IFC models on the wall", ""),
-        ("Storeys", str(total_fl), "floors modelled, all projects", f'<span class="kpi-spark" aria-hidden="true">{spark}</span>'),
-        ("Tallest", f"G+{storeys(tallest['title']) - 1}", tallest["title"].replace(f"G+{storeys(tallest['title']) - 1} ", ""), ""),
-        ("Feeds", str(vids), "build-up animations", ""),
-        ("Sheets", str(len(bbs)), "rebar and BBS drawings", ""),
-        ("Cities", str(len(cities)), ", ".join(cities), ""),
-    ]
-    tiles += [("Profile", s["value"], s["label"], "") for s in profile["stats"]]
-    lis = "".join(
-        f'<li class="kpi"><p class="kpi-k mono">{e(k)}</p><b class="kpi-v" data-count>{e(v)}</b>'
-        f'<p class="kpi-l">{e(lab)}</p>{extra}</li>'
-        for k, v, lab, extra in tiles
-    )
-    return f"""
-<section class="pnl pnl-kpis" aria-labelledby="kpi-title">
-  <header class="pnl-bar"><span class="pnl-led" aria-hidden="true"></span><span class="pnl-code mono">KPI</span><h2 id="kpi-title" class="pnl-title">Model telemetry</h2><span class="pnl-tools mono">from the model data</span></header>
-  <div class="pnl-body"><ul class="kpi-strip">{lis}</ul></div>
-</section>"""
-
-
-def active_view(p: dict) -> str:
-    imgs = p["images"]
-    thumbs = "".join(
-        f'<li>{opener(p["slug"], im["src"], img_tag(im, "", use_thumb=True), "av-thumb", index=i, label="Open view %d of %s" % (i + 1, p["title"]))}</li>'
-        for i, im in enumerate(imgs[1:7], start=1)
-    )
-    video_btn = (opener(p["slug"], p["video"]["src"], f'Play the build-up <span class="mono">{e(p["video"]["duration"])}</span>',
-                        "btn btn-line", video=True)) if p.get("video") else ""
-    main_img = opener(p["slug"], imgs[0]["src"],
-                      img_tag(imgs[0], p["title"] + " Revit model", sizes="(min-width: 1100px) 55vw, 100vw")
-                      + '<span class="av-reticle" aria-hidden="true"></span>',
-                      "av-main", label=f'Open {p["title"]} gallery')
-    fl = storeys(p["title"])
-    props = [("Element ID", p["slug"].upper()), ("Sheet", p["sheet"]), ("Type", p["kind"]),
-             ("Category", p["type"]), ("City", p["location"] or "Not published"), ("Levels", f"{fl} above ground"),
-             ("Views", f'{len(imgs)}{" + build-up" if p.get("video") else ""}')]
-    rows = "".join(f'<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in props)
-    body = f"""<div class="av-grid">
-    <figure class="av-figure">{main_img}<figcaption class="mono"><span class="av-rec">Active</span>{{3D}} &middot; {e(p["slug"].upper())} &middot; sheet {e(p["sheet"])}</figcaption></figure>
-    <div class="av-side">
-      <h3 class="av-title">{e(p["title"])}</h3>
-      <p class="av-summary">{e(p["summary"])}</p>
-      <div class="av-props"><p class="av-props-head mono">Properties</p><dl>{rows}</dl></div>
-      <div class="actions">
-        {opener(p["slug"], imgs[0]["src"], f"Open all {len(imgs)} views", "btn btn-solid")}
-        {video_btn}
-      </div>
+  <div class="mh-lede">
+    <p class="mh-standfirst">{e(profile["headline"])}</p>
+    <p class="mh-intro">{e(profile["intro"])}</p>
+    <div class="mh-actions">
+      <a class="btn btn-solid" href="#projects">Read the works</a>
+      <a class="btn btn-line" href="mailto:{e(profile["email"])}">Commission a model</a>
+      {status}
     </div>
   </div>
-  <ul class="av-thumbs">{thumbs}</ul>"""
-    return panel("featured", "featured-title", "Active view", body, "pnl-active",
-                 note="The model on the main screen. It changes twice a day.", tools="Changes twice a day")
+  <ul class="mh-figures" aria-label="Key figures">{figures}</ul>
+  <section class="contents" id="contents" aria-labelledby="contents-title">
+    <div class="contents-head">
+      <p class="eyebrow mono">In this issue</p>
+      <h2 id="contents-title">Contents</h2>
+    </div>
+    <ol class="toc">{contents}</ol>
+    <p class="contents-note">{e(RHYTHM)}</p>
+  </section>
+</header>"""
 
 
-def model_browser(projects: list[dict]) -> str:
-    counts: dict[str, int] = {}
-    for p in projects:
-        counts[p["type"]] = counts.get(p["type"], 0) + 1
-    # every type gets a chip: the usual ones first, any new type (e.g. Mixed-use) next, Other last
-    known = ["Residential", "Commercial", "Mixed-use"]
-    order = ([t for t in known if t in counts] + sorted(t for t in counts if t not in known + ["Other"])
-             + (["Other"] if "Other" in counts else []))
-    filters = f'<button type="button" class="chip" aria-pressed="true" data-filter="all">All <span>{len(projects)}</span></button>'
-    filters += "".join(
-        f'<button type="button" class="chip" aria-pressed="false" data-filter="{e(t)}">{e(t)} <span>{counts[t]}</span></button>'
-        for t in order
-    )
-    sorts = ('<div class="mb-sort" role="group" aria-label="Sort models" hidden>'
-             '<span class="mono">Sort</span>'
-             '<button type="button" class="seg" aria-pressed="true" data-sort="id">ID</button>'
-             '<button type="button" class="seg" aria-pressed="false" data-sort="height">Height</button></div>')
-    tallest = max(storeys(p["title"]) for p in projects)
-    tiles = []
-    for i, p in enumerate(projects):
-        fl = storeys(p["title"])
-        inner = (f'<span class="mb-img">{img_tag(p["images"][0], "", use_thumb=True)}'
-                 f'<span class="mb-id mono">{e(p["slug"].upper())}</span>'
-                 f'<span class="av-reticle" aria-hidden="true"></span></span>'
-                 f'<span class="mb-copy"><b class="mb-title">{e(p["title"])}</b>'
-                 f'<span class="mb-meta">{e(p["kind"])}</span>'
-                 f'<span class="mb-gauge" aria-hidden="true"><i style="--g:{fl / tallest:.4f}"></i></span>'
-                 f'<span class="mb-foot mono"><span>{fl} fl</span><span>{e(p["location"] or "—")}</span>'
-                 f'<span>{len(p["images"])} views{" + video" if p.get("video") else ""}</span></span></span>')
-        tiles.append(f'<li class="mb-tile" data-type="{e(p["type"])}" data-i="{i}" data-h="{fl}" '
-                     f'style="view-transition-name:mb-{e(p["slug"])}">'
-                     f'{opener(p["slug"], p["images"][0]["src"], inner, "mb-link", label=f"{p["title"]}: {fl} floors, {len(p["images"])} views")}</li>')
-    body = f"""<div class="mb-tools"><div class="filters" role="group" aria-label="Filter projects by type">{filters}</div>{sorts}</div>
-  <ol class="mb-grid" aria-live="polite">{"".join(tiles)}</ol>"""
-    return panel("projects", "projects-title", f"Model browser: {len(projects)} projects", body, "pnl-models",
-                 note="Every project I modelled with the Computer Help BIM team. The gauge is the building's height. Open a model to walk its views.",
-                 tools=f"{len(projects)} online")
+# --------------------------------------------------------------------------- #
+# Section scaffolding
+# --------------------------------------------------------------------------- #
+def section_head(anchor: str, title_id: str, kicker: str, title: str, note: str = "") -> str:
+    note_html = f'<p class="sec-note">{e(note)}</p>' if note else ""
+    return f"""<header class="sec-head">
+    <p class="sec-folio mono"><span class="sec-no">{e(FOLIO.get(anchor, ""))}</span>{e(kicker)}</p>
+    <h2 id="{e(title_id)}" class="sec-title">{e(title)}</h2>
+    {note_html}
+  </header>"""
 
 
-def cameras(projects_by_slug: dict, order: list[str]) -> str:
-    cams = []
-    n = 0
-    for slug in order:
-        p = projects_by_slug.get(slug)
-        if not p or not p.get("video"):
-            continue
-        n += 1
-        v = p["video"]
-        poster = v.get("poster") or p["images"][0]["thumb"]
-        inner = (f'<span class="cam-screen"><img src="{e(poster)}" alt="" loading="lazy" decoding="async">'
-                 f'<video muted loop playsinline preload="none" data-src="{e(v["src"])}" tabindex="-1"></video>'
-                 f'<span class="cam-osd mono" aria-hidden="true"><span class="cam-no">CAM {n:02d}</span>'
-                 f'<span class="cam-rec">REC</span></span>'
-                 f'<span class="cam-tc mono" aria-hidden="true">{e(v["duration"])}</span>'
-                 f'<span class="cam-play" aria-hidden="true">&#9654;</span></span>'
-                 f'<span class="cam-cap"><b>{e(p["title"])}</b><span class="mono">{e(p["slug"].upper())}</span></span>')
-        cams.append(f'<li class="cam">{opener(slug, v["src"], inner, "cam-link", video=True, label="Play the %s build-up" % p["title"])}</li>')
-    body = f'<ul class="cam-wall">{"".join(cams)}</ul>'
-    return panel("buildups", "cams-title", "Site cameras", body, "pnl-cams",
-                 note="Construction-sequence animations rendered from the Revit models. Hover a monitor to preview it muted, open it to watch with sound.",
-                 tools=f"{n} feeds")
-
-
-def sheet_register(bbs: list[dict]) -> str:
-    if not bbs:
-        return ""
-    items = []
-    for i, b in enumerate(bbs):
-        cap = (f'<span class="sr-cap"><span class="sr-no mono">BBS-{i + 1:03d}</span>'
-               f'<span class="sr-name">{e(b["alt"])}</span><span class="sr-rev mono">Rev A</span></span>')
-        link = opener("__bbs", b["src"], img_tag(b, b["alt"], use_thumb=True) + cap, "sr-link", index=i,
-                      label="Open drawing: " + b["alt"])
-        items.append(f'<li{" class=extra" if i >= 8 else ""}>{link}</li>')
-    items = "".join(items)
-    more = (f'<button type="button" class="btn btn-line sr-more" data-more aria-expanded="false">'
-            f'Show all {len(bbs)} sheets</button>') if len(bbs) > 8 else ""
-    body = f'<ol class="sr-list" data-collapsed="true">{items}</ol>{more}'
-    return panel("rebar", "rebar-title", "BBS sheet register", body, "pnl-sheets",
-                 note="Beam, column, footing and slab reinforcement, detailed in Revit and RC-CADS and scheduled straight from the model.",
-                 tools=f"{len(bbs)} sheets")
-
-
-def families() -> str:
-    """The signature skill cards, docked as the Families panel."""
-    skills, _ = signature.load()
-    sk = skills["skills"]
-    head = (bar("skills", "sig-skills-title", sk["title"], f'{len(sk["cards"])} loaded')
-            + f'<p class="pnl-note fam-note">{e(sk["intro"])}</p>')
-    return signature.skills_html(header_html=head, anchor="skills").replace(
-        'class="sig-skills"', 'class="pnl pnl-families sig-skills"', 1)
-
-
-def team(profile: dict) -> str:
-    exp = "".join(
-        f"""<article class="tm-job">
-      <p class="tm-when mono"><time>{e(j["from"])}</time> &rarr; <time>{e(j["to"])}</time></p>
-      <h3>{e(j["role"])}</h3>
-      <p class="meta">{e(j["org"])}</p>
-      <ul>{"".join(f"<li>{e(pt)}</li>" for pt in j["points"])}</ul>
+# --------------------------------------------------------------------------- #
+# I — The practice (about / experience / skills)
+# --------------------------------------------------------------------------- #
+def leader(profile: dict) -> str:
+    intro = e(profile["intro"])
+    drop = intro[:1]
+    rest = intro[1:]
+    jobs = "".join(
+        f"""<article class="cv-job">
+      <p class="cv-when mono"><time>{e(j["from"])}</time> – <time>{e(j["to"])}</time></p>
+      <h3 class="cv-role">{e(j["role"])}</h3>
+      <p class="cv-org">{e(j["org"])}</p>
+      <ul class="cv-points">{"".join(f"<li>{e(pt)}</li>" for pt in j["points"])}</ul>
     </article>"""
         for j in profile["experience"]
     )
     skills = "".join(
-        f'<div><dt class="mono">{e(s["group"])}</dt><dd>{"".join(f"<span>{e(x)}</span>" for x in s["items"])}</dd></div>'
+        f'<div class="disc"><dt class="mono">{e(s["group"])}</dt>'
+        f'<dd>{" · ".join(e(x) for x in s["items"])}</dd></div>'
         for s in profile["skills"]
     )
-    edu = "".join(f'<p><b>{e(x["title"])}</b>, {e(x["years"])}<br>{e(x["detail"])}</p>' for x in profile["education"])
-    body = f"""<p class="tm-intro">{e(profile["intro"])}</p>
-  <div class="tm-grid">
-    <div class="tm-jobs">{exp}</div>
-    <aside class="tm-side">
-      <dl class="tm-skills">{skills}</dl>
-      <div class="tm-edu"><h3 class="mono">Education</h3>{edu}<h3 class="mono">Languages</h3><p>{e(", ".join(profile["languages"]))}</p></div>
+    edu = "".join(f'<p><b>{e(x["title"])}</b><br>{e(x["detail"])}<br><span class="mono">{e(x["years"])}</span></p>'
+                  for x in profile["education"])
+    return f"""
+<section class="sec sec-leader" id="about" aria-labelledby="leader-title">
+  {section_head("about", "leader-title", "The practice", "Concrete, modelled to the bar")}
+  <div class="leader-grid">
+    <div class="leader-body">
+      <p class="leader-lede"><span class="dropcap" aria-hidden="true">{drop}</span><span class="sr">{drop}</span>{rest}</p>
+      <div class="cv">{jobs}</div>
+    </div>
+    <aside class="leader-aside">
+      <blockquote class="pull"><p>“Rebar modelled precisely enough to schedule straight from the model.”</p></blockquote>
+      <dl class="disciplines">{skills}</dl>
+      <div class="edu">
+        <h3 class="mono">Education</h3>{edu}
+        <h3 class="mono">Languages</h3><p>{e(", ".join(profile["languages"]))}</p>
+      </div>
     </aside>
-  </div>"""
-    return panel("about", "about-title", f'Team: {profile["name"]}', body, "pnl-team", tools=e(profile["location"]))
+  </div>
+</section>"""
 
 
-def event_log(site: dict) -> str:
+# --------------------------------------------------------------------------- #
+# II — Selected works (lead feature + every project as a plate)
+# --------------------------------------------------------------------------- #
+def lead_feature(p: dict) -> str:
+    imgs = p["images"]
+    fl = storeys(p["title"])
+    main_img = opener(p["slug"], imgs[0]["src"],
+                      img_tag(imgs[0], p["title"] + " Revit model", "lead-img",
+                              sizes="(min-width: 1000px) 62vw, 100vw")
+                      + '<span class="plate-rule" aria-hidden="true"></span>',
+                      "lead-fig", label=f'Open {p["title"]} gallery')
+    props = [("Element", p["slug"].upper()), ("Sheet", p["sheet"]), ("Discipline", p["kind"]),
+             ("Programme", p["type"]), ("Location", p["location"] or "Not published"),
+             ("Levels", f"G+{fl - 1}"), ("Plates", f'{len(imgs)}{" + film" if p.get("video") else ""}')]
+    rows = "".join(f"<div><dt>{e(k)}</dt><dd>{e(val)}</dd></div>" for k, val in props)
+    play = (opener(p["slug"], p["video"]["src"],
+                   f'Play the build-up <span class="mono">{e(p["video"]["duration"])}</span>',
+                   "btn btn-line", video=True)) if p.get("video") else ""
+    return f"""<article class="lead" aria-label="Cover feature">
+    <figure class="lead-plate">{main_img}
+      <figcaption class="plate-cap mono"><span class="plate-no">{e(plate_num(1))}</span>{{3D}} · {e(p["slug"].upper())} · sheet {e(p["sheet"])}</figcaption>
+    </figure>
+    <div class="lead-copy">
+      <p class="lead-kicker mono">Cover feature · changes twice a day</p>
+      <h3 class="lead-title">{e(p["title"])}</h3>
+      <p class="lead-sum">{e(p["summary"])}</p>
+      <dl class="lead-props">{rows}</dl>
+      <div class="lead-actions">
+        {opener(p["slug"], imgs[0]["src"], f"Open all {len(imgs)} plates", "btn btn-solid")}
+        {play}
+      </div>
+    </div>
+  </article>"""
+
+
+def feature_plate(p: dict, i: int) -> str:
+    fl = storeys(p["title"])
+    im = p["images"][0]
+    inner = (f'<span class="feat-img">{img_tag(im, "", use_thumb=True)}'
+             f'<span class="plate-rule" aria-hidden="true"></span></span>'
+             f'<span class="feat-cap"><span class="feat-no mono">{e(plate_num(i))}</span>'
+             f'<b class="feat-title">{e(p["title"])}</b>'
+             f'<span class="feat-meta mono">{e(p["kind"])}</span>'
+             f'<span class="feat-foot mono"><span>G+{fl - 1}</span><span>{e(p["location"] or "—")}</span>'
+             f'<span>{len(p["images"])} plates{" + film" if p.get("video") else ""} ↗</span></span></span>')
+    return (f'<li class="feature" data-type="{e(p["type"])}" data-i="{i}">'
+            f'{opener(p["slug"], im["src"], inner, "feature-link", label=f"{p["title"]}: G+{fl - 1}, {len(p["images"])} plates")}'
+            f'</li>')
+
+
+def works(projects: list[dict], featured: dict) -> str:
+    counts: dict[str, int] = {}
+    for p in projects:
+        counts[p["type"]] = counts.get(p["type"], 0) + 1
+    known = ["Residential", "Commercial", "Mixed-use"]
+    order = ([t for t in known if t in counts]
+             + sorted(t for t in counts if t not in known + ["Other"])
+             + (["Other"] if "Other" in counts else []))
+    # A rubric chip per programme type (validate requires every type to be filterable).
+    chips = f'<button type="button" class="rubric-chip" aria-pressed="true" data-filter="all">All <span>{len(projects)}</span></button>'
+    chips += "".join(
+        f'<button type="button" class="rubric-chip" aria-pressed="false" data-filter="{e(t)}">{e(t)} <span>{counts[t]}</span></button>'
+        for t in order
+    )
+    plates = "".join(feature_plate(p, i) for i, p in enumerate(projects, start=1))
+    return f"""
+<section class="sec sec-works" id="projects" aria-labelledby="works-title">
+  {section_head("projects", "works-title", f"Selected works · {len(projects)} buildings", "Modelled for Mumbai site teams", note="Every building I modelled with the Computer Help BIM team, under a neutral plate number. Open a plate to walk its views.")}
+  {lead_feature(featured)}
+  <div class="rubric" role="group" aria-label="Filter works by programme">{chips}</div>
+  <ol class="feature-index" aria-live="polite">{plates}</ol>
+</section>"""
+
+
+# --------------------------------------------------------------------------- #
+# III — Build-up films
+# --------------------------------------------------------------------------- #
+def films(by_slug: dict, order: list[str]) -> str:
+    cams, n = [], 0
+    for slug in order:
+        p = by_slug.get(slug)
+        if not p or not p.get("video"):
+            continue
+        n += 1
+        vobj = p["video"]
+        poster = vobj.get("poster") or p["images"][0]["thumb"]
+        inner = (f'<span class="film-screen"><img src="{e(poster)}" alt="" loading="lazy" decoding="async">'
+                 f'<video muted loop playsinline preload="none" data-src="{e(vobj["src"])}" tabindex="-1"></video>'
+                 f'<span class="film-osd mono" aria-hidden="true"><span>Film {n:02d}</span>'
+                 f'<span class="film-rec">▶</span></span>'
+                 f'<span class="film-tc mono" aria-hidden="true">{e(vobj["duration"])}</span></span>'
+                 f'<span class="film-cap"><span class="feat-no mono">{e(plate_num(n))}</span>'
+                 f'<b>{e(p["title"])}</b><span class="mono">{e(p["slug"].upper())}</span></span>')
+        cams.append(f'<li class="film">{opener(slug, vobj["src"], inner, "film-link", video=True, label="Play the %s build-up" % p["title"])}</li>')
+    body = f'<ol class="film-wall">{"".join(cams)}</ol>'
+    return f"""
+<section class="sec sec-films" id="buildups" aria-labelledby="films-title">
+  {section_head("buildups", "films-title", f"Build-up films · {n}", "Construction sequence, rendered from the model", note="Construction-sequence animations rendered from the Revit models. Hover a frame to preview it muted; open it to watch with sound.")}
+  {body}
+</section>"""
+
+
+# --------------------------------------------------------------------------- #
+# IV — Reinforcement (BBS technical appendix)
+# --------------------------------------------------------------------------- #
+def appendix(bbs: list[dict]) -> str:
+    if not bbs:
+        return ""
+    items = []
+    for i, b in enumerate(bbs):
+        cap = (f'<span class="app-cap"><span class="app-no mono">BBS-{i + 1:03d}</span>'
+               f'<span class="app-name">{e(b["alt"])}</span><span class="app-rev mono">Rev A</span></span>')
+        link = opener("__bbs", b["src"], img_tag(b, b["alt"], use_thumb=True) + cap, "app-link", index=i,
+                      label="Open drawing: " + b["alt"])
+        items.append(f'<li{" class=extra" if i >= 8 else ""}>{link}</li>')
+    more = (f'<button type="button" class="btn btn-line app-more" data-more aria-expanded="false">'
+            f'Show all {len(bbs)} drawings</button>') if len(bbs) > 8 else ""
+    return f"""
+<section class="sec sec-appendix" id="rebar" aria-labelledby="rebar-title">
+  {section_head("rebar", "rebar-title", f"Technical appendix · {len(bbs)} drawings", "Reinforcement, scheduled off the model", note="Beam, column, footing and slab reinforcement, detailed in Revit and RC-CADS and scheduled straight from the model.")}
+  <ol class="app-list" data-collapsed="true">{"".join(items)}</ol>
+  {more}
+</section>"""
+
+
+# --------------------------------------------------------------------------- #
+# V — Instruments (the permanent signature skill cards)
+# --------------------------------------------------------------------------- #
+def instruments() -> str:
+    """The signature skill cards, framed as the Instruments section of the issue."""
+    skills, _ = signature.load()
+    sk = skills["skills"]
+    head = (f'<header class="sec-head sig-skills-head">'
+            f'<p class="sec-folio mono"><span class="sec-no">{e(FOLIO["skills"])}</span>Instruments · {len(sk["cards"])}</p>'
+            f'<h2 id="sig-skills-title" class="sec-title">{e(sk["title"])}</h2>'
+            f'<p class="sec-note">{e(sk["intro"])}</p></header>')
+    return signature.skills_html(header_html=head, anchor="skills").replace(
+        'class="sig-skills"', 'class="sec sec-instruments sig-skills"', 1)
+
+
+# --------------------------------------------------------------------------- #
+# VI / VII — Colophon: editions (revisions) + correspondence (contact)
+# --------------------------------------------------------------------------- #
+def colophon(site: dict, profile: dict) -> str:
     rows = "".join(
         f'<li><time class="mono" datetime="{e(r["date"])}">{e(fmt_date(r["date"]))}</time>'
         f'<b class="mono">v{e(r["rev"])}</b><span>{e(r["note"])}</span></li>'
         for r in site.get("revisions", [])[:5]
     )
-    body = f"""<p class="log-rhythm">{e(RHYTHM)}</p>
-  <ol class="log-list" aria-label="Latest revisions">{rows}</ol>
-  <a class="btn btn-line" href="{CHANGELOG_URL}" rel="noopener">Full revision history</a>"""
-    return panel("revisions", "rev-title", f"Event log: rev {site['version']}", body, "pnl-log", tools="Latest 5")
-
-
-def requests(profile: dict) -> str:
-    body = f"""<p class="rq-lede">Got a model that needs building, a BBS that needs scheduling or clashes that need clearing?</p>
-  <a class="rq-mail" href="mailto:{e(profile["email"])}"><span class="rq-led" aria-hidden="true"></span>{e(profile["email"])}</a>
-  <p class="rq-links">
-    <a class="btn btn-solid" href="mailto:{e(profile["email"])}">Open a request</a>
-    <a class="btn btn-line" href="{e(profile["linkedin"])}" rel="noopener">LinkedIn</a>
-    <span class="mono">{e(profile["location"])}</span>
-  </p>"""
-    return panel("contact", "contact-title", "Requests", body, "pnl-request", tools="Channel open")
+    editions = f"""
+<section class="sec sec-editions" id="revisions" aria-labelledby="editions-title">
+  {section_head("revisions", "editions-title", f"Editions · rev {site['version']}", "How often this monograph is reset")}
+  <ol class="edition-list" aria-label="Latest revisions">{rows}</ol>
+  <a class="btn btn-line" href="{CHANGELOG_URL}" rel="noopener">Full edition history ↗</a>
+</section>"""
+    correspondence = f"""
+<section class="sec sec-contact" id="contact" aria-labelledby="contact-title">
+  {section_head("contact", "contact-title", "Correspondence", "A model to build, a BBS to schedule, clashes to clear")}
+  <div class="corr">
+    <a class="corr-mail" href="mailto:{e(profile["email"])}"><span class="corr-dot" aria-hidden="true"></span>{e(profile["email"])}</a>
+    <p class="corr-links">
+      <a class="btn btn-solid" href="mailto:{e(profile["email"])}">Open a request</a>
+      <a class="btn btn-line" href="{e(profile["linkedin"])}" rel="noopener">LinkedIn ↗</a>
+      <span class="mono">{e(profile["location"])}</span>
+    </p>
+  </div>
+</section>"""
+    return editions + correspondence
 
 
 # --------------------------------------------------------------------------- #
@@ -460,25 +489,20 @@ def build() -> Path:
 <a class="skip" href="#main">Skip to content</a>
 <main id="main">
 {signature.stage_html(profile, projects, opener, anchor="top")}
-<div class="room">
-{browser(profile, site, themes, system.get("name", ""))}
-<div class="wall">
-{ticker(projects, bbs, site, featured)}
-{kpis(projects, bbs, profile)}
-{active_view(featured)}
-{model_browser(projects)}
-{cameras(by_slug, site.get("reel", list(by_slug)))}
-{sheet_register(bbs)}
-{families()}
-{team(profile)}
-{event_log(site)}
-{requests(profile)}
-</div>
+<div class="issue">
+{running_head(profile, site, system, themes)}
+{masthead(profile, site, system)}
+{leader(profile)}
+{works(projects, featured)}
+{films(by_slug, site.get("reel", list(by_slug)))}
+{appendix(bbs)}
+{instruments()}
+{colophon(site, profile)}
 </div>
 </main>
 <footer class="foot">
-  <p class="mono">{e(system.get("name", ""))} &middot; rev {v} &middot; data date {e(fmt_date(site["date"]))}</p>
-  <p>Projects modelled at {e(profile["employer"])}. Build-up soundtracks from Mixkit. <a href="{CHANGELOG_URL}" rel="noopener">Revision history</a></p>
+  <p class="mono">{e(system.get("name", ""))} · rev {v} · data date {e(fmt_date(site["date"]))}</p>
+  <p>Projects modelled at {e(profile["employer"])}. Build-up soundtracks from Mixkit. <a href="{CHANGELOG_URL}" rel="noopener">Edition history</a></p>
 </footer>
 
 <dialog class="viewer" id="viewer" aria-labelledby="viewer-title">
