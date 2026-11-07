@@ -1,5 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "python3 scripts/portfolio.py build",
+  "outputDirectory": ".",
   "redirects": [
     {
       "source": "/media/:path*",
