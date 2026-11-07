@@ -78,10 +78,13 @@ a month, and every download counts, so:
 - **Deploys** pull media in GitHub Actions from a cache (`.github/workflows/static.yml`), so only
   changed files are downloaded.
 - **The Vercel mirror** (zxaidman-portfolio.vercel.app) builds from this repo without LFS, so
-  its copies of media are pointer files. `vercel.json` redirects every `/media/...` request to
-  the same file on GitHub Pages (which has the real files and allows cross-origin use). Do not
-  enable Git LFS on the Vercel project: each Vercel build would download all media and use up the
-  free LFS bandwidth within days. Keep `vercel.json` as it is.
+  its copies of media are pointer files. `vercel.json` runs
+  `python3 scripts/portfolio.py build` and publishes the repository root; this regenerates
+  `index.html` and design tokens from the current `VERSION` and `data/site.json` on every
+  deployment. Preserve its `buildCommand` and `outputDirectory`. The same config redirects every
+  `/media/...` request to the matching file on GitHub Pages (which has the real files and allows
+  cross-origin use). Do not enable Git LFS on the Vercel project: each Vercel build would download
+  all media and use up the free LFS bandwidth within days.
 - New or changed media is converted to LFS on commit automatically when git-lfs is installed
   (`git lfs install` once per clone). Never commit media without git-lfs installed.
 
