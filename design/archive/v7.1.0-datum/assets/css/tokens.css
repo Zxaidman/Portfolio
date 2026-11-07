@@ -1,0 +1,67 @@
+/* Generated from design/system.json by scripts/render.py. Do not edit. */
+/* Design system: Datum (since 7.1.0) */
+:root,
+[data-theme="survey"] {
+  --paper: #e9e5dc;
+  --panel: #f6f3ed;
+  --ink: #1c2528;
+  --muted: #465258;
+  --line: #aab3b2;
+  --accent: #9c3f16;
+  --on-accent: #fff6ea;
+  --viewport: #f6f3ed;
+  color-scheme: light;
+}
+[data-theme="blueprint"] {
+  --paper: #101e2d;
+  --panel: #1b3043;
+  --ink: #eaf2f5;
+  --muted: #b2c5cf;
+  --line: #486174;
+  --accent: #f2b544;
+  --on-accent: #21190b;
+  --viewport: #edf2ef;
+  color-scheme: dark;
+}
+[data-theme="field"] {
+  --paper: #f0ebdf;
+  --panel: #fffaf0;
+  --ink: #202923;
+  --muted: #4d5a4f;
+  --line: #b7ad99;
+  --accent: #8b3f16;
+  --on-accent: #fff5e9;
+  --viewport: #fffaf0;
+  color-scheme: light;
+}
+[data-theme="night-shift"] {
+  --paper: #15191b;
+  --panel: #222a2d;
+  --ink: #edf1eb;
+  --muted: #bec8bd;
+  --line: #4d5a5c;
+  --accent: #d1e36a;
+  --on-accent: #1d2511;
+  --viewport: #edf1eb;
+  color-scheme: dark;
+}
+:root {
+  --font: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --font-display: "Space Grotesk", "Arial", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --step--1: clamp(0.78rem, 0.75rem + 0.12vw, 0.88rem);
+  --step-0: clamp(0.98rem, 0.94rem + 0.22vw, 1.1rem);
+  --step-1: clamp(1.18rem, 1.08rem + 0.52vw, 1.55rem);
+  --step-2: clamp(1.65rem, 1.28rem + 1.65vw, 2.8rem);
+  --step-3: clamp(2.45rem, 1.45rem + 4.8vw, 5.8rem);
+  --step-display: clamp(3.2rem, 1.55rem + 8vw, 9rem);
+  --step-kpi: clamp(2.1rem, 1.55rem + 2.1vw, 3.35rem);
+  --gutter: clamp(18px, 3.4vw, 60px);
+  --gap: clamp(14px, 1.7vw, 26px);
+  --hdr: 0px;
+  --measure: 68ch;
+  --max: 1320px;
+  --rule: 1px;
+  --r: 4px;
+  --bar-h: 48px;
+}
