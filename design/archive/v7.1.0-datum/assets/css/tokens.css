@@ -2,14 +2,14 @@
 /* Design system: Datum (since 7.1.0) */
 :root,
 [data-theme="survey"] {
-  --paper: #e3ece9;
-  --panel: #f5f8f4;
-  --ink: #192c2b;
-  --muted: #465c58;
-  --line: #9eafaa;
-  --accent: #0a625b;
-  --on-accent: #f0fff9;
-  --viewport: #f5f8f4;
+  --paper: #efe2d9;
+  --panel: #fbf2ed;
+  --ink: #292126;
+  --muted: #5c4a50;
+  --line: #bca7a0;
+  --accent: #354f8c;
+  --on-accent: #f5f4ff;
+  --viewport: #fbf2ed;
   color-scheme: light;
 }
 [data-theme="blueprint"] {
