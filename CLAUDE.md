@@ -1,6 +1,6 @@
 # Maintaining this portfolio
 
-This file is the permanent memory for whoever maintains the site, human or AI. The scheduled job reads it on every run. Keep the README free of code and instructions; everything technical lives here.
+This file is the portfolio-specific operating manual. Every AI agent must also read the root `AGENT.md`, the universal contract for all future agents. The scheduled job reads these instructions on every run. Keep the README free of code and instructions; everything technical lives here.
 
 ## Where the history lives (never delete)
 
@@ -96,7 +96,8 @@ a month, and every download counts, so:
 # A run (what the scheduled task does; slot comes from the current IST time)
 git lfs install --skip-smudge     # media stays as LFS pointers (see "Media lives in Git LFS")
 git clone --depth 1 https://github.com/aasif-shaikh7/BIM-Portfolio ../BIM-Portfolio
-python3 scripts/portfolio.py daily --source ../BIM-Portfolio
+python3 scripts/portfolio.py cadence --calendar
+python3 scripts/portfolio.py daily --source ../BIM-Portfolio   # one morning release; cadence is automatic
 
 # Edited data/profile.json? Re-render and check:
 python3 scripts/portfolio.py build
@@ -120,15 +121,15 @@ python3 scripts/qa.py --out /tmp/qa && python3 scripts/portfolio.py archive --sh
 
 ### Update cadence and versions
 
-One scheduled task fires at **5:50 AM, 1:50 PM and 9:50 PM IST** every day (8 hours apart). `python3 scripts/portfolio.py cadence` says what this run ships; `--calendar` lists the next major days.
+One scheduled task runs at **5:50 AM IST once per day**. The afternoon and night invocations are retired; `cadence` returns `skip` for those slots. `python3 scripts/portfolio.py cadence --calendar` lists the next major days.
 
 | Slot | Kind | Version | What changes |
 |---|---|---|---|
-| 5:50 AM, major day | MAJOR `X.0.0` | Whole revamp: new layout archetype, concept, interactions and motion; a new Claude Design System |
-| 5:50 AM, other days | MINOR `x.Y.0` | A new design system: palette (≥ 3 themes), type, scale, components, one new signature motion |
-| 1:50 PM and 9:50 PM | PATCH `x.y.Z` | Theme and featured-asset change within the current design, plus new media from the source |
+| 5:50 AM every day except a major date | MINOR `x.Y.0` | A new design system: palette (≥ 3 themes), type, scale, components and one new signature motion |
+| 5:50 AM every third day from 2026-11-10 | MAJOR `X.0.0` | Whole revamp: new layout archetype, concept, interactions and motion; create a new Claude Design System |
+| 1:50 PM and 9:50 PM | RETIRED | No patch releases; these slots must not bump a version or rotate the hero |
 
-Major days are **Monday, Wednesday and Friday**. Minor runs on the other mornings (Tuesday, Thursday, Saturday, Sunday); patch runs every day, Sunday included. Each slot ships at most once: a retried job does nothing.
+The first major after v7.1.0 is **Tuesday, November 10, 2026**. Further majors occur every three calendar days (November 13, 16, 19, etc.). On a major date, the major release replaces that day's minor release; do not ship two versions on one date. Every other date ships one minor. A retry on the same date is idempotent.
 
 Read `design/INSPIRATION.md` before any minor or major. Every minor and major is snapshotted in `design/archive/` and logged in `design/HISTORY.md`. `validate` refuses a design that repeats an earlier one (name, font set or palette) or has no HISTORY row. Design changes ship only after `validate`, the WCAG contrast check, `qa.py` and the leak check all pass.
 
