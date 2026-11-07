@@ -6,13 +6,13 @@ Subcommands
 -----------
   sync      Pull projects, images and build-up videos from the source repo
             (aasif-shaikh7/BIM-Portfolio) into this site's media/ and data/.
-  refresh   Rotate the daily state (featured project, hero video, theme),
-            bump the semantic version, and append a CHANGELOG entry.
+  refresh   Publish one daily design issue (featured project, theme and hero),
+            bump SemVer, and append a CHANGELOG entry.
   build     Render index.html from data/*.json (see scripts/render.py).
   validate  Check that every JSON file parses and every referenced asset exists.
   daily     sync -> refresh -> build -> validate -> leak check (what the scheduled job runs).
   archive   Snapshot the active design into design/archive/ (minor and major designs).
-  cadence   Print this run's kind: patch, minor or major (--calendar lists the next majors).
+  cadence   Print this run's kind: skip, minor or major (--calendar lists the next majors).
 
 Design notes
 ------------
@@ -21,10 +21,10 @@ Design notes
   stays light even though the media folder is large.
 * Media is copied only when its content hash changes (no daily re-commit of
   160 MB of video). Images are re-encoded to web sizes with Pillow.
-* Versioning follows SemVer (MAJOR.MINOR.PATCH) on a fixed cadence (IST):
-    PATCH  1:50 PM and 9:50 PM daily: theme and featured-asset change, plus new media
-    MINOR  5:50 AM daily: a new design system (`daily --minor`)
-    MAJOR  5:50 AM Monday, Wednesday and Friday: whole revamp, new layout (`daily --major`)
+* Versioning follows SemVer on one daily design release at 05:50 IST:
+    MINOR  every day except major dates: new design system
+    MAJOR  every three days from 2026-11-10: whole layout revamp
+    PATCH  retired: afternoon and night slots are no-ops
 * The rotation is deterministic for a given date, so re-running the job on the
   same day is idempotent: it produces no diff and no version bump.
 
@@ -559,7 +559,7 @@ def bump(version: str, part: str) -> str:
 
 def daily_state(projects: list[dict], day: dt.date, slot: str = "morning") -> dict:
     """Deterministic rotation for a run slot: same date + slot -> same state.
-    Three slots a day (morning, afternoon, night), so each run shows something different."""
+    Only the morning slot is a release. Afternoon and night are retired no-op slots."""
     ordinal = day.toordinal() * len(SLOTS) + SLOTS.index(slot)
     with_video = [p for p in projects if p.get("video")] or projects
     featured = with_video[ordinal % len(with_video)]
@@ -582,7 +582,7 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
 
     part = "major" if force_major else ("minor" if force_minor else cadence(day, slot))
     if part == "skip":
-        log(f"refresh: {day.isoformat()} {slot} slot retired; no patch release")
+        log(f"refresh: {day.isoformat()} {slot} slot retired; no release")
         return False
     slot_id = f"{day.isoformat()} morning"
     if site.get("slot") == slot_id:
@@ -609,7 +609,7 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
     system = read_json(ROOT / "design" / "system.json", {}) or {}
     if part in ("major", "minor"):
         note = f"{system.get('name', 'New design')} design system. " + note
-    # The hero rotates on every update (patch, minor, major) through one pool of IFC models and
+    # The hero rotates on every daily release (minor or major) through one pool of IFC models and
     # project build-up videos (signature.stage_pool).
     import signature
     pool = signature.stage_pool(read_json(DATA / "stage.json", {}) or {})
