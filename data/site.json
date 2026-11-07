@@ -1,9 +1,7 @@
 {
-  "featured": "s13",
-  "theme": "risograph",
+  "featured": "s15",
+  "theme": "blueprint",
   "reel": [
-    "s13",
-    "s14",
     "s15",
     "s21",
     "s22",
@@ -15,11 +13,18 @@
     "s09",
     "s10",
     "s11",
-    "s12"
+    "s12",
+    "s13",
+    "s14"
   ],
-  "version": "7.0.0",
-  "date": "2026-10-28",
+  "version": "7.1.0",
+  "date": "2026-11-07",
   "revisions": [
+    {
+      "rev": "7.1.0",
+      "date": "2026-11-07",
+      "note": "Datum field atlas design system. Featured G+33 commercial tower model, blueprint theme, hero s12"
+    },
     {
       "rev": "7.0.0",
       "date": "2026-10-28",
@@ -39,13 +44,8 @@
       "rev": "6.1.0",
       "date": "2026-10-27",
       "note": "Precast yard design system. Featured G+8 residential building model, yard theme, hero m1"
-    },
-    {
-      "rev": "6.0.2",
-      "date": "2026-10-26",
-      "note": "Synced new project media. Featured G+6 residential building model, clash theme, hero s08"
     }
   ],
-  "slot": "2026-10-28 morning",
-  "stage_pick": 9
+  "slot": "2026-11-07 morning",
+  "stage_pick": 10
 }
