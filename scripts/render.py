@@ -1,7 +1,7 @@
 """
 render.py — builds index.html from data/profile.json, data/projects.json and data/site.json.
 
-Design: "Monograph" (v7.0.0). The coordination room is torn down and the portfolio is re-set as
+Design: "Datum" (v7.1.0). The coordination room is torn down and the portfolio is re-set as
 a printed monograph — a bound review of built work, typeset like an architectural journal:
 
   * The permanent scroll stage opens the page (signature.py), full-bleed.
@@ -37,9 +37,9 @@ SITE_URL = "https://zxaidman.github.io/Portfolio/"
 CHANGELOG_URL = "https://github.com/Zxaidman/Portfolio/blob/main/CHANGELOG.md"
 
 # The cadence line must always name the publishing rhythm in full (see the brief).
-RHYTHM = ("This monograph is reset on a schedule: a whole revamp — a new layout — every Monday, "
-          "Wednesday and Friday, a new design system on the other mornings, and the featured "
-          "project changes twice a day.")
+RHYTHM = ("This field atlas is issued once each morning: a new design system every day, with a "
+          "whole revamp every third day. The featured project and hero advance with each issue; "
+          "there are no afternoon or night patch releases.")
 
 # Contents index = the navigation. (anchor, folio numeral, title). Order is reading order.
 CONTENTS = [
@@ -117,7 +117,7 @@ def running_head(profile: dict, site: dict, system: dict, themes: dict) -> str:
         for t, th in themes.items()
     )
     return f"""<nav class="runhead" aria-label="Running head">
-  <a class="runhead-mark" href="#top"><b>Monograph</b><span class="runhead-sub mono">Zaid Shaikh · built work</span></a>
+  <a class="runhead-mark" href="#top"><b>{e(system.get("name", "Datum"))}</b><span class="runhead-sub mono">Zaid Shaikh · built work</span></a>
   <p class="runhead-now mono" aria-hidden="true"><span data-runhead>Contents</span></p>
   <div class="runhead-right">
     <div class="paper" role="group" aria-label="Paper edition" hidden><span class="mono">Paper</span>{swatches}</div>
