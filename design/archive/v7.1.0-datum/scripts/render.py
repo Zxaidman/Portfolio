@@ -1,8 +1,9 @@
 """
 render.py — builds index.html from data/profile.json, data/projects.json and data/site.json.
 
-Design: "Datum" (v7.1.0). The coordination room is torn down and the portfolio is re-set as
-a printed monograph — a bound review of built work, typeset like an architectural journal:
+Design: "Datum" (v7.1.0). The site is styled as a surveyor's field atlas for built work:
+a technical record assembled from levels, section cuts, setting-out marks and site annotations.
+The Monograph reading order is retained, but its materials and typography now belong to the drawing office:
 
   * The permanent scroll stage opens the page (signature.py), full-bleed.
   * After it, "the issue": a slim running-head bar (publication wordmark, the section you are
