@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python3 scripts/portfolio.py build",
+  "buildCommand": "python3 scripts/portfolio.py build && node --check assets/js/signature.js && node --check assets/js/main.js",
   "outputDirectory": ".",
   "redirects": [
     {
