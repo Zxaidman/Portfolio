@@ -88,6 +88,33 @@ a month, and every download counts, so:
 - New or changed media is converted to LFS on commit automatically when git-lfs is installed
   (`git lfs install` once per clone). Never commit media without git-lfs installed.
 
+### Performance: images, video and first load
+
+Keep the current static-site architecture. Optimize the existing pipeline before adding an external media platform.
+
+Current issues found in the source:
+- `assets/js/signature.js` calls `preload()` during initialization. That progressively downloads the entire active scroll-stage frame sequence (up to 120 frames) in batches, even before the visitor scrolls through it. This competes with first-screen images and fonts.
+- The stage poster in `scripts/signature.py` is emitted with `loading="lazy"` although it belongs to the first-screen hero. The real hero/LCP image must be discoverable and eager.
+- `scripts/portfolio.py` creates 1800px gallery JPEGs and 720px thumbnails; preserve separate preview and full-view sizes. Do not send 1800px originals to card grids.
+- `scripts/portfolio.py` copies unmasked source videos without re-encoding. Validate actual file sizes and encoding before assuming they are web-ready.
+- Film cards currently attach and play the full video on hover. A quick mouse pass can initiate multiple downloads and retain buffered data after hover.
+
+Implementation order:
+1. Measure a cold load on a real mobile connection and desktop using Chrome DevTools/ Lighthouse or PageSpeed Insights. Record request waterfall, LCP element, image/video transfer bytes, TTFB, LCP, INP and CLS. Test a normal theme and the full scroll stage. Do not infer file-size problems from dimensions alone.
+2. Fix first-screen priority: eager-load the actual hero/LCP poster or image, set `fetchpriority="high"` only on that one resource, provide intrinsic dimensions and keep fonts non-blocking with a sensible fallback.
+3. Make scroll-stage loading demand-driven. Keep the poster as the immediate fallback; load only the first useful frames initially, then frames near the user's current scroll position with a small bounded concurrency/look-ahead window. Do not fetch all 120 frames at startup. Avoid retaining the entire sequence in memory; use a bounded cache if measurement shows memory pressure. Preserve frame scrubbing, resize behavior, reduced-motion and no-JS fallback.
+4. Keep project cards on thumbnails and full-size files only inside the gallery. Emit correct `srcset`/`sizes` for real display widths and DPR. Prefer WebP/AVIF where build support and measured savings justify them, with a reliable JPEG fallback; keep visual comparison checks for fine BIM linework and text.
+5. Replace hover-triggered full video downloads with poster-first playback initiated by explicit click/tap. Keep `preload="none"`; never make a hover or hidden card start video transfer. If a preview is retained, it must be opt-in, single-instance, and disabled for reduced-motion/data-saving users.
+6. Normalize video files only after auditing them: H.264 MP4 with fast-start for compatibility, sensible 720p/1080p renditions and tested CRF/bitrate; retain source masters outside the deployed media path where feasible. Use HLS/adaptive bitrate only when measured video length, file size or variable-network playback justifies the added packaging and player complexity.
+7. Add long-lived immutable caching only to versioned/content-hashed media URLs. Avoid cache-busting query strings on stable media and avoid redirect chains where possible. Keep the Git LFS constraint: do not enable LFS on Vercel. The current Vercel media redirect to GitHub Pages is a known extra cross-origin hop; benchmark it before replacing it.
+8. Re-run image, video, keyboard, mobile, reduced-motion, data-saving and broken-media QA after any change. Check the Network panel for duplicate requests and ensure one video cannot leave multiple previews consuming bandwidth.
+
+Targets at the 75th percentile of real-user mobile visits: LCP ≤ 2.5 s, INP ≤ 200 ms and CLS ≤ 0.1. Also track total bytes before first interaction and the number of media requests before the visitor reaches the relevant section. Build success is not a performance pass.
+
+### Media platform decision
+
+Do not introduce Cloudinary, Cloudflare Images/Stream, Mux, a JavaScript image framework or a custom media service by default. First right-size files, reduce eager requests and use native browser capabilities. If the measured origin/redirect/cache path remains the bottleneck, evaluate one managed edge-media option with a small proof of concept and compare cost, cache-hit ratio, mobile transfer time and operational complexity. Preserve a simple static site and one source of truth.
+
 ### Requirements
 
 - Python 3.9+
