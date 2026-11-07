@@ -79,3 +79,5 @@ Rules for every design:
 - Accessibility: WCAG AA contrast (enforced), visible focus, keyboard-usable viewer, `prefers-reduced-motion` turns motion off, works at 390px wide.
 - Performance: no heavy frameworks; CDN scripts only if pinned to an exact version; videos lazy-load.
 - Must pass validate, the leak check and `scripts/qa.py` before it ships.
+
+- 2026-11-07 (7.1.0): The [Save.design 2026 audit](https://save.design/web-design-trends-2026) reports editorial treatments remain common across recently captured sites, while 3D imagery has grown; [Webflow's 2026 trend review](https://webflow.com/blog/web-design-trends-2026) argues for human craft and concise copy, and [Figma's 2026 guide](https://www.figma.com/resource-library/web-design-trends/) highlights expressive typography, dark themes and motion. Used: a surveyor's field-atlas language—technical coordinates, registration marks, a restrained datum accent and a single lightweight survey-sweep motion rather than a generic bento or dashboard layout.
