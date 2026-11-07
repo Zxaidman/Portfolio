@@ -93,35 +93,45 @@ a month, and every download counts, so:
 ### Common tasks
 
 ```bash
-# A run (what the scheduled task does; slot comes from the current IST time)
-git lfs install --skip-smudge     # media stays as LFS pointers (see "Media lives in Git LFS")
+# Every human or AI agent works on main only
+git switch main
+git pull --ff-only origin main
+
+# Scheduled release: upstream source stays in a separate checkout
+git lfs install --skip-smudge     # keep this portfolio LFS assets as pointers
 git clone --depth 1 https://github.com/aasif-shaikh7/BIM-Portfolio ../BIM-Portfolio
 python3 scripts/portfolio.py cadence --calendar
-python3 scripts/portfolio.py daily --source ../BIM-Portfolio   # one morning release; cadence is automatic
+python3 scripts/portfolio.py daily --source ../BIM-Portfolio
+
+# Validate, inspect the diff, then commit and push directly to main
+python3 scripts/portfolio.py build
+python3 scripts/portfolio.py validate
+python3 scripts/portfolio.py media --qa
+python3 scripts/qa.py --out /tmp/qa
+git status --short
+git diff --check
+# Stage only the intended files, then:
+git commit -m "vX.Y.0: minor: <design name>"
+git push origin main
 
 # Edited data/profile.json? Re-render and check:
 python3 scripts/portfolio.py build
+python3 scripts/portfolio.py validate
 
 # New hero model from an IFC (never commit the IFC): see tools/ifc-stage/README.md
 
-# Add Zaid's clip after the build (8-10 s, steady camera); needs ffmpeg, numpy, scipy:
+# Add Zaid clip after the build (8-10 s, steady camera); needs ffmpeg, numpy, scipy:
 python3 scripts/stage.py person path/to/zaid.mp4 --frames 120 && python3 scripts/portfolio.py build
 
 # Preview locally
 python3 -m http.server 8000      # then open http://localhost:8000
 
-# What does this run ship? (patch | minor | major)
+# Check the release kind and upcoming major dates
 python3 scripts/portfolio.py cadence --calendar
-
-# New design system (minor) or revamp (major), after changing the design files:
-python3 scripts/portfolio.py daily --source ../BIM-Portfolio --minor   # or --major
-python3 scripts/portfolio.py media --qa      # pull just the media the screenshots need
-python3 scripts/qa.py --out /tmp/qa && python3 scripts/portfolio.py archive --shots /tmp/qa
 ```
-
 ### Update cadence and versions
 
-One scheduled task runs at **5:50 AM IST once per day**. The afternoon and night invocations are retired; `cadence` returns `skip` for those slots. `python3 scripts/portfolio.py cadence --calendar` lists the next major days.
+One scheduled task runs at **5:50 AM IST once per day**. All work is performed directly on `main` and pushed after validation; agents must not create branches or pull requests. The afternoon and night invocations are retired; `cadence` returns `skip` for those slots. `python3 scripts/portfolio.py cadence --calendar` lists the next major days.
 
 | Slot | Kind | Version | What changes |
 |---|---|---|---|
