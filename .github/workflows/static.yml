@@ -44,6 +44,8 @@ jobs:
           restore-keys: lfs-
       - name: Pull LFS media
         run: git lfs pull && rm -f .lfs-assets-id
+      - name: Compile Python scripts
+        run: python3 -m compileall -q scripts
       - name: Build generated site (index.html and design tokens)
         run: python3 scripts/portfolio.py build
       - name: Validate site (blocks deploy if data or assets are broken)
