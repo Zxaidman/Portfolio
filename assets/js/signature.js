@@ -3,9 +3,7 @@
      stage():  pinned scroll stage. One scroll progress p (0 → 1 across the section)
                drives everything: frame sequence on a canvas, hero fade, HUD parallax
                cards, the build meter (+ the level being placed), the camera push-in and
-               the viewport that expands into the showcase. Frames are preloaded
-               progressively (first, last, then every other frame, then the rest), so it
-               works before everything loads. Segments marked "tint" (the IFC model, rendered
+               the viewport that expands into the showcase. Frames load around the current scroll position with bounded concurrency and a small decoded-frame cache. Segments marked "tint" (the IFC model, rendered
                as neutral clay) are recoloured to --sig-model-tint, keeping their shading.
      showcaseTabs(): keyboard-accessible tabs inside the showcase.
      skills(): filter chips + cursor-following glow on the skill cards.
