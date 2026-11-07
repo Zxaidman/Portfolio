@@ -270,9 +270,9 @@ def feature_plate(p: dict, i: int) -> str:
              f'<span class="feat-meta mono">{e(p["kind"])}</span>'
              f'<span class="feat-foot mono"><span>G+{fl - 1}</span><span>{e(p["location"] or "—")}</span>'
              f'<span>{len(p["images"])} plates{" + film" if p.get("video") else ""} ↗</span></span></span>')
-    return (f'<li class="feature" data-type="{e(p["type"])}" data-i="{i}">'
-            f'{opener(p["slug"], im["src"], inner, "feature-link", label=f"{p["title"]}: G+{fl - 1}, {len(p["images"])} plates")}'
-            f'</li>')
+    label = f"{p['title']}: G+{fl - 1}, {len(p['images'])} plates"
+    link = opener(p["slug"], im["src"], inner, "feature-link", label=label)
+    return f'<li class="feature" data-type="{e(p["type"])}" data-i="{i}">{link}</li>'
 
 
 def works(projects: list[dict], featured: dict) -> str:
