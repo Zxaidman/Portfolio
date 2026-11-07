@@ -1008,6 +1008,9 @@ def main(argv: list[str] | None = None) -> int:
         _, secrets = cmd_sync(args.source.resolve())
         return max(cmd_validate(), leak_check(secrets))
     release_kind = "major" if args.major else ("minor" if args.minor else cadence(day, slot))
+    if release_kind == "skip":
+        log(f"release: {day.isoformat()} {slot} slot retired; no sync, build or version change")
+        return 0
     if args.cmd == "refresh":
         shipped = cmd_refresh(day, content_changed=False, force_major=args.major, force_minor=args.minor, slot=slot)
         cmd_build()
