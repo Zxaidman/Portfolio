@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zaid Shaikh portfolio — main.js (v7.0.0 "Monograph")
+   Zaid Shaikh portfolio — main.js (v7.1.0 "Datum")
    Progressive enhancement only: every opener is a real link to its image or
    video, every section reads top to bottom, and the page works without JS.
    Modules:
