@@ -1,0 +1,75 @@
+{
+  "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
+  "name": "Datum",
+  "introduced": "7.1.0",
+  "concept": "Datum is a surveyor's field atlas for built work: a technical record assembled from setting-out marks, levels, section cuts and site annotations. The existing editorial monograph structure remains intact, but its visual language shifts to the drawing office: a restrained paper-and-graphite base, one burnt-survey-orange datum accent, blueprint and night-shift editions, square registration marks, calibrated rules, compact coordinate metadata and crisp sans-serif typography. Space Grotesk carries headings; IBM Plex Sans handles reading; IBM Plex Mono is reserved for levels, drawing references, dimensions and revision data. The new signature motion is a survey sweep: a thin datum line scans each section heading as it enters the reading field, like a total station establishing a reference line. The motion is CSS view-timeline enhanced, static by default, and disabled under reduced motion. The scroll-stage BIM signature and skill cards remain permanent and read only design tokens.",
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+    "body": "\"IBM Plex Sans\", \"Segoe UI\", Arial, sans-serif",
+    "display": "\"Space Grotesk\", \"Arial\", sans-serif",
+    "mono": "\"IBM Plex Mono\", \"SFMono-Regular\", Consolas, monospace"
+  },
+  "scale": {
+    "--step--1": "clamp(0.78rem, 0.75rem + 0.12vw, 0.88rem)",
+    "--step-0": "clamp(0.98rem, 0.94rem + 0.22vw, 1.1rem)",
+    "--step-1": "clamp(1.18rem, 1.08rem + 0.52vw, 1.55rem)",
+    "--step-2": "clamp(1.65rem, 1.28rem + 1.65vw, 2.8rem)",
+    "--step-3": "clamp(2.45rem, 1.45rem + 4.8vw, 5.8rem)",
+    "--step-display": "clamp(3.2rem, 1.55rem + 8vw, 9rem)",
+    "--step-kpi": "clamp(2.1rem, 1.55rem + 2.1vw, 3.35rem)",
+    "--gutter": "clamp(18px, 3.4vw, 60px)",
+    "--gap": "clamp(14px, 1.7vw, 26px)",
+    "--hdr": "0px",
+    "--measure": "68ch",
+    "--max": "1320px",
+    "--rule": "1px",
+    "--r": "4px",
+    "--bar-h": "48px"
+  },
+  "themes": {
+    "survey": {
+      "scheme": "light",
+      "paper": "#e9e5dc",
+      "panel": "#f6f3ed",
+      "ink": "#1c2528",
+      "muted": "#465258",
+      "line": "#aab3b2",
+      "accent": "#9c3f16",
+      "on-accent": "#fff6ea",
+      "viewport": "#f6f3ed"
+    },
+    "blueprint": {
+      "scheme": "dark",
+      "paper": "#101e2d",
+      "panel": "#1b3043",
+      "ink": "#eaf2f5",
+      "muted": "#b2c5cf",
+      "line": "#486174",
+      "accent": "#f2b544",
+      "on-accent": "#21190b",
+      "viewport": "#edf2ef"
+    },
+    "field": {
+      "scheme": "light",
+      "paper": "#f0ebdf",
+      "panel": "#fffaf0",
+      "ink": "#202923",
+      "muted": "#4d5a4f",
+      "line": "#b7ad99",
+      "accent": "#8b3f16",
+      "on-accent": "#fff5e9",
+      "viewport": "#fffaf0"
+    },
+    "night-shift": {
+      "scheme": "dark",
+      "paper": "#15191b",
+      "panel": "#222a2d",
+      "ink": "#edf1eb",
+      "muted": "#bec8bd",
+      "line": "#4d5a5c",
+      "accent": "#d1e36a",
+      "on-accent": "#1d2511",
+      "viewport": "#edf1eb"
+    }
+  }
+}
