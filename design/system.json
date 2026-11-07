@@ -2,7 +2,7 @@
   "_readme": "The active design system. scripts/render.py (via portfolio.py build) turns this into assets/css/tokens.css. A MINOR replaces this file and restyles assets/css/main.css; a MAJOR also rewrites scripts/render.py and assets/js/main.js. The first theme listed is the default. validate enforces WCAG contrast on every theme. fonts.display and fonts.mono are optional extra stacks (emitted as --font-display and --font-mono).",
   "name": "Datum",
   "introduced": "7.1.0",
-  "concept": "Datum is a surveyor's field atlas for built work: a technical record assembled from setting-out marks, levels, section cuts and site annotations. The existing editorial monograph structure remains intact, but its visual language shifts to the drawing office: a restrained paper-and-graphite base, one burnt-survey-orange datum accent, blueprint and night-shift editions, square registration marks, calibrated rules, compact coordinate metadata and crisp sans-serif typography. Space Grotesk carries headings; IBM Plex Sans handles reading; IBM Plex Mono is reserved for levels, drawing references, dimensions and revision data. The new signature motion is a survey sweep: a thin datum line scans each section heading as it enters the reading field, like a total station establishing a reference line. The motion is CSS view-timeline enhanced, static by default, and disabled under reduced motion. The scroll-stage BIM signature and skill cards remain permanent and read only design tokens.",
+  "concept": "Datum is a surveyor's field atlas for built work: a technical record assembled from setting-out marks, levels, section cuts and site annotations. The existing editorial monograph structure remains intact, but its visual language shifts to the drawing office: a restrained paper-and-graphite base, one deep setting-out indigo datum accent, blueprint and night-shift editions, square registration marks, calibrated rules, compact coordinate metadata and crisp sans-serif typography. Space Grotesk carries headings; IBM Plex Sans handles reading; IBM Plex Mono is reserved for levels, drawing references, dimensions and revision data. The new signature motion is a survey sweep: a thin datum line scans each section heading as it enters the reading field, like a total station establishing a reference line. The motion is CSS view-timeline enhanced, static by default, and disabled under reduced motion. The scroll-stage BIM signature and skill cards remain permanent and read only design tokens.",
   "fonts": {
     "stylesheet": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&display=swap",
     "body": "\"IBM Plex Sans\", \"Segoe UI\", Arial, sans-serif",
@@ -29,14 +29,14 @@
   "themes": {
     "survey": {
       "scheme": "light",
-      "paper": "#e3ece9",
-      "panel": "#f5f8f4",
-      "ink": "#192c2b",
-      "muted": "#465c58",
-      "line": "#9eafaa",
-      "accent": "#0a625b",
-      "on-accent": "#f0fff9",
-      "viewport": "#f5f8f4"
+      "paper": "#efe2d9",
+      "panel": "#fbf2ed",
+      "ink": "#292126",
+      "muted": "#5c4a50",
+      "line": "#bca7a0",
+      "accent": "#354f8c",
+      "on-accent": "#f5f4ff",
+      "viewport": "#fbf2ed"
     },
     "blueprint": {
       "scheme": "dark",
