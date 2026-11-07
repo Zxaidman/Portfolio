@@ -71,13 +71,13 @@
     let useMobile = mobileSet();
     const total = segments.reduce((n, s) => n + s.count, 0);
     const frames = [];  // {seg, i, img}
-    segments.forEach((s) => { for (let i = 1; i <= s.count; i++) frames.push({ seg: s, i, img: null }); });
+    segments.forEach((s) => { for (let i = 1; i <= s.count; i++) frames.push({ seg: s, i, img: null, loading: false, failed: false, requestGen: 0 }); });
     const url = (f) => {
       const set = useMobile ? f.seg.mobile : f.seg.desktop;
       return `${set.dir}/f${String(f.i).padStart(3, "0")}.webp`;
     };
 
-    const st = { p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, active: true, raf: 0, gen: 0, phase: "" };
+    const st = { p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, drawnIndex: -1, active: true, raf: 0, gen: 1, hasScrolled: false, lastWanted: 0, direction: 1, phase: "" };
 
     // ---------------- theme tint ----------------
     // Resolve --sig-model-tint to a colour the canvas understands (any CSS colour syntax).
@@ -130,40 +130,120 @@
       return buf;
     }
 
-    // ---------------- loading ----------------
-    function loadFrame(idx, gen) {
+    // ---------------- demand-driven frame loading ----------------
+    const maxConcurrentFrames = saveData ? 1 : 4;
+    const maxCachedFrames = saveData ? 6 : 14;
+    let frameQueue = [];
+    let activeFrameLoads = 0;
+
+    function loadFrame(idx, generation) {
       return new Promise((resolve) => {
         const f = frames[idx];
-        if (f.img) return resolve();
+        if (!f || f.img || f.loading || f.failed) return resolve(false);
+
+        f.loading = true;
+        f.requestGen = generation;
         const img = new Image();
         img.decoding = "async";
         img.onload = () => {
-          if (gen === st.gen) {
-            f.img = img;
-            if (idx === wanted()) draw(true);
+          if (f.requestGen === generation) {
+            f.loading = false;
+            if (generation === st.gen) {
+              f.img = img;
+              if (idx === wanted()) {
+                draw(true);
+                section.classList.remove("sig-waiting");
+              }
+              trimFrameCache(wanted());
+            }
           }
-          resolve();
+          resolve(true);
         };
-        img.onerror = () => resolve();
+        img.onerror = () => {
+          if (f.requestGen === generation) {
+            f.loading = false;
+            if (generation === st.gen) f.failed = true;
+          }
+          resolve(false);
+        };
         img.src = url(f);
       });
     }
-    async function preload() {
-      const gen = ++st.gen;
-      frames.forEach((f) => { f.img = null; });
-      await Promise.all([loadFrame(0, gen), loadFrame(total - 1, gen)]);
-      section.classList.remove("sig-waiting");
-      draw(true);
-      const step = saveData ? 3 : 1;
-      const order = [];
-      for (let i = 1; i < total - 1; i += 2 * step) order.push(i);
-      if (!saveData) for (let i = 2; i < total - 1; i += 2) order.push(i);
-      // Load the frames nearest the current position first.
-      const here = wanted();
-      order.sort((a, b) => Math.abs(a - here) - Math.abs(b - here));
-      for (let k = 0; k < order.length && gen === st.gen; k += 6) {
-        await Promise.all(order.slice(k, k + 6).map((i) => loadFrame(i, gen)));
+
+    function trimFrameCache(center) {
+      const loaded = [];
+      frames.forEach((f, idx) => { if (f.img) loaded.push(idx); });
+      if (loaded.length <= maxCachedFrames) return;
+
+      loaded.sort((a, b) => Math.abs(a - center) - Math.abs(b - center));
+      const keep = new Set(loaded.slice(0, maxCachedFrames));
+      if (st.drawnIndex >= 0 && frames[st.drawnIndex]?.img) keep.add(st.drawnIndex);
+      loaded.forEach((idx) => { if (!keep.has(idx)) frames[idx].img = null; });
+    }
+
+    function pumpFrames() {
+      while (activeFrameLoads < maxConcurrentFrames && frameQueue.length) {
+        const idx = frameQueue.shift();
+        const f = frames[idx];
+        if (!f || f.img || f.loading || f.failed) continue;
+
+        activeFrameLoads += 1;
+        const generation = st.gen;
+        loadFrame(idx, generation).finally(() => {
+          activeFrameLoads -= 1;
+          trimFrameCache(wanted());
+          pumpFrames();
+        });
       }
+    }
+
+    function scheduleFrames() {
+      if (!total) return;
+      const center = wanted();
+      if (center !== st.lastWanted) {
+        st.direction = center > st.lastWanted ? 1 : -1;
+        st.lastWanted = center;
+      }
+
+      const ordered = [];
+      const seen = new Set();
+      const add = (idx) => {
+        if (idx < 0 || idx >= total || seen.has(idx)) return;
+        seen.add(idx);
+        const f = frames[idx];
+        if (f && !f.img && !f.loading && !f.failed) ordered.push(idx);
+      };
+
+      // On first paint, request only the first useful frame. Nearby frames are
+      // fetched only after the visitor starts scrolling the stage.
+      if (!st.hasScrolled) {
+        add(0);
+      } else {
+        const ahead = saveData ? 2 : 6;
+        const behind = saveData ? 1 : 3;
+        add(center);
+        for (let step = 1; step <= ahead; step++) add(center + st.direction * step);
+        for (let step = 1; step <= behind; step++) add(center - st.direction * step);
+      }
+
+      // Replace stale queued work after fast scrolls; in-flight requests remain bounded.
+      frameQueue = ordered;
+      trimFrameCache(center);
+      pumpFrames();
+    }
+
+    function restartFrames() {
+      st.gen += 1;
+      frameQueue = [];
+      frames.forEach((f) => {
+        f.img = null;
+        f.loading = false;
+        f.failed = false;
+        f.requestGen = st.gen;
+      });
+      st.drawnIndex = -1;
+      st.drawnKey = "";
+      scheduleFrames();
     }
 
     // ---------------- geometry ----------------
@@ -187,8 +267,9 @@
       canvas.width = Math.round(st.vw * st.dpr);
       canvas.height = Math.round(st.vh * st.dpr);
       st.drawn = -1;
+      st.drawnKey = "";
       const m = mobileSet();
-      if (m !== useMobile) { useMobile = m; preload(); }
+      if (m !== useMobile) { useMobile = m; restartFrames(); }
     }
 
     function draw(force = false) {
@@ -200,6 +281,7 @@
       st.drawnKey = key;
       const f = frames[idx];
       const img = f.img;
+      st.drawnIndex = idx;
       const src = f.seg.tint ? tintedImage(idx, img) : img;
       const { vw, vh, dpr } = st;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -303,21 +385,24 @@
       st.p = progress();
       place();
       draw();
+      if (st.hasScrolled) scheduleFrames();
     }
     const request = () => { if (st.active && !st.raf) st.raf = requestAnimationFrame(frame); };
 
     // Only work while the stage is near the viewport.
     new IntersectionObserver(([en]) => { st.active = en.isIntersecting; if (st.active) request(); },
       { rootMargin: "50% 0px" }).observe(section);
-    window.addEventListener("scroll", request, { passive: true });
+    window.addEventListener("scroll", () => { st.hasScrolled = true; request(); }, { passive: true });
     window.addEventListener("resize", () => { size(); request(); });
     window.addEventListener("orientationchange", () => { size(); request(); });
 
     // Links into the stage (e.g. "#top") land on the hero; the showcase link lands expanded.
     readTint();
     size();
+    st.p = progress();
+    st.hasScrolled = window.scrollY > 0;
     frame();
-    preload();
+    scheduleFrames();
   }
 
   function showcaseTabs() {
