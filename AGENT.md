@@ -53,6 +53,32 @@ The current cadence starts at **v7.1.0 on 2026-11-07**:
 
 The implementation is authoritative: `python3 scripts/portfolio.py cadence --date YYYY-MM-DD --slot morning --calendar`. Non-morning slots must return `skip`. Do not override the cadence with manual flags unless the owner requests it.
 
+## Product quality bar — simplicity first
+
+Target the clarity and restraint of Linear and Apple Notes; do not imitate their branding or add visual complexity to appear sophisticated.
+
+- Give every screen one clear purpose and one clear hierarchy. The primary content or action must be understandable from layout and labels alone.
+- Remove taglines, filler introductions, helper paragraphs, duplicate headings and secondary labels when they repeat information. Keep metadata only when it helps identify, compare or act on the content.
+- If a screen needs explanatory copy to make its controls or hierarchy understandable, simplify the layout or rename the control instead of adding more copy.
+- Prefer fewer sections, fewer states, fewer dependencies and fewer abstractions. Do not introduce a framework, library, service or design pattern when native HTML, CSS, JavaScript or the existing build pipeline is sufficient.
+- Make UX, DX and AX improve together: accessible semantic HTML, keyboard support, predictable behavior, responsive layout, clear source-of-truth data, readable code and concise maintenance instructions.
+- Every interaction must have a clear user benefit. Avoid decorative motion, hover-only functionality, redundant controls and hidden behaviors. Respect reduced motion and data-saving preferences.
+- Preserve existing content, keyboard behavior, confidentiality, responsive behavior and accessibility. Simplicity is not permission to remove necessary project information or functionality.
+- Before adding anything, ask whether it reduces user effort or improves clarity enough to justify its implementation and maintenance cost. Prefer removing complexity over adding options.
+
+## Performance and media delivery
+
+Performance is part of the product, not a final polish task.
+
+- Prioritize the first meaningful screen. Load only its true Largest Contentful Paint asset eagerly, with intrinsic dimensions and high fetch priority where appropriate. Never lazy-load the LCP asset or mark every image high priority.
+- Defer below-the-fold images and videos. Use intrinsic width/height, responsive image candidates with accurate `sizes`, and modern compressed formats with a safe fallback.
+- Do not preload an entire image sequence, gallery, video collection or hidden tab at startup. Scroll-controlled frames must load on demand near the active stage, with bounded concurrency and a bounded look-ahead window.
+- Video must not download until it is near the viewport or the visitor explicitly starts/previews it. Use a small poster, `preload="none"` for user-initiated playback, and never allow multiple hover previews to compete for bandwidth.
+- Keep media delivery cacheable and close to users. Avoid unnecessary cross-origin redirects and repeated fetches. Preserve the Git LFS and Vercel media constraints documented in `CLAUDE.md`; do not enable LFS on Vercel as a shortcut.
+- Do not trade quality away blindly. Keep full-resolution originals for opened project views, but deliver right-sized previews for cards and mobile screens.
+- Measure before and after on mobile and desktop, including a throttled mobile connection. Track Core Web Vitals targets: LCP ≤ 2.5 s, INP ≤ 200 ms and CLS ≤ 0.1. Report real measurements; never claim a performance pass from build success alone.
+- Keep the implementation boring and observable: native browser loading where possible, small bounded JavaScript, no eager background downloads, no unnecessary media service and no unverified performance claims.
+
 ## Design-system requirements
 
 - Research current references before every MINOR or MAJOR. Record the date and one or two real URLs in `design/INSPIRATION.md` and the new `design/HISTORY.md` row. Never invent references.
