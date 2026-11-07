@@ -230,7 +230,7 @@ def stage_html(profile: dict, projects: list[dict], opener, anchor: str = "top")
 <section class="sig-stage" id="{e(anchor)}" data-sig="stage" aria-labelledby="sig-name">
   <script type="application/json" id="sig-stage-data">{manifest}</script>
   <div class="sig-pin">
-    <img class="sig-poster" src="{e(first.get("poster") or f'{first["desktop"]["dir"]}/f{first["count"]:03d}.webp')}" alt="{e(first.get("alt") or POSTER_ALT.get(first["id"], POSTER_ALT["buildup"]))}" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="lazy">
+    <img class="sig-poster" src="{e(first.get("poster") or f'{first["desktop"]["dir"]}/f{first["count"]:03d}.webp')}" alt="{e(first.get("alt") or POSTER_ALT.get(first["id"], POSTER_ALT["buildup"]))}" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="eager" decoding="async">
     <canvas class="sig-canvas" aria-hidden="true"></canvas>
     <div class="sig-hero">
       <div class="sig-hero-top"><span>{e(st["eyebrow"])}</span>{status}</div>
