@@ -69,13 +69,21 @@
     let useMobile = mobileSet();
     const total = segments.reduce((n, s) => n + s.count, 0);
     const frames = [];  // {seg, i, img}
-    segments.forEach((s) => { for (let i = 1; i <= s.count; i++) frames.push({ seg: s, i, img: null, loading: false, failed: false, requestGen: 0 }); });
+    segments.forEach((s) => {
+      for (let i = 1; i <= s.count; i++) {
+        frames.push({ seg: s, i, img: null, loading: false, failed: false, requestGen: 0 });
+      }
+    });
     const url = (f) => {
       const set = useMobile ? f.seg.mobile : f.seg.desktop;
       return `${set.dir}/f${String(f.i).padStart(3, "0")}.webp`;
     };
 
-    const st = { p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, drawnIndex: -1, active: false, raf: 0, gen: 1, hasScrolled: false, lastWanted: 0, direction: 1, phase: "" };
+    const st = {
+      p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, drawnIndex: -1,
+      active: false, raf: 0, gen: 1, hasScrolled: false,
+      lastWanted: 0, direction: 1, phase: ""
+    };
 
     // ---------------- theme tint ----------------
     // Resolve --sig-model-tint to a colour the canvas understands (any CSS colour syntax).
@@ -237,6 +245,7 @@
       });
       st.drawnIndex = -1;
       st.drawnKey = "";
+      section.classList.add("sig-waiting");
       scheduleFrames();
     }
 
