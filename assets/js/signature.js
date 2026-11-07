@@ -75,7 +75,7 @@
       return `${set.dir}/f${String(f.i).padStart(3, "0")}.webp`;
     };
 
-    const st = { p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, drawnIndex: -1, active: true, raf: 0, gen: 1, hasScrolled: false, lastWanted: 0, direction: 1, phase: "" };
+    const st = { p: 0, vw: 0, vh: 0, dpr: 1, drawn: -1, drawnIndex: -1, active: false, raf: 0, gen: 1, hasScrolled: false, lastWanted: 0, direction: 1, phase: "" };
 
     // ---------------- theme tint ----------------
     // Resolve --sig-model-tint to a colour the canvas understands (any CSS colour syntax).
@@ -196,7 +196,9 @@
     }
 
     function scheduleFrames() {
-      if (!total) return;
+      // Keep the initial load poster-only. Fetch frames only after the visitor scrolls
+      // and while the stage is near the viewport.
+      if (!total || !st.active || !st.hasScrolled) return;
       const center = wanted();
       if (center !== st.lastWanted) {
         st.direction = center > st.lastWanted ? 1 : -1;
@@ -212,17 +214,11 @@
         if (f && !f.img && !f.loading && !f.failed) ordered.push(idx);
       };
 
-      // On first paint, request only the first useful frame. Nearby frames are
-      // fetched only after the visitor starts scrolling the stage.
-      if (!st.hasScrolled) {
-        add(0);
-      } else {
-        const ahead = saveData ? 2 : 6;
-        const behind = saveData ? 1 : 3;
-        add(center);
-        for (let step = 1; step <= ahead; step++) add(center + st.direction * step);
-        for (let step = 1; step <= behind; step++) add(center - st.direction * step);
-      }
+      const ahead = saveData ? 2 : 6;
+      const behind = saveData ? 1 : 3;
+      add(center);
+      for (let step = 1; step <= ahead; step++) add(center + st.direction * step);
+      for (let step = 1; step <= behind; step++) add(center - st.direction * step);
 
       // Replace stale queued work after fast scrolls; in-flight requests remain bounded.
       frameQueue = ordered;
