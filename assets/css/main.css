@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zaid Shaikh portfolio — main.css  ·  Design: "Monograph" (v7.0.0)
+   Zaid Shaikh portfolio — main.css  ·  Design: "Datum" (v7.1.0)
    A printed architectural monograph: masthead, Contents index, an editorial
    measure of features and plates, hairline rules, folios and a colophon.
    Uses design tokens only (assets/css/tokens.css from design/system.json), so
@@ -396,3 +396,76 @@ img, video { max-width: 100%; height: auto; display: block; }
   .feature-link:hover .feat-img img { transform: none; }
   .film-screen video { transition: none; }
 }
+
+
+/* DATUM / 7.1.0 — FIELD ATLAS LANGUAGE */
+:root {
+  --datum-grid: color-mix(in srgb, var(--ink) 7%, transparent);
+  --datum-shadow: 0 2px 0 color-mix(in srgb, var(--ink) 16%, transparent),
+                  0 16px 34px color-mix(in srgb, var(--ink) 11%, transparent);
+}
+body {
+  background-color: var(--paper);
+  background-image: linear-gradient(to right, var(--datum-grid) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--datum-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.runhead { border-bottom: 1px solid var(--ink); background: color-mix(in srgb, var(--paper) 94%, transparent); backdrop-filter: blur(14px); }
+.runhead-mark b { font-family: var(--font-display); font-size: 1.12rem; font-weight: 700; letter-spacing: -.065em; text-transform: uppercase; }
+.runhead-sub, .runhead-now, .runhead-contents, .mh-issue, .sec-folio, .plate-cap, .feat-no, .feat-meta, .feat-foot, .film-cap, .app-cap, .edition-list, .foot .mono { letter-spacing: .055em; text-transform: uppercase; }
+.mh-issue { border-top: 2px solid var(--ink); padding-top: 12px; font-weight: 600; }
+.mh-name { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: -.075em; line-height: .88; }
+.mh-role { max-width: 24ch; font-family: var(--font-mono); text-transform: uppercase; }
+.mh-standfirst { max-width: 18ch; font-family: var(--font-display); font-weight: 600; letter-spacing: -.045em; }
+.mh-intro, .sec-note, .lead-sum { color: var(--ink-soft); }
+.contents, .sec, .lead, .lead-copy, .lead-plate, .leader-aside { border-color: var(--line); }
+.contents { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.contents-head h2, .sec-title { font-family: var(--font-display); letter-spacing: -.055em; }
+.toc a { border-bottom: 1px solid var(--line); }
+.toc-no, .toc-fol, .sec-no, .plate-no, .app-no { color: var(--accent); }
+.sec-head { position: relative; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.sec-head::after { content: ""; display: block; position: absolute; left: 0; bottom: -2px; width: 100%; height: 3px; background: var(--accent); transform: scaleX(1); transform-origin: left center; }
+.lead { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); gap: clamp(20px, 3vw, 44px); }
+.lead-plate, .feature-link, .film-link, .app-link { border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); box-shadow: var(--datum-shadow); }
+.lead-img, .feat-img img, .film-screen, .app-link img { border-radius: 2px; }
+.lead-title, .feat-title { font-family: var(--font-display); letter-spacing: -.045em; }
+.lead-kicker, .lead-props dt, .lead-props dd, .sec-folio { font-family: var(--font-mono); }
+.lead-props div { border-top: 1px solid var(--line); }
+.rubric-chip, .paper-dot, .btn, .sig-btn, .sig-chip { border-radius: 3px !important; font-family: var(--font-mono); letter-spacing: .045em; text-transform: uppercase; }
+.rubric-chip, .btn, .paper-dot, .sig-chip { border-width: 1px; }
+.rubric-chip[aria-pressed="true"], .sig-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.feature-link, .film-link, .app-link { transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease; }
+.feature-link:hover, .film-link:hover, .app-link:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--datum-shadow); }
+.plate-rule { background: var(--accent); height: 3px; }
+.viewer { border: 1px solid var(--ink); border-radius: 4px; box-shadow: 0 18px 64px rgb(0 0 0 / .24); }
+.viewer-head, .viewer-foot { background: var(--panel); }
+.viewer-stage { background-color: var(--viewport); }
+.sig-stage, .sig-skills {
+  --sig-radius: 4px; --sig-glass: color-mix(in srgb, var(--panel) 91%, transparent);
+  --sig-hair: color-mix(in srgb, var(--ink) 17%, transparent);
+  --sig-hair-strong: color-mix(in srgb, var(--ink) 42%, transparent);
+  --sig-shadow: var(--datum-shadow); --sig-model-tint-mix: .48;
+}
+.sig-hud, .sig-screen, .sig-skill { border-radius: 4px !important; border-color: var(--line); }
+.sig-hud { border-left: 3px solid var(--accent); }
+.sig-btn, .sig-chip { border-radius: 3px !important; }
+.sig-skill { background: var(--panel); }
+.sig-glyph { border-radius: 2px !important; }
+.sig-meter i em { background: var(--accent); }
+.sec-instruments { background: color-mix(in srgb, var(--panel) 46%, transparent); }
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .feature-link:hover .feat-img img { transform: scale(1.018); transition: transform .35s ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .feature-link, .film-link, .app-link { transition: none; }
+  .feature-link:hover, .film-link:hover, .app-link:hover { transform: none; }
+}
+/* SURVEY SWEEP: a datum line scans section headings on a view timeline. */
+@property --datum-scan { syntax: "<number>"; inherits: false; initial-value: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .sec-head::after { transform: scaleX(var(--datum-scan)); animation: datum-sweep linear both; animation-timeline: view(); animation-range: entry 0% cover 38%; }
+    @keyframes datum-sweep { from { --datum-scan: 0; } to { --datum-scan: 1; } }
+  }
+}
+@media (prefers-reduced-motion: reduce) { .sec-head::after { transform: scaleX(1); } }

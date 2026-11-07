@@ -2,6 +2,9 @@
 
 All notable changes. Versions follow SemVer (MAJOR.MINOR.PATCH).
 
+## [7.1.0] - 2026-11-07 (morning)
+- New design system: Datum field atlas. Survey-paper and graphite visual language, four accessible themes, Space Grotesk / IBM Plex typography, registration-mark components and survey-sweep motion. Preserved the Monograph reading architecture, permanent BIM scroll stage, skill cards, projects, build-up films, BBS appendix and viewer. Featured G+33 commercial tower model, blueprint theme, hero s12.
+
 ## [7.0.0] - 2026-10-28 (morning)
 - Revamp (new layout): Monograph design system. Featured G+35 sale and rehab building model, risograph theme, hero s11.
 

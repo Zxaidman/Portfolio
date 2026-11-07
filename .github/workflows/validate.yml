@@ -1,0 +1,27 @@
+name: Validate portfolio pull requests
+
+on:
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-validate:
+    name: Build and validate static portfolio
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source (keep LFS pointers)
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile Python scripts
+        run: python3 -m compileall -q scripts
+      - name: Build generated site
+        run: python3 scripts/portfolio.py build
+      - name: Validate data, design history, accessibility tokens and signature
+        run: python3 scripts/portfolio.py validate

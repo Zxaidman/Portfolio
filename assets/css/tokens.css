@@ -1,67 +1,67 @@
 /* Generated from design/system.json by scripts/render.py. Do not edit. */
-/* Design system: Monograph (since 7.0.0) */
+/* Design system: Datum (since 7.1.0) */
 :root,
-[data-theme="letterpress"] {
-  --paper: #ece3cf;
-  --panel: #f7efdd;
-  --ink: #1c1812;
-  --muted: #5a5142;
-  --line: #b3a176;
-  --accent: #c22a1b;
-  --on-accent: #fdf4ea;
-  --viewport: #f6efdf;
+[data-theme="survey"] {
+  --paper: #efe2d9;
+  --panel: #fbf2ed;
+  --ink: #292126;
+  --muted: #5c4a50;
+  --line: #bca7a0;
+  --accent: #354f8c;
+  --on-accent: #f5f4ff;
+  --viewport: #fbf2ed;
   color-scheme: light;
 }
-[data-theme="nocturne"] {
-  --paper: #131009;
-  --panel: #201b12;
-  --ink: #f0e7d4;
-  --muted: #b2a384;
-  --line: #4a3f2b;
-  --accent: #d8a63f;
-  --on-accent: #241802;
-  --viewport: #efe6d2;
+[data-theme="blueprint"] {
+  --paper: #102c46;
+  --panel: #1a3c5c;
+  --ink: #eff6fc;
+  --muted: #bdd0e0;
+  --line: #526f89;
+  --accent: #f6d365;
+  --on-accent: #2a210a;
+  --viewport: #edf3f4;
   color-scheme: dark;
 }
-[data-theme="proof"] {
-  --paper: #e2e5e4;
-  --panel: #f4f6f5;
-  --ink: #15181a;
-  --muted: #505558;
-  --line: #a6acab;
-  --accent: #1c4f9c;
-  --on-accent: #f2f7fa;
-  --viewport: #f2f5f4;
+[data-theme="field"] {
+  --paper: #e8e0ef;
+  --panel: #f7f2fa;
+  --ink: #2c2135;
+  --muted: #5b4c64;
+  --line: #b7a8c1;
+  --accent: #70458d;
+  --on-accent: #fff7ff;
+  --viewport: #f7f2fa;
   color-scheme: light;
 }
-[data-theme="risograph"] {
-  --paper: #eae3df;
-  --panel: #f6f0ec;
-  --ink: #1a151b;
-  --muted: #5c5260;
-  --line: #b8a8a4;
-  --accent: #b01f6e;
-  --on-accent: #fdeef6;
-  --viewport: #f5efeb;
-  color-scheme: light;
+[data-theme="night-shift"] {
+  --paper: #1e212a;
+  --panel: #2c313d;
+  --ink: #f0f2f7;
+  --muted: #c5cbd8;
+  --line: #596173;
+  --accent: #c5e86c;
+  --on-accent: #222a11;
+  --viewport: #e9edf2;
+  color-scheme: dark;
 }
 :root {
-  --font: "Newsreader", "Iowan Old Style", Georgia, "Times New Roman", serif;
-  --font-display: "Bodoni Moda", "Didot", "Bodoni MT", Georgia, serif;
-  --font-mono: "Courier Prime", "Courier New", ui-monospace, monospace;
-  --step--1: clamp(0.82rem, 0.8rem + 0.1vw, 0.9rem);
-  --step-0: clamp(1.02rem, 0.98rem + 0.2vw, 1.14rem);
-  --step-1: clamp(1.22rem, 1.1rem + 0.55vw, 1.6rem);
-  --step-2: clamp(1.7rem, 1.3rem + 1.7vw, 2.9rem);
-  --step-3: clamp(2.5rem, 1.3rem + 5vw, 6rem);
-  --step-display: clamp(3.4rem, 1.4rem + 8.5vw, 9.5rem);
-  --step-kpi: clamp(2.2rem, 1.6rem + 2.2vw, 3.4rem);
-  --gutter: clamp(18px, 3.2vw, 56px);
-  --gap: clamp(16px, 1.8vw, 28px);
+  --font: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --font-display: "Space Grotesk", "Arial", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --step--1: clamp(0.78rem, 0.75rem + 0.12vw, 0.88rem);
+  --step-0: clamp(0.98rem, 0.94rem + 0.22vw, 1.1rem);
+  --step-1: clamp(1.18rem, 1.08rem + 0.52vw, 1.55rem);
+  --step-2: clamp(1.65rem, 1.28rem + 1.65vw, 2.8rem);
+  --step-3: clamp(2.45rem, 1.45rem + 4.8vw, 5.8rem);
+  --step-display: clamp(3.2rem, 1.55rem + 8vw, 9rem);
+  --step-kpi: clamp(2.1rem, 1.55rem + 2.1vw, 3.35rem);
+  --gutter: clamp(18px, 3.4vw, 60px);
+  --gap: clamp(14px, 1.7vw, 26px);
   --hdr: 0px;
-  --measure: 66ch;
-  --max: 1280px;
+  --measure: 68ch;
+  --max: 1320px;
   --rule: 1px;
-  --r: 2px;
-  --bar-h: 46px;
+  --r: 4px;
+  --bar-h: 48px;
 }

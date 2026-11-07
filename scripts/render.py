@@ -1,8 +1,9 @@
 """
 render.py — builds index.html from data/profile.json, data/projects.json and data/site.json.
 
-Design: "Monograph" (v7.0.0). The coordination room is torn down and the portfolio is re-set as
-a printed monograph — a bound review of built work, typeset like an architectural journal:
+Design: "Datum" (v7.1.0). The site is styled as a surveyor's field atlas for built work:
+a technical record assembled from levels, section cuts, setting-out marks and site annotations.
+The Monograph reading order is retained, but its materials and typography now belong to the drawing office:
 
   * The permanent scroll stage opens the page (signature.py), full-bleed.
   * After it, "the issue": a slim running-head bar (publication wordmark, the section you are
@@ -37,9 +38,9 @@ SITE_URL = "https://zxaidman.github.io/Portfolio/"
 CHANGELOG_URL = "https://github.com/Zxaidman/Portfolio/blob/main/CHANGELOG.md"
 
 # The cadence line must always name the publishing rhythm in full (see the brief).
-RHYTHM = ("This monograph is reset on a schedule: a whole revamp — a new layout — every Monday, "
-          "Wednesday and Friday, a new design system on the other mornings, and the featured "
-          "project changes twice a day.")
+RHYTHM = ("This field atlas is issued once each morning: a new design system every day, with a "
+          "whole revamp every third day. The featured project and hero advance with each issue; "
+          "there are no afternoon or night patch releases.")
 
 # Contents index = the navigation. (anchor, folio numeral, title). Order is reading order.
 CONTENTS = [
@@ -117,7 +118,7 @@ def running_head(profile: dict, site: dict, system: dict, themes: dict) -> str:
         for t, th in themes.items()
     )
     return f"""<nav class="runhead" aria-label="Running head">
-  <a class="runhead-mark" href="#top"><b>Monograph</b><span class="runhead-sub mono">Zaid Shaikh · built work</span></a>
+  <a class="runhead-mark" href="#top"><b>{e(system.get("name", "Datum"))}</b><span class="runhead-sub mono">Zaid Shaikh · built work</span></a>
   <p class="runhead-now mono" aria-hidden="true"><span data-runhead>Contents</span></p>
   <div class="runhead-right">
     <div class="paper" role="group" aria-label="Paper edition" hidden><span class="mono">Paper</span>{swatches}</div>
@@ -269,9 +270,9 @@ def feature_plate(p: dict, i: int) -> str:
              f'<span class="feat-meta mono">{e(p["kind"])}</span>'
              f'<span class="feat-foot mono"><span>G+{fl - 1}</span><span>{e(p["location"] or "—")}</span>'
              f'<span>{len(p["images"])} plates{" + film" if p.get("video") else ""} ↗</span></span></span>')
-    return (f'<li class="feature" data-type="{e(p["type"])}" data-i="{i}">'
-            f'{opener(p["slug"], im["src"], inner, "feature-link", label=f"{p["title"]}: G+{fl - 1}, {len(p["images"])} plates")}'
-            f'</li>')
+    label = f"{p['title']}: G+{fl - 1}, {len(p['images'])} plates"
+    link = opener(p["slug"], im["src"], inner, "feature-link", label=label)
+    return f'<li class="feature" data-type="{e(p["type"])}" data-i="{i}">{link}</li>'
 
 
 def works(projects: list[dict], featured: dict) -> str:

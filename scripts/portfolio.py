@@ -6,13 +6,13 @@ Subcommands
 -----------
   sync      Pull projects, images and build-up videos from the source repo
             (aasif-shaikh7/BIM-Portfolio) into this site's media/ and data/.
-  refresh   Rotate the daily state (featured project, hero video, theme),
-            bump the semantic version, and append a CHANGELOG entry.
+  refresh   Publish one daily design issue (featured project, theme and hero),
+            bump SemVer, and append a CHANGELOG entry.
   build     Render index.html from data/*.json (see scripts/render.py).
   validate  Check that every JSON file parses and every referenced asset exists.
   daily     sync -> refresh -> build -> validate -> leak check (what the scheduled job runs).
   archive   Snapshot the active design into design/archive/ (minor and major designs).
-  cadence   Print this run's kind: patch, minor or major (--calendar lists the next majors).
+  cadence   Print this run's kind: skip, minor or major (--calendar lists the next majors).
 
 Design notes
 ------------
@@ -21,10 +21,10 @@ Design notes
   stays light even though the media folder is large.
 * Media is copied only when its content hash changes (no daily re-commit of
   160 MB of video). Images are re-encoded to web sizes with Pillow.
-* Versioning follows SemVer (MAJOR.MINOR.PATCH) on a fixed cadence (IST):
-    PATCH  1:50 PM and 9:50 PM daily: theme and featured-asset change, plus new media
-    MINOR  5:50 AM daily: a new design system (`daily --minor`)
-    MAJOR  5:50 AM Monday, Wednesday and Friday: whole revamp, new layout (`daily --major`)
+* Versioning follows SemVer on one daily design release at 05:50 IST:
+    MINOR  every day except major dates: new design system
+    MAJOR  every three days from 2026-11-10: whole layout revamp
+    PATCH  retired: afternoon and night slots are no-ops
 * The rotation is deterministic for a given date, so re-running the job on the
   same day is idempotent: it produces no diff and no version bump.
 
@@ -53,7 +53,9 @@ IST = ZoneInfo("Asia/Kolkata")
 
 # Run slots in IST. The scheduled job fires at 05:50, 13:50 and 21:50 (8 hours apart).
 SLOTS = ["morning", "afternoon", "night"]
-MAJOR_WEEKDAYS = {0, 2, 4}             # Monday, Wednesday, Friday (Python weekday numbers)
+# 7.1.0 is the daily minor baseline; the first following major is three days later.
+MAJOR_ANCHOR = dt.date(2026, 11, 10)
+MAJOR_INTERVAL_DAYS = 3
 
 IMAGE_FULL_MAX = 1800   # px, long edge for gallery images
 IMAGE_THUMB_MAX = 720   # px, long edge for register previews / cards
@@ -557,7 +559,7 @@ def bump(version: str, part: str) -> str:
 
 def daily_state(projects: list[dict], day: dt.date, slot: str = "morning") -> dict:
     """Deterministic rotation for a run slot: same date + slot -> same state.
-    Three slots a day (morning, afternoon, night), so each run shows something different."""
+    Only the morning slot is a release. Afternoon and night are retired no-op slots."""
     ordinal = day.toordinal() * len(SLOTS) + SLOTS.index(slot)
     with_video = [p for p in projects if p.get("video")] or projects
     featured = with_video[ordinal % len(with_video)]
@@ -578,20 +580,22 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
     site = read_json(site_path, {}) or {}
     version = (ROOT / "VERSION").read_text().strip() if (ROOT / "VERSION").exists() else "2.0.0"
 
-    slot_id = f"{day.isoformat()} {slot}"
-    if site.get("slot") == slot_id and not content_changed:
+    part = "major" if force_major else ("minor" if force_minor else cadence(day, slot))
+    if part == "skip":
+        log(f"refresh: {day.isoformat()} {slot} slot retired; no release")
+        return False
+    slot_id = f"{day.isoformat()} morning"
+    if site.get("slot") == slot_id:
         # Each slot ships at most once, so a re-run (or a retried job) never double-bumps.
         log(f"refresh: {slot_id} already shipped as {version}; nothing to do")
         return False
-    state = daily_state(data["projects"], day, slot)
+    state = daily_state(data["projects"], day, "morning")
     rotated = any(site.get(k) != v for k, v in state.items())
     if not (rotated or content_changed or force_major or force_minor):
         log(f"refresh: nothing changed for {slot_id}; staying on {version}")
         return False
 
-    # Cadence (see cadence()): MAJOR = whole revamp Mon/Wed/Fri, MINOR = new design system
-    # every morning, PATCH = theme/asset change at 1:50 PM and 9:50 PM (plus any new media).
-    part = "major" if force_major else ("minor" if force_minor else "patch")
+    # Exactly one SemVer design release per date: minor daily, major on the 3-day anchor.
     # The very first run after a manual redesign keeps the hand-set version.
     new_version = version if site.get("version") != version else bump(version, part)
 
@@ -605,7 +609,7 @@ def cmd_refresh(day: dt.date, content_changed: bool, force_major: bool, force_mi
     system = read_json(ROOT / "design" / "system.json", {}) or {}
     if part in ("major", "minor"):
         note = f"{system.get('name', 'New design')} design system. " + note
-    # The hero rotates on every update (patch, minor, major) through one pool of IFC models and
+    # The hero rotates on every daily release (minor or major) through one pool of IFC models and
     # project build-up videos (signature.stage_pool).
     import signature
     pool = signature.stage_pool(read_json(DATA / "stage.json", {}) or {})
@@ -760,8 +764,8 @@ def slot_for(at: dt.datetime) -> str:
 
 
 def is_major_day(day: dt.date) -> bool:
-    """Majors (whole revamp) ship on the Monday, Wednesday and Friday morning slots."""
-    return day.weekday() in MAJOR_WEEKDAYS
+    """Major revamps ship every three calendar days, anchored on 2026-11-10."""
+    return day >= MAJOR_ANCHOR and (day - MAJOR_ANCHOR).days % MAJOR_INTERVAL_DAYS == 0
 
 
 def check_filters(html: str, projects: list[dict], errors: list[str]) -> None:
@@ -812,10 +816,10 @@ def check_signature(errors: list[str]) -> None:
 
 
 def cadence(day: dt.date, slot: str = "morning") -> str:
-    """What a run ships. Morning: major on a major day, otherwise minor (every day, Sunday
-    included). Afternoon and night: patch (every day, Sunday included)."""
+    """One release per day: major every third day from the anchor, minor otherwise.
+    Afternoon and night slots are retired and return 'skip'."""
     if slot != "morning":
-        return "patch"
+        return "skip"
     return "major" if is_major_day(day) else "minor"
 
 
@@ -961,8 +965,8 @@ def main(argv: list[str] | None = None) -> int:
         sp = sub.choices[name] if name in sub.choices else sub.add_parser(name)
         sp.add_argument("--date", help="YYYY-MM-DD (default: today in IST)")
         sp.add_argument("--slot", choices=SLOTS, help="run slot (default: from the current IST time)")
-        sp.add_argument("--major", action="store_true", help="bump MAJOR (whole revamp, Mon/Wed/Fri)")
-        sp.add_argument("--minor", action="store_true", help="bump MINOR (new design system, every morning)")
+        sp.add_argument("--major", action="store_true", help="force a MAJOR whole-site revamp")
+        sp.add_argument("--minor", action="store_true", help="force a MINOR design-system release")
     sub.add_parser("validate")
     sub.add_parser("build")
     ep = sub.add_parser("extra-images", help="publish rendered stills as a hand-added project's images")
@@ -972,11 +976,13 @@ def main(argv: list[str] | None = None) -> int:
     mp.add_argument("--qa", action="store_true")
     ap_ = sub.add_parser("archive", help="snapshot the active design into design/archive/")
     ap_.add_argument("--shots", type=Path, help="QA screenshot folder to include")
-    cp = sub.add_parser("cadence", help="print patch/minor/major for this run (default: now, IST)")
+    cp = sub.add_parser("cadence", help="print skip/minor/major for this run (default: now, IST)")
     cp.add_argument("--date", help="YYYY-MM-DD")
     cp.add_argument("--slot", choices=SLOTS)
     cp.add_argument("--calendar", action="store_true", help="also list the next major days")
     args = ap.parse_args(argv)
+    if getattr(args, "major", False) and getattr(args, "minor", False):
+        ap.error("--major and --minor cannot be used together")
 
     if args.cmd == "validate":
         return cmd_validate()
@@ -1001,17 +1007,23 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "sync":
         _, secrets = cmd_sync(args.source.resolve())
         return max(cmd_validate(), leak_check(secrets))
+    release_kind = "major" if args.major else ("minor" if args.minor else cadence(day, slot))
+    if release_kind == "skip":
+        log(f"release: {day.isoformat()} {slot} slot retired; no sync, build or version change")
+        return 0
     if args.cmd == "refresh":
-        cmd_refresh(day, content_changed=False, force_major=args.major, force_minor=args.minor, slot=slot)
+        shipped = cmd_refresh(day, content_changed=False, force_major=args.major, force_minor=args.minor, slot=slot)
         cmd_build()
+        if shipped and release_kind in ("major", "minor"):
+            cmd_archive((ROOT / "VERSION").read_text().strip())
         return cmd_validate()
     # daily
     changed, secrets = cmd_sync(args.source.resolve())
     shipped = cmd_refresh(day, content_changed=changed, force_major=args.major, force_minor=args.minor,
                           slot=slot)
     cmd_build()
-    if shipped and (args.major or args.minor):
-        # Minor/major designs are snapshotted the moment they are built, so they are never lost.
+    if shipped and release_kind in ("major", "minor"):
+        # Every daily design release is archived immediately after the renderer builds it.
         cmd_archive((ROOT / "VERSION").read_text().strip())
     # Validation and the confidentiality check both gate the push: non-zero exit = do not push.
     return max(cmd_validate(), leak_check(secrets))
