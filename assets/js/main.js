@@ -19,6 +19,12 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const viewTimeline = typeof CSS !== "undefined" && CSS.supports && CSS.supports("animation-timeline: view()");
+  const mediaBase = document.documentElement.dataset.mediaBase || "media/";
+  const mediaUrl = (path) => {
+    const value = String(path || "");
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return value;
+    return mediaBase + value.replace(/^\/?media\//, "");
+  };
 
   document.documentElement.classList.add("js");
 
@@ -172,8 +178,8 @@
       if (mode === "video" && item.video) {
         const v = document.createElement("video");
         v.controls = true; v.playsInline = true; v.preload = "none";
-        v.poster = item.video.poster || "";
-        v.src = item.video.src;
+        v.poster = item.video.poster ? mediaUrl(item.video.poster) : "";
+        v.src = mediaUrl(item.video.src);
         v.setAttribute("aria-label", `${item.title} build-up animation`);
         // A plate over the top-left corner, where the source renders carry a burned-in caption.
         const wrap = document.createElement("div");
@@ -193,7 +199,7 @@
       }
       const im = item.images[index];
       const img = document.createElement("img");
-      img.src = im.src; img.width = im.w; img.height = im.h;
+      img.src = mediaUrl(im.src); img.width = im.w; img.height = im.h;
       img.alt = im.alt || `${item.title}, view ${index + 1}`;
       img.decoding = "async";
       stage.append(img);
