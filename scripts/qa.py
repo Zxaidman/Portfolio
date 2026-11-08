@@ -139,9 +139,9 @@ def main() -> int:
 
                 def track_media_request(request):
                     request_url = request.url
-                    if re.search(r"/media/stage/[^/]+/f\\d+\\.webp(?:\\?|$)", request_url):
+                    if re.search(r"/media/stage/[^/]+/f\d+\.webp(?:\?|$)", request_url):
                         media_requests["frames"].append(request_url)
-                    if re.search(r"/media/video/[^/]+\\.mp4(?:\\?|$)", request_url):
+                    if re.search(r"/media/video/[^/]+\.mp4(?:\?|$)", request_url):
                         media_requests["videos"].append(request_url)
 
                 page.on("request", track_media_request)
