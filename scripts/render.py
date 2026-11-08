@@ -312,7 +312,6 @@ def films(by_slug: dict, order: list[str]) -> str:
         vobj = p["video"]
         poster = vobj.get("poster") or p["images"][0]["thumb"]
         inner = (f'<span class="film-screen"><img src="{e(poster)}" alt="" loading="lazy" decoding="async">'
-                 f'<video muted loop playsinline preload="none" data-src="{e(vobj["src"])}" tabindex="-1"></video>'
                  f'<span class="film-osd mono" aria-hidden="true"><span>Film {n:02d}</span>'
                  f'<span class="film-rec">▶</span></span>'
                  f'<span class="film-tc mono" aria-hidden="true">{e(vobj["duration"])}</span></span>'
@@ -322,7 +321,7 @@ def films(by_slug: dict, order: list[str]) -> str:
     body = f'<ol class="film-wall">{"".join(cams)}</ol>'
     return f"""
 <section class="sec sec-films" id="buildups" aria-labelledby="films-title">
-  {section_head("buildups", "films-title", f"Build-up films · {n}", "Construction sequence, rendered from the model", note="Construction-sequence animations rendered from the Revit models. Hover a frame to preview it muted; open it to watch with sound.")}
+   {section_head("buildups", "films-title", f"{n} sequences", "Build-up films")}
   {body}
 </section>"""
 
