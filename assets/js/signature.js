@@ -17,6 +17,12 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+  const mediaBase = document.documentElement.dataset.mediaBase || "media/";
+  const mediaUrl = (path) => {
+    const value = String(path || "");
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return value;
+    return mediaBase + value.replace(/^\/?media\//, "");
+  };
 
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const seg = (p, a, b) => clamp((p - a) / (b - a));
@@ -76,7 +82,7 @@
     });
     const url = (f) => {
       const set = useMobile ? f.seg.mobile : f.seg.desktop;
-      return `${set.dir}/f${String(f.i).padStart(3, "0")}.webp`;
+      return mediaUrl(`${set.dir}/f${String(f.i).padStart(3, "0")}.webp`);
     };
 
     const st = {
@@ -150,6 +156,7 @@
         f.loading = true;
         f.requestGen = generation;
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.decoding = "async";
         img.onload = () => {
           if (f.requestGen === generation) {
