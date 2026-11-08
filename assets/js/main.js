@@ -18,17 +18,9 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
-  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const viewTimeline = typeof CSS !== "undefined" && CSS.supports && CSS.supports("animation-timeline: view()");
 
   document.documentElement.classList.add("js");
-
-  /** Attach a lazily-declared video source (data-src) once. */
-  function loadVideo(video) {
-    if (!video || video.src || !video.dataset.src) return;
-    video.src = video.dataset.src;
-  }
 
   function safePlay(video) {
     const p = video.play();
@@ -120,17 +112,6 @@
     }));
   }
 
-  /* ---------- Build-up films: muted hover previews ---------- */
-  function films() {
-    if (!canHover || reduceMotion || saveData) return;
-    $$(".film").forEach((film) => {
-      const video = $("video", film);
-      if (!video) return;
-      film.addEventListener("mouseenter", () => { loadVideo(video); film.classList.add("is-playing"); safePlay(video); });
-      film.addEventListener("mouseleave", () => { film.classList.remove("is-playing"); video.pause(); });
-    });
-  }
-
   /* ---------- Technical appendix: show / hide extra drawings ---------- */
   function appendix() {
     const btn = $("[data-more]");
@@ -174,13 +155,23 @@
     const next = $('[data-step="1"]', dialog);
     let current = null; // { item, index, mode: 'image' | 'video' }
     let opener = null;
+    let activeVideo = null;
+
+    function releaseVideo() {
+      if (!activeVideo) return;
+      activeVideo.pause();
+      activeVideo.removeAttribute("src");
+      activeVideo.load();
+      activeVideo = null;
+    }
 
     function render() {
       const { item, index, mode } = current;
+      releaseVideo();
       stage.replaceChildren();
       if (mode === "video" && item.video) {
         const v = document.createElement("video");
-        v.controls = true; v.playsInline = true; v.preload = "metadata";
+        v.controls = true; v.playsInline = true; v.preload = "none";
         v.poster = item.video.poster || "";
         v.src = item.video.src;
         v.setAttribute("aria-label", `${item.title} build-up animation`);
@@ -191,6 +182,7 @@
         plate.className = "vw-plate";
         plate.setAttribute("aria-hidden", "true");
         plate.textContent = `FILM · ${item.sheet}`;
+        activeVideo = v;
         wrap.append(v, plate);
         stage.append(wrap);
         if (!reduceMotion) safePlay(v);
@@ -253,7 +245,8 @@
       if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") { ev.preventDefault(); step(-1); }
     });
     dialog.addEventListener("close", () => {
-      stage.replaceChildren(); // stops any playing video
+      releaseVideo();
+      stage.replaceChildren();
       if (opener && document.contains(opener)) opener.focus();
     });
   }
@@ -263,7 +256,6 @@
     paper();
     counters();
     rubric();
-    films();
     appendix();
     reveal();
     viewer();
