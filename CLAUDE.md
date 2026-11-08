@@ -81,10 +81,11 @@ a month, and every download counts, so:
   its copies of media are pointer files. `vercel.json` runs
   `python3 scripts/portfolio.py build` and publishes the repository root; this regenerates
   `index.html` and design tokens from the current `VERSION` and `data/site.json` on every
-  deployment. Preserve its `buildCommand` and `outputDirectory`. The same config redirects every
-  `/media/...` request to the matching file on GitHub Pages (which has the real files and allows
-  cross-origin use). Do not enable Git LFS on the Vercel project: each Vercel build would download
-  all media and use up the free LFS bandwidth within days.
+  deployment. Preserve its `buildCommand` and `outputDirectory`. Generated HTML and viewer code
+  point directly to `https://zxaidman.github.io/Portfolio/media/`; do not restore a Vercel
+  `/media` redirect. GitHub Pages serves the actual LFS-backed assets and includes
+  `Access-Control-Allow-Origin: *`, required by the canvas frame loader. Do not enable Git LFS on
+  Vercel: each Vercel build would download all media and use up the free LFS bandwidth within days.
 - New or changed media is converted to LFS on commit automatically when git-lfs is installed
   (`git lfs install` once per clone). Never commit media without git-lfs installed.
 
@@ -92,22 +93,23 @@ a month, and every download counts, so:
 
 Keep the current static-site architecture. Optimize the existing pipeline before adding an external media platform.
 
-Performance rollout status (2026-11-07):
+Performance rollout status (2026-11-08):
 - **Completed — initial load:** `scripts/signature.py` emits the stage poster eagerly with intrinsic dimensions. It remains visible while the first requested frame is unavailable.
-- **Completed — scroll-stage requests:** `assets/js/signature.js` no longer downloads the sequence on page load. It waits until the visitor has scrolled and the stage is near the viewport, then requests a small window around the current frame. Concurrency is capped at four (one with Save-Data); decoded image references are capped at 14 (six with Save-Data). The current rotation item is `s12` with 120 frames. Preserve this behavior; never restore whole-sequence preloading.
-- **Not measured:** a real browser Network waterfall, LCP element, transfer bytes, TTFB, LCP, INP and CLS were not captured during this change because the live domains/browser session were unavailable in the execution environment. Build validation is not a substitute. Capture the field/lab baseline on a real connection before further tuning.
-- `scripts/portfolio.py` creates 1800px gallery JPEGs and 720px thumbnails; preserve separate preview and full-view sizes. Do not send 1800px originals to card grids.
-- `scripts/portfolio.py` copies unmasked source videos without re-encoding. Validate actual file sizes and encoding before assuming they are web-ready.
-- Film cards still attach and play the full video on hover. A quick mouse pass can initiate multiple downloads and retain buffered data after hover; this remains Phase 3 work.
+- **Completed — scroll-stage requests:** `assets/js/signature.js` waits until the visitor has scrolled and the stage is near the viewport, then requests a small window around the current frame. Concurrency is capped at four (one with Save-Data); decoded image references are capped at 14 (six with Save-Data). Preserve this behavior; never restore whole-sequence preloading.
+- **Completed — video cards:** film cards contain poster images only. They do not contain hidden video elements and do not download or autoplay video on hover. Opening a film is an explicit activation; the viewer uses `preload="none"`, plays only after activation (unless reduced-motion is requested), and releases the video source when the viewer closes or changes media.
+- **Completed — media delivery:** generated media image/link URLs and the stage frame loader resolve directly to the GitHub Pages media base. The Vercel `/media` redirect was removed. The stage loader sets `crossOrigin="anonymous"` before assigning frame URLs; preserve this because frames are drawn to canvas and the GitHub Pages origin supplies `Access-Control-Allow-Origin: *`.
+- **Measured — delivery comparison (Mumbai audit sandbox, 2026-11-08):** a 1 MiB HTTP range request for the same MP4 returned from GitHub Pages in 17 ms total (11.5 ms TTFB) versus 55 ms total (49.3 ms TTFB) through the Vercel 307 redirect. The response was a GitHub Pages Mumbai edge cache hit with byte ranges enabled. This is one warm-request sample, not a real-user percentile or a substitute for broader testing.
+- **Measured — video inventory:** 14 MP4s are 1920x1080, H.264 High Profile, yuv420p, 24 fps, approximately 3.2–3.5 Mbps, and roughly 12–13 MB for 30-second clips. They have no audio track. Do not blindly re-encode: a sample CRF 26 test increased size; CRF 28 saved only about 9% with SSIM 0.9948. Retain the current masters unless a better codec/bitrate wins a visual review and a meaningful size target.
+- **Not measured:** real browser LCP/INP/CLS, full-page transfer bytes and a throttled mobile Network waterfall remain unmeasured. Do not claim the Core Web Vitals targets have passed.
 
 Implementation order:
-1. **Measure:** capture a cold load on desktop and real mobile using Chrome DevTools/Lighthouse or PageSpeed Insights. Record request waterfall, LCP element, image/video transfer bytes, TTFB, LCP, INP and CLS. Test a normal theme, the stage before scrolling, and the stage while scrolling. Do not infer file-size problems from dimensions alone.
-2. **Completed:** eager-load the static stage poster, keep it visible as the initial fallback, and prevent frame requests until the visitor scrolls while the stage is near the viewport. Do not add `fetchpriority="high"` until a measurement confirms which resource is the LCP element.
-3. **Images:** keep project cards on thumbnails and full-size files only inside the gallery. Emit correct `srcset`/`sizes` for real display widths and DPR. Add smaller candidates only where measured; prefer WebP/AVIF where build support and measured savings justify them, with a reliable JPEG fallback and visual checks for fine BIM linework and text.
-4. **Videos:** replace hover-triggered full video downloads with poster-first playback initiated by explicit click/tap. Keep `preload="none"`; never make a hover or hidden card start video transfer. If a preview is retained, it must be opt-in, single-instance, and disabled for reduced-motion/data-saving users.
-5. **Video encoding:** normalize files only after auditing them: H.264 MP4 with fast-start for compatibility, sensible 720p/1080p renditions and tested CRF/bitrate; retain source masters outside the deployed media path where feasible. Use HLS/adaptive bitrate only when measured video length, file size or variable-network playback justifies the added packaging and player complexity.
-6. **Delivery:** add long-lived immutable caching only to versioned/content-hashed media URLs. Avoid cache-busting query strings on stable media and avoid redirect chains where possible. Keep the Git LFS constraint: do not enable LFS on Vercel. The current Vercel media redirect to GitHub Pages is a known extra cross-origin hop; benchmark it before replacing it.
-7. **Verification:** re-run image, video, keyboard, mobile, reduced-motion, data-saving and broken-media QA after any change. Check the Network panel for duplicate requests, initial frame count, cache retention and ensure one video cannot leave multiple previews consuming bandwidth.
+1. **Completed:** eager-load the static stage poster, keep it visible as the initial fallback, and prevent frame requests until the visitor scrolls while the stage is near the viewport. Do not add `fetchpriority="high"` until a measurement confirms which resource is the LCP element.
+2. **Completed:** load frames around the active scroll position with bounded concurrency and cache; preserve reverse-scroll, resize, reduced-motion and no-JavaScript behavior.
+3. **Completed:** render poster-only film cards and attach/play video only after the user explicitly opens a film. Use `preload="none"`; release the source when the viewer closes or changes media. Do not add hover-triggered previews.
+4. **Completed:** point all generated media URLs directly to `MEDIA_BASE` on GitHub Pages. Keep CORS enabled for stage frames drawn to canvas. Do not restore the Vercel `/media` redirect or turn on Vercel Git LFS.
+5. **Encoding decision:** current MP4 files are already 1080p H.264 at approximately 3.3 Mbps. Test quality/size before changing; keep source masters and require material size savings plus visual review of fine BIM linework.
+6. **Images:** keep project cards on thumbnails and full-size files only inside the gallery. Emit correct `srcset`/`sizes` for real display widths and DPR. Add smaller candidates only where measured; preserve fine BIM linework and text.
+7. **Verification:** test video click-to-play, reduced-motion manual playback, source release on close/navigation, byte-range playback, image/frame CORS, keyboard/mobile behavior, stage motion and broken-media handling. Capture a cold mobile/desktop Network waterfall and Core Web Vitals before claiming a performance pass.
 
 ### Media platform decision
 
