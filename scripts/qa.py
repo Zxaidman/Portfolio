@@ -23,6 +23,7 @@ import glob
 import http.server
 import json
 import os
+import re
 import ssl
 import sys
 import threading
@@ -134,9 +135,23 @@ def main() -> int:
                 page = ctx.new_page()
                 page.route("https://fonts.googleapis.com/**", font_route)
                 page.route("https://fonts.gstatic.com/**", font_route)
+                media_requests = {"frames": [], "videos": []}
+
+                def track_media_request(request):
+                    request_url = request.url
+                    if re.search(r"/media/stage/[^/]+/f\\d+\\.webp(?:\\?|$)", request_url):
+                        media_requests["frames"].append(request_url)
+                    if re.search(r"/media/video/[^/]+\\.mp4(?:\\?|$)", request_url):
+                        media_requests["videos"].append(request_url)
+
+                page.on("request", track_media_request)
                 page.on("pageerror", lambda e, l=label: problems.append(f"{l}/motion: JS error {e}"))
                 page.goto(url, wait_until="networkidle")
                 page.wait_for_timeout(800)
+                if media_requests["frames"]:
+                    problems.append(f"{label}/motion: stage frames loaded before scrolling")
+                if media_requests["videos"]:
+                    problems.append(f"{label}/motion: video requested before user activation")
                 live = page.evaluate("!!document.querySelector('.sig-stage.sig-live')")
                 if not live:
                     problems.append(f"{label}/motion: scroll stage did not start (.sig-live missing)")
@@ -155,6 +170,22 @@ def main() -> int:
                     usable = page.evaluate("!document.querySelector('.sig-screen').hasAttribute('inert')")
                     if not usable:
                         problems.append(f"{label}/motion: showcase did not open at the end of the stage")
+
+                    # A film card must be the first point at which an MP4 is requested.
+                    film = page.locator('#buildups a[data-video]').first
+                    if film.count():
+                        film.click(timeout=15000)
+                        page.wait_for_timeout(1200)
+                        if not page.evaluate("!!document.querySelector('#viewer video')"):
+                            problems.append(f"{label}/video: film did not open in the viewer")
+                        if not media_requests["videos"]:
+                            problems.append(f"{label}/video: MP4 was not requested after film activation")
+                        page.locator("[data-close]").click()
+                        page.wait_for_timeout(150)
+                        if page.evaluate("!!document.querySelector('#viewer video')"):
+                            problems.append(f"{label}/video: video element remained after viewer close")
+                    else:
+                        problems.append(f"{label}/video: no film card found")
                 ctx.close()
             browser.close()
     finally:
