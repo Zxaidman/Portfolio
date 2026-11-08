@@ -34,6 +34,17 @@ DATA = ROOT / "data"
 
 CSS_HREF = "assets/css/signature.css"
 JS_SRC = "assets/js/signature.js"
+MEDIA_BASE = "https://zxaidman.github.io/Portfolio/media/"
+
+
+def media_url(path: str) -> str:
+    """Resolve a generated media path directly to the GitHub Pages edge origin."""
+    value = str(path or "").lstrip("/")
+    if value.startswith(("https://", "http://", "data:", "blob:")):
+        return value
+    if value.startswith("media/"):
+        value = value[6:]
+    return MEDIA_BASE + value
 
 
 def e(value) -> str:
@@ -167,7 +178,7 @@ def _showcase(projects: list[dict], show: dict, profile: dict, opener) -> str:
             im = p["images"][0]
             meta = " · ".join(x for x in (p["kind"], p["location"]) if x)
             media = "build-up" if p.get("video") else "views"
-            inner = (f'<span class="sig-proj-img"><img src="{e(im["thumb"])}" alt="" width="{im["w"]}" '
+            inner = (f'<span class="sig-proj-img"><img src="{e(media_url(im["thumb"]))}" alt="" width="{im["w"]}" '
                      f'height="{im["h"]}" loading="lazy" decoding="async"></span>'
                      f'<span class="sig-proj-copy"><span class="sig-eyebrow">{e(p["sheet"])} · {e(meta)}</span>'
                      f'<b>{e(p["title"])}</b><span class="sig-proj-foot">{len(p["images"])} views'
@@ -230,7 +241,7 @@ def stage_html(profile: dict, projects: list[dict], opener, anchor: str = "top")
 <section class="sig-stage" id="{e(anchor)}" data-sig="stage" aria-labelledby="sig-name">
   <script type="application/json" id="sig-stage-data">{manifest}</script>
   <div class="sig-pin">
-    <img class="sig-poster" src="{e(first.get("poster") or f'{first["desktop"]["dir"]}/f{first["count"]:03d}.webp')}" alt="{e(first.get("alt") or POSTER_ALT.get(first["id"], POSTER_ALT["buildup"]))}" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="eager" decoding="async">
+    <img class="sig-poster" src="{e(media_url(first.get("poster") or f'{first["desktop"]["dir"]}/f{first["count"]:03d}.webp'))}" alt="{e(first.get("alt") or POSTER_ALT.get(first["id"], POSTER_ALT["buildup"]))}" width="{first["desktop"]["w"]}" height="{first["desktop"]["h"]}" loading="eager" decoding="async">
     <canvas class="sig-canvas" aria-hidden="true"></canvas>
     <div class="sig-hero">
       <div class="sig-hero-top"><span>{e(st["eyebrow"])}</span>{status}</div>
